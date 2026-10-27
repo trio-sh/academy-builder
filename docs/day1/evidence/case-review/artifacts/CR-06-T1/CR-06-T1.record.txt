@@ -1,10 +1,10 @@
 case CR-06-T1
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 dimensions D1,D2,D3,D4,D5,D8,D9
 command bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr06-cr10-cr27.db.test.ts
-fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit 3cecc7e44fa1; other dimensions by the textual swap in vitest.db.dim.config.ts
-started 2026-10-26T20:50:58.812Z
-ended 2026-10-26T20:50:58.996Z
+fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit b4c285d2993c; other dimensions by the textual swap in vitest.db.dim.config.ts
+started 2026-10-27T05:40:02.831Z
+ended 2026-10-27T05:40:02.964Z
 observed 1 mapped test(s) in cr06-cr10-cr27.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-06 a participant reads and challenges any committed observation > T1: an observation that no report contains is readable by its participant and the challenge
-artifact artifacts/CR-06-T1/CR-06-T1.evidence.txt bf6a23e6a6ea199b6f2055cb410d6a8c0aedda97333a1c8cfb54c0397eeece3a
+artifact artifacts/CR-06-T1/CR-06-T1.evidence.txt b60b9a162fe7e8466fdc95fd8dc0fb951722dd1b57e4a0dc91babf6e231322f2

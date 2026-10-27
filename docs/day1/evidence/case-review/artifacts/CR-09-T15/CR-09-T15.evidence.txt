@@ -1,6 +1,6 @@
 case CR-09-T15
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 rule CR-09
 what is run: Scan every output for "released to your organization"
 expected: None present
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 9ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T15: no output or function carries "released to your organization"
-    [sandbox] passed 10ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T15: no output or function carries "released to your organization"
+    [default] passed 6ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T15: no output or function carries "released to your organization"
+    [sandbox] passed 5ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T15: no output or function carries "released to your organization"
 D2: pass
     [default] passed 7ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T15: no output or function carries "released to your organization"
     [sandbox] passed 6ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T15: no output or function carries "released to your organization"
 D3: pass
-    [default] passed 7ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T15: no output or function carries "released to your organization"
-    [sandbox] passed 6ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T15: no output or function carries "released to your organization"
+    [default] passed 4ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T15: no output or function carries "released to your organization"
+    [sandbox] passed 7ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T15: no output or function carries "released to your organization"
 D4: pass
-    [default] passed 7ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T15: no output or function carries "released to your organization"
-    [sandbox] passed 6ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T15: no output or function carries "released to your organization"
-D5: pass
     [default] passed 6ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T15: no output or function carries "released to your organization"
     [sandbox] passed 7ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T15: no output or function carries "released to your organization"
+D5: pass
+    [default] passed 6ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T15: no output or function carries "released to your organization"
+    [sandbox] passed 5ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T15: no output or function carries "released to your organization"
 D8: pass
-    [default] passed 10ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T15: no output or function carries "released to your organization"
-    [sandbox] passed 13ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T15: no output or function carries "released to your organization"
+    [default] passed 6ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T15: no output or function carries "released to your organization"
+    [sandbox] passed 6ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T15: no output or function carries "released to your organization"
 D9: pass
-    [default] passed 8ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T15: no output or function carries "released to your organization"
-    [sandbox] passed 13ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T15: no output or function carries "released to your organization"
+    [default] passed 5ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T15: no output or function carries "released to your organization"
+    [sandbox] passed 6ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T15: no output or function carries "released to your organization"

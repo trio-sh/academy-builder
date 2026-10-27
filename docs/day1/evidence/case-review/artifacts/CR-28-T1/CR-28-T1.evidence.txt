@@ -1,6 +1,6 @@
 case CR-28-T1
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 rule CR-28
 what is run: Compose a report for a dimension with a recurrence clause and three single observation clauses
 expected: The recurrence clause is selected; the rule version is recorded
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 621ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T1: a dimension with a recurrence clause and three single observation clauses: the recurrence clause is selected, the others stay in the record, and the rule version is recorded on the issued report
-    [sandbox] passed 873ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T1: a dimension with a recurrence clause and three single observation clauses: the recurrence clause is selected, the others stay in the record, and the rule version is recorded on the issued report
+    [default] passed 647ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T1: a dimension with a recurrence clause and three single observation clauses: the recurrence clause is selected, the others stay in the record, and the rule version is recorded on the issued report
+    [sandbox] passed 866ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T1: a dimension with a recurrence clause and three single observation clauses: the recurrence clause is selected, the others stay in the record, and the rule version is recorded on the issued report
 D2: pass
-    [default] passed 630ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T1: a dimension with a recurrence clause and three single observation clauses: the recurrence clause is selected, the others stay in the record, and the rule version is recorded on the issued report
-    [sandbox] passed 998ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T1: a dimension with a recurrence clause and three single observation clauses: the recurrence clause is selected, the others stay in the record, and the rule version is recorded on the issued report
+    [default] passed 533ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T1: a dimension with a recurrence clause and three single observation clauses: the recurrence clause is selected, the others stay in the record, and the rule version is recorded on the issued report
+    [sandbox] passed 759ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T1: a dimension with a recurrence clause and three single observation clauses: the recurrence clause is selected, the others stay in the record, and the rule version is recorded on the issued report
 D3: pass
-    [default] passed 670ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T1: a dimension with a recurrence clause and three single observation clauses: the recurrence clause is selected, the others stay in the record, and the rule version is recorded on the issued report
-    [sandbox] passed 1004ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T1: a dimension with a recurrence clause and three single observation clauses: the recurrence clause is selected, the others stay in the record, and the rule version is recorded on the issued report
+    [default] passed 582ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T1: a dimension with a recurrence clause and three single observation clauses: the recurrence clause is selected, the others stay in the record, and the rule version is recorded on the issued report
+    [sandbox] passed 758ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T1: a dimension with a recurrence clause and three single observation clauses: the recurrence clause is selected, the others stay in the record, and the rule version is recorded on the issued report
 D4: pass
-    [default] passed 604ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T1: a dimension with a recurrence clause and three single observation clauses: the recurrence clause is selected, the others stay in the record, and the rule version is recorded on the issued report
-    [sandbox] passed 955ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T1: a dimension with a recurrence clause and three single observation clauses: the recurrence clause is selected, the others stay in the record, and the rule version is recorded on the issued report
+    [default] passed 629ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T1: a dimension with a recurrence clause and three single observation clauses: the recurrence clause is selected, the others stay in the record, and the rule version is recorded on the issued report
+    [sandbox] passed 788ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T1: a dimension with a recurrence clause and three single observation clauses: the recurrence clause is selected, the others stay in the record, and the rule version is recorded on the issued report
 D5: pass
-    [default] passed 774ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T1: a dimension with a recurrence clause and three single observation clauses: the recurrence clause is selected, the others stay in the record, and the rule version is recorded on the issued report
-    [sandbox] passed 828ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T1: a dimension with a recurrence clause and three single observation clauses: the recurrence clause is selected, the others stay in the record, and the rule version is recorded on the issued report
+    [default] passed 736ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T1: a dimension with a recurrence clause and three single observation clauses: the recurrence clause is selected, the others stay in the record, and the rule version is recorded on the issued report
+    [sandbox] passed 825ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T1: a dimension with a recurrence clause and three single observation clauses: the recurrence clause is selected, the others stay in the record, and the rule version is recorded on the issued report
 D8: pass
-    [default] passed 689ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T1: a dimension with a recurrence clause and three single observation clauses: the recurrence clause is selected, the others stay in the record, and the rule version is recorded on the issued report
-    [sandbox] passed 873ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T1: a dimension with a recurrence clause and three single observation clauses: the recurrence clause is selected, the others stay in the record, and the rule version is recorded on the issued report
+    [default] passed 600ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T1: a dimension with a recurrence clause and three single observation clauses: the recurrence clause is selected, the others stay in the record, and the rule version is recorded on the issued report
+    [sandbox] passed 919ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T1: a dimension with a recurrence clause and three single observation clauses: the recurrence clause is selected, the others stay in the record, and the rule version is recorded on the issued report
 D9: pass
-    [default] passed 696ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T1: a dimension with a recurrence clause and three single observation clauses: the recurrence clause is selected, the others stay in the record, and the rule version is recorded on the issued report
-    [sandbox] passed 909ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T1: a dimension with a recurrence clause and three single observation clauses: the recurrence clause is selected, the others stay in the record, and the rule version is recorded on the issued report
+    [default] passed 588ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T1: a dimension with a recurrence clause and three single observation clauses: the recurrence clause is selected, the others stay in the record, and the rule version is recorded on the issued report
+    [sandbox] passed 813ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T1: a dimension with a recurrence clause and three single observation clauses: the recurrence clause is selected, the others stay in the record, and the rule version is recorded on the issued report

@@ -1,6 +1,6 @@
 case CR-04-T1
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 rule CR-04
 what is run: Stage 2 and Stage 4 entry with an authenticated account and no visual confirmation
 expected: Admitted
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 78ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T1: Stage 2 and Stage 4 entry with an authenticated account and no visual confirmation is admitted
-    [sandbox] passed 336ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T1: Stage 2 and Stage 4 entry with an authenticated account and no visual confirmation is admitted
+    [default] passed 71ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T1: Stage 2 and Stage 4 entry with an authenticated account and no visual confirmation is admitted
+    [sandbox] passed 312ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T1: Stage 2 and Stage 4 entry with an authenticated account and no visual confirmation is admitted
 D2: pass
-    [default] passed 93ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T1: Stage 2 and Stage 4 entry with an authenticated account and no visual confirmation is admitted
-    [sandbox] passed 322ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T1: Stage 2 and Stage 4 entry with an authenticated account and no visual confirmation is admitted
+    [default] passed 75ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T1: Stage 2 and Stage 4 entry with an authenticated account and no visual confirmation is admitted
+    [sandbox] passed 382ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T1: Stage 2 and Stage 4 entry with an authenticated account and no visual confirmation is admitted
 D3: pass
-    [default] passed 109ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T1: Stage 2 and Stage 4 entry with an authenticated account and no visual confirmation is admitted
-    [sandbox] passed 346ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T1: Stage 2 and Stage 4 entry with an authenticated account and no visual confirmation is admitted
-D4: pass
     [default] passed 81ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T1: Stage 2 and Stage 4 entry with an authenticated account and no visual confirmation is admitted
-    [sandbox] passed 338ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T1: Stage 2 and Stage 4 entry with an authenticated account and no visual confirmation is admitted
+    [sandbox] passed 333ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T1: Stage 2 and Stage 4 entry with an authenticated account and no visual confirmation is admitted
+D4: pass
+    [default] passed 86ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T1: Stage 2 and Stage 4 entry with an authenticated account and no visual confirmation is admitted
+    [sandbox] passed 366ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T1: Stage 2 and Stage 4 entry with an authenticated account and no visual confirmation is admitted
 D5: pass
-    [default] passed 84ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T1: Stage 2 and Stage 4 entry with an authenticated account and no visual confirmation is admitted
-    [sandbox] passed 334ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T1: Stage 2 and Stage 4 entry with an authenticated account and no visual confirmation is admitted
+    [default] passed 85ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T1: Stage 2 and Stage 4 entry with an authenticated account and no visual confirmation is admitted
+    [sandbox] passed 321ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T1: Stage 2 and Stage 4 entry with an authenticated account and no visual confirmation is admitted
 D8: pass
-    [default] passed 91ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T1: Stage 2 and Stage 4 entry with an authenticated account and no visual confirmation is admitted
-    [sandbox] passed 368ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T1: Stage 2 and Stage 4 entry with an authenticated account and no visual confirmation is admitted
+    [default] passed 86ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T1: Stage 2 and Stage 4 entry with an authenticated account and no visual confirmation is admitted
+    [sandbox] passed 254ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T1: Stage 2 and Stage 4 entry with an authenticated account and no visual confirmation is admitted
 D9: pass
-    [default] passed 89ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T1: Stage 2 and Stage 4 entry with an authenticated account and no visual confirmation is admitted
-    [sandbox] passed 322ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T1: Stage 2 and Stage 4 entry with an authenticated account and no visual confirmation is admitted
+    [default] passed 79ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T1: Stage 2 and Stage 4 entry with an authenticated account and no visual confirmation is admitted
+    [sandbox] passed 355ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-04 identity at entry rests on the account > T1: Stage 2 and Stage 4 entry with an authenticated account and no visual confirmation is admitted

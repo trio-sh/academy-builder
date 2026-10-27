@@ -1,6 +1,6 @@
 case CR-01-T3
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 rule CR-01
 what is run: Edit a Stage 2 determination after the commit outside the correction route
 expected: Refused; the correction route creates a new linked record and keeps the original
@@ -11,37 +11,37 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 364ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
+    [default] passed 14ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
     [default] passed 3ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3: Stage 2 determinations are append-only
-    [sandbox] passed 377ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
-    [sandbox] passed 5ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3: Stage 2 determinations are append-only
+    [sandbox] passed 305ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
+    [sandbox] passed 8ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3: Stage 2 determinations are append-only
 D2: pass
-    [default] passed 27ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
-    [default] passed 5ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3: Stage 2 determinations are append-only
-    [sandbox] passed 364ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
+    [default] passed 13ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
+    [default] passed 2ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3: Stage 2 determinations are append-only
+    [sandbox] passed 292ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
     [sandbox] passed 3ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3: Stage 2 determinations are append-only
 D3: pass
-    [default] passed 23ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
-    [default] passed 4ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3: Stage 2 determinations are append-only
-    [sandbox] passed 293ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
-    [sandbox] passed 4ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3: Stage 2 determinations are append-only
+    [default] passed 15ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
+    [default] passed 3ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3: Stage 2 determinations are append-only
+    [sandbox] passed 258ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
+    [sandbox] passed 3ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3: Stage 2 determinations are append-only
 D4: pass
     [default] passed 18ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
     [default] passed 3ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3: Stage 2 determinations are append-only
-    [sandbox] passed 347ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
+    [sandbox] passed 352ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
     [sandbox] passed 4ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3: Stage 2 determinations are append-only
 D5: pass
-    [default] passed 14ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
+    [default] passed 15ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
     [default] passed 3ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3: Stage 2 determinations are append-only
-    [sandbox] passed 388ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
-    [sandbox] passed 5ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3: Stage 2 determinations are append-only
+    [sandbox] passed 337ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
+    [sandbox] passed 3ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3: Stage 2 determinations are append-only
 D8: pass
-    [default] passed 24ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
-    [default] passed 5ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3: Stage 2 determinations are append-only
-    [sandbox] passed 331ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
+    [default] passed 19ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
+    [default] passed 3ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3: Stage 2 determinations are append-only
+    [sandbox] passed 301ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
     [sandbox] passed 4ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3: Stage 2 determinations are append-only
 D9: pass
-    [default] passed 20ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
-    [default] passed 3ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3: Stage 2 determinations are append-only
-    [sandbox] passed 282ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
-    [sandbox] passed 3ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3: Stage 2 determinations are append-only
+    [default] passed 14ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
+    [default] passed 4ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3: Stage 2 determinations are append-only
+    [sandbox] passed 425ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3, T5: a committed Stage 2 record cannot be edited or committed again; the original stands
+    [sandbox] passed 5ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 the Stage 2 commit and after > T3: Stage 2 determinations are append-only

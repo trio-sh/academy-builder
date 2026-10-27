@@ -1,10 +1,10 @@
 case CR-12-T11
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 dimensions D1,D2,D3,D4,D5,D8,D9
 command bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr12-window.db.test.ts
-fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit 3cecc7e44fa1; other dimensions by the textual swap in vitest.db.dim.config.ts
-started 2026-10-26T20:50:58.812Z
-ended 2026-10-26T20:50:58.896Z
+fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit b4c285d2993c; other dimensions by the textual swap in vitest.db.dim.config.ts
+started 2026-10-27T05:40:02.831Z
+ended 2026-10-27T05:40:02.915Z
 observed 1 mapped test(s) in cr12-window.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-12 T11: offsets are converted, never truncated > the same instant, and the expiry follows
-artifact artifacts/CR-12-T11/CR-12-T11.evidence.txt ea778df5f804ce3e54eaf9515e7edc6aa8fcb2fd1e270c3693b927437f1e247a
+artifact artifacts/CR-12-T11/CR-12-T11.evidence.txt a5d41fcb6ba412da40ef0539bf87c43670ae21d95d17f61b96435613411a3d17

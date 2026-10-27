@@ -1,6 +1,6 @@
 case CR-12-T4
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 rule CR-12
 what is run: Two start requests at once; then the same request repeated with its idempotency key
 expected: One active attempt; the second refused ATTEMPT_ACTIVE; the repeat returns the existing attempt
@@ -12,51 +12,51 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 34ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > two starts at once: exactly one starts, the other is refused ATTEMPT_ACTIVE
-    [default] passed 5ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > a start with no idempotency key is refused
-    [default] passed 8ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > the database itself refuses a second active attempt from any route
-    [sandbox] passed 147ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > two starts at once: exactly one starts, the other is refused ATTEMPT_ACTIVE
-    [sandbox] passed 95ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > a start with no idempotency key is refused
-    [sandbox] passed 97ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > the database itself refuses a second active attempt from any route
+    [default] passed 30ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > two starts at once: exactly one starts, the other is refused ATTEMPT_ACTIVE
+    [default] passed 4ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > a start with no idempotency key is refused
+    [default] passed 7ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > the database itself refuses a second active attempt from any route
+    [sandbox] passed 124ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > two starts at once: exactly one starts, the other is refused ATTEMPT_ACTIVE
+    [sandbox] passed 65ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > a start with no idempotency key is refused
+    [sandbox] passed 70ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > the database itself refuses a second active attempt from any route
 D2: pass
-    [default] passed 37ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > two starts at once: exactly one starts, the other is refused ATTEMPT_ACTIVE
-    [default] passed 5ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > a start with no idempotency key is refused
-    [default] passed 8ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > the database itself refuses a second active attempt from any route
-    [sandbox] passed 102ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > two starts at once: exactly one starts, the other is refused ATTEMPT_ACTIVE
-    [sandbox] passed 81ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > a start with no idempotency key is refused
-    [sandbox] passed 87ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > the database itself refuses a second active attempt from any route
-D3: pass
     [default] passed 34ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > two starts at once: exactly one starts, the other is refused ATTEMPT_ACTIVE
     [default] passed 5ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > a start with no idempotency key is refused
     [default] passed 8ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > the database itself refuses a second active attempt from any route
-    [sandbox] passed 144ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > two starts at once: exactly one starts, the other is refused ATTEMPT_ACTIVE
-    [sandbox] passed 105ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > a start with no idempotency key is refused
-    [sandbox] passed 107ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > the database itself refuses a second active attempt from any route
+    [sandbox] passed 108ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > two starts at once: exactly one starts, the other is refused ATTEMPT_ACTIVE
+    [sandbox] passed 79ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > a start with no idempotency key is refused
+    [sandbox] passed 69ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > the database itself refuses a second active attempt from any route
+D3: pass
+    [default] passed 32ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > two starts at once: exactly one starts, the other is refused ATTEMPT_ACTIVE
+    [default] passed 5ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > a start with no idempotency key is refused
+    [default] passed 7ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > the database itself refuses a second active attempt from any route
+    [sandbox] passed 115ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > two starts at once: exactly one starts, the other is refused ATTEMPT_ACTIVE
+    [sandbox] passed 80ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > a start with no idempotency key is refused
+    [sandbox] passed 111ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > the database itself refuses a second active attempt from any route
 D4: pass
+    [default] passed 32ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > two starts at once: exactly one starts, the other is refused ATTEMPT_ACTIVE
+    [default] passed 4ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > a start with no idempotency key is refused
+    [default] passed 6ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > the database itself refuses a second active attempt from any route
+    [sandbox] passed 104ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > two starts at once: exactly one starts, the other is refused ATTEMPT_ACTIVE
+    [sandbox] passed 63ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > a start with no idempotency key is refused
+    [sandbox] passed 62ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > the database itself refuses a second active attempt from any route
+D5: pass
+    [default] passed 33ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > two starts at once: exactly one starts, the other is refused ATTEMPT_ACTIVE
+    [default] passed 4ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > a start with no idempotency key is refused
+    [default] passed 8ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > the database itself refuses a second active attempt from any route
+    [sandbox] passed 110ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > two starts at once: exactly one starts, the other is refused ATTEMPT_ACTIVE
+    [sandbox] passed 64ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > a start with no idempotency key is refused
+    [sandbox] passed 72ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > the database itself refuses a second active attempt from any route
+D8: pass
     [default] passed 31ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > two starts at once: exactly one starts, the other is refused ATTEMPT_ACTIVE
     [default] passed 4ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > a start with no idempotency key is refused
-    [default] passed 7ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > the database itself refuses a second active attempt from any route
-    [sandbox] passed 155ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > two starts at once: exactly one starts, the other is refused ATTEMPT_ACTIVE
-    [sandbox] passed 110ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > a start with no idempotency key is refused
-    [sandbox] passed 103ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > the database itself refuses a second active attempt from any route
-D5: pass
-    [default] passed 36ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > two starts at once: exactly one starts, the other is refused ATTEMPT_ACTIVE
-    [default] passed 4ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > a start with no idempotency key is refused
-    [default] passed 7ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > the database itself refuses a second active attempt from any route
-    [sandbox] passed 119ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > two starts at once: exactly one starts, the other is refused ATTEMPT_ACTIVE
-    [sandbox] passed 75ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > a start with no idempotency key is refused
-    [sandbox] passed 69ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > the database itself refuses a second active attempt from any route
-D8: pass
-    [default] passed 37ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > two starts at once: exactly one starts, the other is refused ATTEMPT_ACTIVE
-    [default] passed 5ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > a start with no idempotency key is refused
-    [default] passed 9ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > the database itself refuses a second active attempt from any route
+    [default] passed 8ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > the database itself refuses a second active attempt from any route
     [sandbox] passed 111ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > two starts at once: exactly one starts, the other is refused ATTEMPT_ACTIVE
-    [sandbox] passed 94ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > a start with no idempotency key is refused
-    [sandbox] passed 104ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > the database itself refuses a second active attempt from any route
+    [sandbox] passed 61ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > a start with no idempotency key is refused
+    [sandbox] passed 71ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > the database itself refuses a second active attempt from any route
 D9: pass
-    [default] passed 34ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > two starts at once: exactly one starts, the other is refused ATTEMPT_ACTIVE
+    [default] passed 36ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > two starts at once: exactly one starts, the other is refused ATTEMPT_ACTIVE
     [default] passed 5ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > a start with no idempotency key is refused
     [default] passed 8ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > the database itself refuses a second active attempt from any route
-    [sandbox] passed 122ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > two starts at once: exactly one starts, the other is refused ATTEMPT_ACTIVE
-    [sandbox] passed 64ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > a start with no idempotency key is refused
-    [sandbox] passed 63ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > the database itself refuses a second active attempt from any route
+    [sandbox] passed 109ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > two starts at once: exactly one starts, the other is refused ATTEMPT_ACTIVE
+    [sandbox] passed 63ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > a start with no idempotency key is refused
+    [sandbox] passed 67ms :: cr12-routes.db.test.ts :: CR-12 T4: one active attempt, idempotent start > the database itself refuses a second active attempt from any route

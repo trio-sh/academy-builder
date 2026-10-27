@@ -69,3 +69,7 @@ The earlier finding was that turning `enforce_required` on stopped 222 of 364 da
 ## 26 October 2026: final evidence run
 
 The case matrices were re-run on main 3cecc7e (migrations to 20270250) in both states, default (all off) and sandbox (all five on), on every dimension, and the 104 cases re-recorded and re-signed (`docs/day1/evidence/case-review/`). Unit suite 517/517. All five switches are still OFF on the live project; `lsa_activation` stays on by CR-217; stage entry hold time is set (1800).
+
+## 27 October 2026: evidence re-recorded on real timing questions
+
+Migration 20270251 registered each dimension's own timing dependent question (applied live 27 October, CR-335). Both matrices (all switches off / all five on) were re-run on main b4c285d on every dimension and agree; the 104 cases were re-recorded and re-signed; unit 517/517. All five switches are still OFF on the live project.

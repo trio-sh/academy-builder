@@ -1,10 +1,10 @@
 case CR-27-T1
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 dimensions D1,D2,D3,D4,D5,D8,D9
 command bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr06-cr10-cr27.db.test.ts
-fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit 3cecc7e44fa1; other dimensions by the textual swap in vitest.db.dim.config.ts
-started 2026-10-26T20:50:58.812Z
-ended 2026-10-26T20:50:59.002Z
+fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit b4c285d2993c; other dimensions by the textual swap in vitest.db.dim.config.ts
+started 2026-10-27T05:40:02.831Z
+ended 2026-10-27T05:40:02.983Z
 observed 1 mapped test(s) in cr06-cr10-cr27.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-27 the Stage 1 evidence note, version 2 > T1: the evidence note on a Stage 1 observation is version 2 word for word, and the phrase 'an AI system' appears no
-artifact artifacts/CR-27-T1/CR-27-T1.evidence.txt ce12f416428d5a6add2fdda1b2716d23504df0a3ae62b1279d814a35876eb76f
+artifact artifacts/CR-27-T1/CR-27-T1.evidence.txt bdb62f943719cddfde1538e17a77e0901a36ef1d53d0baf2b6bcac1cb8ef63fc

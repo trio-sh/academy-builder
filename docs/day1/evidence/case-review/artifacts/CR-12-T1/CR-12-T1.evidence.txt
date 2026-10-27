@@ -1,6 +1,6 @@
 case CR-12-T1
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 rule CR-12
 what is run: Counted attempts committed 11 January, 1 May, 1 June and 11 July; a start requested on 18 July
 expected: Refused ATTEMPT_CAP_REACHED with the earliest eligible instant of 1 November
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 26ms :: cr12-window.db.test.ts :: CR-12 T1: the cap and the earliest eligible instant > four commits then a start on 18 July is refused ATTEMPT_CAP_REACHED, earliest eligible 1 November
-    [sandbox] passed 152ms :: cr12-window.db.test.ts :: CR-12 T1: the cap and the earliest eligible instant > four commits then a start on 18 July is refused ATTEMPT_CAP_REACHED, earliest eligible 1 November
+    [default] passed 20ms :: cr12-window.db.test.ts :: CR-12 T1: the cap and the earliest eligible instant > four commits then a start on 18 July is refused ATTEMPT_CAP_REACHED, earliest eligible 1 November
+    [sandbox] passed 99ms :: cr12-window.db.test.ts :: CR-12 T1: the cap and the earliest eligible instant > four commits then a start on 18 July is refused ATTEMPT_CAP_REACHED, earliest eligible 1 November
 D2: pass
-    [default] passed 30ms :: cr12-window.db.test.ts :: CR-12 T1: the cap and the earliest eligible instant > four commits then a start on 18 July is refused ATTEMPT_CAP_REACHED, earliest eligible 1 November
-    [sandbox] passed 106ms :: cr12-window.db.test.ts :: CR-12 T1: the cap and the earliest eligible instant > four commits then a start on 18 July is refused ATTEMPT_CAP_REACHED, earliest eligible 1 November
-D3: pass
-    [default] passed 25ms :: cr12-window.db.test.ts :: CR-12 T1: the cap and the earliest eligible instant > four commits then a start on 18 July is refused ATTEMPT_CAP_REACHED, earliest eligible 1 November
-    [sandbox] passed 105ms :: cr12-window.db.test.ts :: CR-12 T1: the cap and the earliest eligible instant > four commits then a start on 18 July is refused ATTEMPT_CAP_REACHED, earliest eligible 1 November
-D4: pass
     [default] passed 23ms :: cr12-window.db.test.ts :: CR-12 T1: the cap and the earliest eligible instant > four commits then a start on 18 July is refused ATTEMPT_CAP_REACHED, earliest eligible 1 November
-    [sandbox] passed 133ms :: cr12-window.db.test.ts :: CR-12 T1: the cap and the earliest eligible instant > four commits then a start on 18 July is refused ATTEMPT_CAP_REACHED, earliest eligible 1 November
+    [sandbox] passed 95ms :: cr12-window.db.test.ts :: CR-12 T1: the cap and the earliest eligible instant > four commits then a start on 18 July is refused ATTEMPT_CAP_REACHED, earliest eligible 1 November
+D3: pass
+    [default] passed 23ms :: cr12-window.db.test.ts :: CR-12 T1: the cap and the earliest eligible instant > four commits then a start on 18 July is refused ATTEMPT_CAP_REACHED, earliest eligible 1 November
+    [sandbox] passed 95ms :: cr12-window.db.test.ts :: CR-12 T1: the cap and the earliest eligible instant > four commits then a start on 18 July is refused ATTEMPT_CAP_REACHED, earliest eligible 1 November
+D4: pass
+    [default] passed 21ms :: cr12-window.db.test.ts :: CR-12 T1: the cap and the earliest eligible instant > four commits then a start on 18 July is refused ATTEMPT_CAP_REACHED, earliest eligible 1 November
+    [sandbox] passed 100ms :: cr12-window.db.test.ts :: CR-12 T1: the cap and the earliest eligible instant > four commits then a start on 18 July is refused ATTEMPT_CAP_REACHED, earliest eligible 1 November
 D5: pass
-    [default] passed 26ms :: cr12-window.db.test.ts :: CR-12 T1: the cap and the earliest eligible instant > four commits then a start on 18 July is refused ATTEMPT_CAP_REACHED, earliest eligible 1 November
-    [sandbox] passed 123ms :: cr12-window.db.test.ts :: CR-12 T1: the cap and the earliest eligible instant > four commits then a start on 18 July is refused ATTEMPT_CAP_REACHED, earliest eligible 1 November
+    [default] passed 21ms :: cr12-window.db.test.ts :: CR-12 T1: the cap and the earliest eligible instant > four commits then a start on 18 July is refused ATTEMPT_CAP_REACHED, earliest eligible 1 November
+    [sandbox] passed 99ms :: cr12-window.db.test.ts :: CR-12 T1: the cap and the earliest eligible instant > four commits then a start on 18 July is refused ATTEMPT_CAP_REACHED, earliest eligible 1 November
 D8: pass
-    [default] passed 37ms :: cr12-window.db.test.ts :: CR-12 T1: the cap and the earliest eligible instant > four commits then a start on 18 July is refused ATTEMPT_CAP_REACHED, earliest eligible 1 November
+    [default] passed 23ms :: cr12-window.db.test.ts :: CR-12 T1: the cap and the earliest eligible instant > four commits then a start on 18 July is refused ATTEMPT_CAP_REACHED, earliest eligible 1 November
     [sandbox] passed 105ms :: cr12-window.db.test.ts :: CR-12 T1: the cap and the earliest eligible instant > four commits then a start on 18 July is refused ATTEMPT_CAP_REACHED, earliest eligible 1 November
 D9: pass
     [default] passed 26ms :: cr12-window.db.test.ts :: CR-12 T1: the cap and the earliest eligible instant > four commits then a start on 18 July is refused ATTEMPT_CAP_REACHED, earliest eligible 1 November
-    [sandbox] passed 104ms :: cr12-window.db.test.ts :: CR-12 T1: the cap and the earliest eligible instant > four commits then a start on 18 July is refused ATTEMPT_CAP_REACHED, earliest eligible 1 November
+    [sandbox] passed 102ms :: cr12-window.db.test.ts :: CR-12 T1: the cap and the earliest eligible instant > four commits then a start on 18 July is refused ATTEMPT_CAP_REACHED, earliest eligible 1 November

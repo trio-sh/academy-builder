@@ -1,6 +1,6 @@
 case CR-24-T1
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 rule CR-24
 what is run: Two valid Stage 2 observations by different observers with no approved cross context relationship
 expected: Second state; both render separately under single event language
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 36ms :: cr23-cr24-evidence-state.db.test.ts :: CR-24 the second evidence state where breadth cannot be established > T1: two valid Stage 2 observations by different observers with no approved cross context relationship stay in the second state and both are current, each its own statement
-    [sandbox] passed 313ms :: cr23-cr24-evidence-state.db.test.ts :: CR-24 the second evidence state where breadth cannot be established > T1: two valid Stage 2 observations by different observers with no approved cross context relationship stay in the second state and both are current, each its own statement
+    [default] passed 28ms :: cr23-cr24-evidence-state.db.test.ts :: CR-24 the second evidence state where breadth cannot be established > T1: two valid Stage 2 observations by different observers with no approved cross context relationship stay in the second state and both are current, each its own statement
+    [sandbox] passed 266ms :: cr23-cr24-evidence-state.db.test.ts :: CR-24 the second evidence state where breadth cannot be established > T1: two valid Stage 2 observations by different observers with no approved cross context relationship stay in the second state and both are current, each its own statement
 D2: pass
-    [default] passed 39ms :: cr23-cr24-evidence-state.db.test.ts :: CR-24 the second evidence state where breadth cannot be established > T1: two valid Stage 2 observations by different observers with no approved cross context relationship stay in the second state and both are current, each its own statement
-    [sandbox] passed 234ms :: cr23-cr24-evidence-state.db.test.ts :: CR-24 the second evidence state where breadth cannot be established > T1: two valid Stage 2 observations by different observers with no approved cross context relationship stay in the second state and both are current, each its own statement
+    [default] passed 25ms :: cr23-cr24-evidence-state.db.test.ts :: CR-24 the second evidence state where breadth cannot be established > T1: two valid Stage 2 observations by different observers with no approved cross context relationship stay in the second state and both are current, each its own statement
+    [sandbox] passed 244ms :: cr23-cr24-evidence-state.db.test.ts :: CR-24 the second evidence state where breadth cannot be established > T1: two valid Stage 2 observations by different observers with no approved cross context relationship stay in the second state and both are current, each its own statement
 D3: pass
-    [default] passed 39ms :: cr23-cr24-evidence-state.db.test.ts :: CR-24 the second evidence state where breadth cannot be established > T1: two valid Stage 2 observations by different observers with no approved cross context relationship stay in the second state and both are current, each its own statement
-    [sandbox] passed 388ms :: cr23-cr24-evidence-state.db.test.ts :: CR-24 the second evidence state where breadth cannot be established > T1: two valid Stage 2 observations by different observers with no approved cross context relationship stay in the second state and both are current, each its own statement
+    [default] passed 28ms :: cr23-cr24-evidence-state.db.test.ts :: CR-24 the second evidence state where breadth cannot be established > T1: two valid Stage 2 observations by different observers with no approved cross context relationship stay in the second state and both are current, each its own statement
+    [sandbox] passed 251ms :: cr23-cr24-evidence-state.db.test.ts :: CR-24 the second evidence state where breadth cannot be established > T1: two valid Stage 2 observations by different observers with no approved cross context relationship stay in the second state and both are current, each its own statement
 D4: pass
-    [default] passed 26ms :: cr23-cr24-evidence-state.db.test.ts :: CR-24 the second evidence state where breadth cannot be established > T1: two valid Stage 2 observations by different observers with no approved cross context relationship stay in the second state and both are current, each its own statement
-    [sandbox] passed 255ms :: cr23-cr24-evidence-state.db.test.ts :: CR-24 the second evidence state where breadth cannot be established > T1: two valid Stage 2 observations by different observers with no approved cross context relationship stay in the second state and both are current, each its own statement
-D5: pass
     [default] passed 32ms :: cr23-cr24-evidence-state.db.test.ts :: CR-24 the second evidence state where breadth cannot be established > T1: two valid Stage 2 observations by different observers with no approved cross context relationship stay in the second state and both are current, each its own statement
-    [sandbox] passed 240ms :: cr23-cr24-evidence-state.db.test.ts :: CR-24 the second evidence state where breadth cannot be established > T1: two valid Stage 2 observations by different observers with no approved cross context relationship stay in the second state and both are current, each its own statement
+    [sandbox] passed 227ms :: cr23-cr24-evidence-state.db.test.ts :: CR-24 the second evidence state where breadth cannot be established > T1: two valid Stage 2 observations by different observers with no approved cross context relationship stay in the second state and both are current, each its own statement
+D5: pass
+    [default] passed 27ms :: cr23-cr24-evidence-state.db.test.ts :: CR-24 the second evidence state where breadth cannot be established > T1: two valid Stage 2 observations by different observers with no approved cross context relationship stay in the second state and both are current, each its own statement
+    [sandbox] passed 176ms :: cr23-cr24-evidence-state.db.test.ts :: CR-24 the second evidence state where breadth cannot be established > T1: two valid Stage 2 observations by different observers with no approved cross context relationship stay in the second state and both are current, each its own statement
 D8: pass
-    [default] passed 45ms :: cr23-cr24-evidence-state.db.test.ts :: CR-24 the second evidence state where breadth cannot be established > T1: two valid Stage 2 observations by different observers with no approved cross context relationship stay in the second state and both are current, each its own statement
-    [sandbox] passed 318ms :: cr23-cr24-evidence-state.db.test.ts :: CR-24 the second evidence state where breadth cannot be established > T1: two valid Stage 2 observations by different observers with no approved cross context relationship stay in the second state and both are current, each its own statement
+    [default] passed 25ms :: cr23-cr24-evidence-state.db.test.ts :: CR-24 the second evidence state where breadth cannot be established > T1: two valid Stage 2 observations by different observers with no approved cross context relationship stay in the second state and both are current, each its own statement
+    [sandbox] passed 354ms :: cr23-cr24-evidence-state.db.test.ts :: CR-24 the second evidence state where breadth cannot be established > T1: two valid Stage 2 observations by different observers with no approved cross context relationship stay in the second state and both are current, each its own statement
 D9: pass
-    [default] passed 50ms :: cr23-cr24-evidence-state.db.test.ts :: CR-24 the second evidence state where breadth cannot be established > T1: two valid Stage 2 observations by different observers with no approved cross context relationship stay in the second state and both are current, each its own statement
-    [sandbox] passed 250ms :: cr23-cr24-evidence-state.db.test.ts :: CR-24 the second evidence state where breadth cannot be established > T1: two valid Stage 2 observations by different observers with no approved cross context relationship stay in the second state and both are current, each its own statement
+    [default] passed 26ms :: cr23-cr24-evidence-state.db.test.ts :: CR-24 the second evidence state where breadth cannot be established > T1: two valid Stage 2 observations by different observers with no approved cross context relationship stay in the second state and both are current, each its own statement
+    [sandbox] passed 256ms :: cr23-cr24-evidence-state.db.test.ts :: CR-24 the second evidence state where breadth cannot be established > T1: two valid Stage 2 observations by different observers with no approved cross context relationship stay in the second state and both are current, each its own statement

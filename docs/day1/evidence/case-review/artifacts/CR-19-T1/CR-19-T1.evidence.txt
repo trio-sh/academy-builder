@@ -1,6 +1,6 @@
 case CR-19-T1
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 rule CR-19
 what is run: Open the mentor view of a session
 expected: Minimum observation context only; no intake profile field
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 34ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-19 the mentor sees the minimum observation context > T1: the mentor view carries the minimum observation context and no intake profile field
-    [sandbox] passed 166ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-19 the mentor sees the minimum observation context > T1: the mentor view carries the minimum observation context and no intake profile field
+    [default] passed 35ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-19 the mentor sees the minimum observation context > T1: the mentor view carries the minimum observation context and no intake profile field
+    [sandbox] passed 188ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-19 the mentor sees the minimum observation context > T1: the mentor view carries the minimum observation context and no intake profile field
 D2: pass
-    [default] passed 39ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-19 the mentor sees the minimum observation context > T1: the mentor view carries the minimum observation context and no intake profile field
-    [sandbox] passed 164ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-19 the mentor sees the minimum observation context > T1: the mentor view carries the minimum observation context and no intake profile field
+    [default] passed 41ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-19 the mentor sees the minimum observation context > T1: the mentor view carries the minimum observation context and no intake profile field
+    [sandbox] passed 121ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-19 the mentor sees the minimum observation context > T1: the mentor view carries the minimum observation context and no intake profile field
 D3: pass
-    [default] passed 37ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-19 the mentor sees the minimum observation context > T1: the mentor view carries the minimum observation context and no intake profile field
-    [sandbox] passed 162ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-19 the mentor sees the minimum observation context > T1: the mentor view carries the minimum observation context and no intake profile field
+    [default] passed 30ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-19 the mentor sees the minimum observation context > T1: the mentor view carries the minimum observation context and no intake profile field
+    [sandbox] passed 146ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-19 the mentor sees the minimum observation context > T1: the mentor view carries the minimum observation context and no intake profile field
 D4: pass
-    [default] passed 37ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-19 the mentor sees the minimum observation context > T1: the mentor view carries the minimum observation context and no intake profile field
-    [sandbox] passed 176ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-19 the mentor sees the minimum observation context > T1: the mentor view carries the minimum observation context and no intake profile field
-D5: pass
-    [default] passed 38ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-19 the mentor sees the minimum observation context > T1: the mentor view carries the minimum observation context and no intake profile field
-    [sandbox] passed 193ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-19 the mentor sees the minimum observation context > T1: the mentor view carries the minimum observation context and no intake profile field
-D8: pass
     [default] passed 36ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-19 the mentor sees the minimum observation context > T1: the mentor view carries the minimum observation context and no intake profile field
-    [sandbox] passed 169ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-19 the mentor sees the minimum observation context > T1: the mentor view carries the minimum observation context and no intake profile field
-D9: pass
+    [sandbox] passed 145ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-19 the mentor sees the minimum observation context > T1: the mentor view carries the minimum observation context and no intake profile field
+D5: pass
     [default] passed 39ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-19 the mentor sees the minimum observation context > T1: the mentor view carries the minimum observation context and no intake profile field
-    [sandbox] passed 218ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-19 the mentor sees the minimum observation context > T1: the mentor view carries the minimum observation context and no intake profile field
+    [sandbox] passed 207ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-19 the mentor sees the minimum observation context > T1: the mentor view carries the minimum observation context and no intake profile field
+D8: pass
+    [default] passed 26ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-19 the mentor sees the minimum observation context > T1: the mentor view carries the minimum observation context and no intake profile field
+    [sandbox] passed 175ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-19 the mentor sees the minimum observation context > T1: the mentor view carries the minimum observation context and no intake profile field
+D9: pass
+    [default] passed 33ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-19 the mentor sees the minimum observation context > T1: the mentor view carries the minimum observation context and no intake profile field
+    [sandbox] passed 156ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-19 the mentor sees the minimum observation context > T1: the mentor view carries the minimum observation context and no intake profile field

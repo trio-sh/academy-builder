@@ -1,6 +1,6 @@
 case CR-28-T3
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 rule CR-28
 what is run: Open the participant review before issue
 expected: The selected entry for each dimension is shown, and every other entry is visible in the record
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 938ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T3: the participant's review before issue shows the entry selected for each dimension and every other entry; no one else sees it
-    [sandbox] passed 1401ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T3: the participant's review before issue shows the entry selected for each dimension and every other entry; no one else sees it
+    [default] passed 874ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T3: the participant's review before issue shows the entry selected for each dimension and every other entry; no one else sees it
+    [sandbox] passed 1303ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T3: the participant's review before issue shows the entry selected for each dimension and every other entry; no one else sees it
 D2: pass
-    [default] passed 997ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T3: the participant's review before issue shows the entry selected for each dimension and every other entry; no one else sees it
-    [sandbox] passed 1507ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T3: the participant's review before issue shows the entry selected for each dimension and every other entry; no one else sees it
+    [default] passed 900ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T3: the participant's review before issue shows the entry selected for each dimension and every other entry; no one else sees it
+    [sandbox] passed 1274ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T3: the participant's review before issue shows the entry selected for each dimension and every other entry; no one else sees it
 D3: pass
-    [default] passed 1082ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T3: the participant's review before issue shows the entry selected for each dimension and every other entry; no one else sees it
-    [sandbox] passed 1401ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T3: the participant's review before issue shows the entry selected for each dimension and every other entry; no one else sees it
+    [default] passed 891ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T3: the participant's review before issue shows the entry selected for each dimension and every other entry; no one else sees it
+    [sandbox] passed 1334ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T3: the participant's review before issue shows the entry selected for each dimension and every other entry; no one else sees it
 D4: pass
-    [default] passed 1028ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T3: the participant's review before issue shows the entry selected for each dimension and every other entry; no one else sees it
-    [sandbox] passed 1474ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T3: the participant's review before issue shows the entry selected for each dimension and every other entry; no one else sees it
+    [default] passed 920ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T3: the participant's review before issue shows the entry selected for each dimension and every other entry; no one else sees it
+    [sandbox] passed 1244ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T3: the participant's review before issue shows the entry selected for each dimension and every other entry; no one else sees it
 D5: pass
-    [default] passed 965ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T3: the participant's review before issue shows the entry selected for each dimension and every other entry; no one else sees it
-    [sandbox] passed 1339ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T3: the participant's review before issue shows the entry selected for each dimension and every other entry; no one else sees it
+    [default] passed 876ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T3: the participant's review before issue shows the entry selected for each dimension and every other entry; no one else sees it
+    [sandbox] passed 1344ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T3: the participant's review before issue shows the entry selected for each dimension and every other entry; no one else sees it
 D8: pass
-    [default] passed 1021ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T3: the participant's review before issue shows the entry selected for each dimension and every other entry; no one else sees it
-    [sandbox] passed 1448ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T3: the participant's review before issue shows the entry selected for each dimension and every other entry; no one else sees it
+    [default] passed 944ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T3: the participant's review before issue shows the entry selected for each dimension and every other entry; no one else sees it
+    [sandbox] passed 1381ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T3: the participant's review before issue shows the entry selected for each dimension and every other entry; no one else sees it
 D9: pass
-    [default] passed 951ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T3: the participant's review before issue shows the entry selected for each dimension and every other entry; no one else sees it
-    [sandbox] passed 1373ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T3: the participant's review before issue shows the entry selected for each dimension and every other entry; no one else sees it
+    [default] passed 957ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T3: the participant's review before issue shows the entry selected for each dimension and every other entry; no one else sees it
+    [sandbox] passed 1355ms :: cr28-claim-package-selection.db.test.ts :: CR-28 the selection rule > T3: the participant's review before issue shows the entry selected for each dimension and every other entry; no one else sees it

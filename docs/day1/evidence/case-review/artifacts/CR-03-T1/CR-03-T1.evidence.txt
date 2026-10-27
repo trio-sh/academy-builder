@@ -1,6 +1,6 @@
 case CR-03-T1
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 rule CR-03
 what is run: A welfare stop before and after observation begins, by the participant and by the mentor, at each Stage
 expected: No counted attempt, no wait, no finding; safety handling and quarantine apply
@@ -11,37 +11,37 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 541ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: before and after observation begins, by the participant and by the mentor, at each Stage: no counted attempt, no wait, no finding
-    [default] passed 72ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: the older stop route, by the mentor at Stage 2 and by the participant at Stage 1, opens safety handling, withholds the observation and consumes nothing
-    [sandbox] passed 859ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: before and after observation begins, by the participant and by the mentor, at each Stage: no counted attempt, no wait, no finding
-    [sandbox] passed 338ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: the older stop route, by the mentor at Stage 2 and by the participant at Stage 1, opens safety handling, withholds the observation and consumes nothing
+    [default] passed 192ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: before and after observation begins, by the participant and by the mentor, at each Stage: no counted attempt, no wait, no finding
+    [default] passed 87ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: the older stop route, by the mentor at Stage 2 and by the participant at Stage 1, opens safety handling, withholds the observation and consumes nothing
+    [sandbox] passed 976ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: before and after observation begins, by the participant and by the mentor, at each Stage: no counted attempt, no wait, no finding
+    [sandbox] passed 406ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: the older stop route, by the mentor at Stage 2 and by the participant at Stage 1, opens safety handling, withholds the observation and consumes nothing
 D2: pass
-    [default] passed 245ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: before and after observation begins, by the participant and by the mentor, at each Stage: no counted attempt, no wait, no finding
-    [default] passed 112ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: the older stop route, by the mentor at Stage 2 and by the participant at Stage 1, opens safety handling, withholds the observation and consumes nothing
-    [sandbox] passed 1275ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: before and after observation begins, by the participant and by the mentor, at each Stage: no counted attempt, no wait, no finding
-    [sandbox] passed 344ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: the older stop route, by the mentor at Stage 2 and by the participant at Stage 1, opens safety handling, withholds the observation and consumes nothing
+    [default] passed 202ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: before and after observation begins, by the participant and by the mentor, at each Stage: no counted attempt, no wait, no finding
+    [default] passed 87ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: the older stop route, by the mentor at Stage 2 and by the participant at Stage 1, opens safety handling, withholds the observation and consumes nothing
+    [sandbox] passed 1125ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: before and after observation begins, by the participant and by the mentor, at each Stage: no counted attempt, no wait, no finding
+    [sandbox] passed 376ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: the older stop route, by the mentor at Stage 2 and by the participant at Stage 1, opens safety handling, withholds the observation and consumes nothing
 D3: pass
-    [default] passed 269ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: before and after observation begins, by the participant and by the mentor, at each Stage: no counted attempt, no wait, no finding
-    [default] passed 123ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: the older stop route, by the mentor at Stage 2 and by the participant at Stage 1, opens safety handling, withholds the observation and consumes nothing
-    [sandbox] passed 1198ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: before and after observation begins, by the participant and by the mentor, at each Stage: no counted attempt, no wait, no finding
-    [sandbox] passed 383ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: the older stop route, by the mentor at Stage 2 and by the participant at Stage 1, opens safety handling, withholds the observation and consumes nothing
+    [default] passed 232ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: before and after observation begins, by the participant and by the mentor, at each Stage: no counted attempt, no wait, no finding
+    [default] passed 86ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: the older stop route, by the mentor at Stage 2 and by the participant at Stage 1, opens safety handling, withholds the observation and consumes nothing
+    [sandbox] passed 1054ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: before and after observation begins, by the participant and by the mentor, at each Stage: no counted attempt, no wait, no finding
+    [sandbox] passed 357ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: the older stop route, by the mentor at Stage 2 and by the participant at Stage 1, opens safety handling, withholds the observation and consumes nothing
 D4: pass
-    [default] passed 180ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: before and after observation begins, by the participant and by the mentor, at each Stage: no counted attempt, no wait, no finding
-    [default] passed 93ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: the older stop route, by the mentor at Stage 2 and by the participant at Stage 1, opens safety handling, withholds the observation and consumes nothing
-    [sandbox] passed 1006ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: before and after observation begins, by the participant and by the mentor, at each Stage: no counted attempt, no wait, no finding
-    [sandbox] passed 437ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: the older stop route, by the mentor at Stage 2 and by the participant at Stage 1, opens safety handling, withholds the observation and consumes nothing
+    [default] passed 181ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: before and after observation begins, by the participant and by the mentor, at each Stage: no counted attempt, no wait, no finding
+    [default] passed 89ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: the older stop route, by the mentor at Stage 2 and by the participant at Stage 1, opens safety handling, withholds the observation and consumes nothing
+    [sandbox] passed 976ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: before and after observation begins, by the participant and by the mentor, at each Stage: no counted attempt, no wait, no finding
+    [sandbox] passed 321ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: the older stop route, by the mentor at Stage 2 and by the participant at Stage 1, opens safety handling, withholds the observation and consumes nothing
 D5: pass
-    [default] passed 220ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: before and after observation begins, by the participant and by the mentor, at each Stage: no counted attempt, no wait, no finding
+    [default] passed 191ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: before and after observation begins, by the participant and by the mentor, at each Stage: no counted attempt, no wait, no finding
     [default] passed 100ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: the older stop route, by the mentor at Stage 2 and by the participant at Stage 1, opens safety handling, withholds the observation and consumes nothing
-    [sandbox] passed 1152ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: before and after observation begins, by the participant and by the mentor, at each Stage: no counted attempt, no wait, no finding
-    [sandbox] passed 399ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: the older stop route, by the mentor at Stage 2 and by the participant at Stage 1, opens safety handling, withholds the observation and consumes nothing
+    [sandbox] passed 1170ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: before and after observation begins, by the participant and by the mentor, at each Stage: no counted attempt, no wait, no finding
+    [sandbox] passed 412ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: the older stop route, by the mentor at Stage 2 and by the participant at Stage 1, opens safety handling, withholds the observation and consumes nothing
 D8: pass
-    [default] passed 208ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: before and after observation begins, by the participant and by the mentor, at each Stage: no counted attempt, no wait, no finding
-    [default] passed 116ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: the older stop route, by the mentor at Stage 2 and by the participant at Stage 1, opens safety handling, withholds the observation and consumes nothing
-    [sandbox] passed 1261ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: before and after observation begins, by the participant and by the mentor, at each Stage: no counted attempt, no wait, no finding
-    [sandbox] passed 418ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: the older stop route, by the mentor at Stage 2 and by the participant at Stage 1, opens safety handling, withholds the observation and consumes nothing
+    [default] passed 235ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: before and after observation begins, by the participant and by the mentor, at each Stage: no counted attempt, no wait, no finding
+    [default] passed 112ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: the older stop route, by the mentor at Stage 2 and by the participant at Stage 1, opens safety handling, withholds the observation and consumes nothing
+    [sandbox] passed 921ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: before and after observation begins, by the participant and by the mentor, at each Stage: no counted attempt, no wait, no finding
+    [sandbox] passed 278ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: the older stop route, by the mentor at Stage 2 and by the participant at Stage 1, opens safety handling, withholds the observation and consumes nothing
 D9: pass
-    [default] passed 194ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: before and after observation begins, by the participant and by the mentor, at each Stage: no counted attempt, no wait, no finding
-    [default] passed 93ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: the older stop route, by the mentor at Stage 2 and by the participant at Stage 1, opens safety handling, withholds the observation and consumes nothing
-    [sandbox] passed 1048ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: before and after observation begins, by the participant and by the mentor, at each Stage: no counted attempt, no wait, no finding
-    [sandbox] passed 418ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: the older stop route, by the mentor at Stage 2 and by the participant at Stage 1, opens safety handling, withholds the observation and consumes nothing
+    [default] passed 197ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: before and after observation begins, by the participant and by the mentor, at each Stage: no counted attempt, no wait, no finding
+    [default] passed 81ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: the older stop route, by the mentor at Stage 2 and by the participant at Stage 1, opens safety handling, withholds the observation and consumes nothing
+    [sandbox] passed 1027ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: before and after observation begins, by the participant and by the mentor, at each Stage: no counted attempt, no wait, no finding
+    [sandbox] passed 370ms :: cr03-welfare-stop.db.test.ts :: CR-03 the welfare stop consumes nothing > T1: the older stop route, by the mentor at Stage 2 and by the participant at Stage 1, opens safety handling, withholds the observation and consumes nothing

@@ -1,6 +1,6 @@
 case CR-14-T1
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 rule CR-14
 what is run: A participant who met the seven beat form under another dimension, no review loaded
 expected: Refused
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 39ms :: cr14-design-review.db.test.ts :: CR-14: the form exclusion > T1: a form met under another dimension, no review loaded: excluded
-    [sandbox] passed 81ms :: cr14-design-review.db.test.ts :: CR-14: the form exclusion > T1: a form met under another dimension, no review loaded: excluded
+    [default] passed 34ms :: cr14-design-review.db.test.ts :: CR-14: the form exclusion > T1: a form met under another dimension, no review loaded: excluded
+    [sandbox] passed 84ms :: cr14-design-review.db.test.ts :: CR-14: the form exclusion > T1: a form met under another dimension, no review loaded: excluded
 D2: pass
     [default] passed 42ms :: cr14-design-review.db.test.ts :: CR-14: the form exclusion > T1: a form met under another dimension, no review loaded: excluded
-    [sandbox] passed 95ms :: cr14-design-review.db.test.ts :: CR-14: the form exclusion > T1: a form met under another dimension, no review loaded: excluded
-D3: pass
-    [default] passed 33ms :: cr14-design-review.db.test.ts :: CR-14: the form exclusion > T1: a form met under another dimension, no review loaded: excluded
-    [sandbox] passed 102ms :: cr14-design-review.db.test.ts :: CR-14: the form exclusion > T1: a form met under another dimension, no review loaded: excluded
-D4: pass
-    [default] passed 48ms :: cr14-design-review.db.test.ts :: CR-14: the form exclusion > T1: a form met under another dimension, no review loaded: excluded
-    [sandbox] passed 83ms :: cr14-design-review.db.test.ts :: CR-14: the form exclusion > T1: a form met under another dimension, no review loaded: excluded
-D5: pass
-    [default] passed 33ms :: cr14-design-review.db.test.ts :: CR-14: the form exclusion > T1: a form met under another dimension, no review loaded: excluded
-    [sandbox] passed 107ms :: cr14-design-review.db.test.ts :: CR-14: the form exclusion > T1: a form met under another dimension, no review loaded: excluded
-D8: pass
-    [default] passed 50ms :: cr14-design-review.db.test.ts :: CR-14: the form exclusion > T1: a form met under another dimension, no review loaded: excluded
-    [sandbox] passed 93ms :: cr14-design-review.db.test.ts :: CR-14: the form exclusion > T1: a form met under another dimension, no review loaded: excluded
-D9: pass
-    [default] passed 40ms :: cr14-design-review.db.test.ts :: CR-14: the form exclusion > T1: a form met under another dimension, no review loaded: excluded
     [sandbox] passed 79ms :: cr14-design-review.db.test.ts :: CR-14: the form exclusion > T1: a form met under another dimension, no review loaded: excluded
+D3: pass
+    [default] passed 43ms :: cr14-design-review.db.test.ts :: CR-14: the form exclusion > T1: a form met under another dimension, no review loaded: excluded
+    [sandbox] passed 81ms :: cr14-design-review.db.test.ts :: CR-14: the form exclusion > T1: a form met under another dimension, no review loaded: excluded
+D4: pass
+    [default] passed 28ms :: cr14-design-review.db.test.ts :: CR-14: the form exclusion > T1: a form met under another dimension, no review loaded: excluded
+    [sandbox] passed 78ms :: cr14-design-review.db.test.ts :: CR-14: the form exclusion > T1: a form met under another dimension, no review loaded: excluded
+D5: pass
+    [default] passed 43ms :: cr14-design-review.db.test.ts :: CR-14: the form exclusion > T1: a form met under another dimension, no review loaded: excluded
+    [sandbox] passed 89ms :: cr14-design-review.db.test.ts :: CR-14: the form exclusion > T1: a form met under another dimension, no review loaded: excluded
+D8: pass
+    [default] passed 31ms :: cr14-design-review.db.test.ts :: CR-14: the form exclusion > T1: a form met under another dimension, no review loaded: excluded
+    [sandbox] passed 109ms :: cr14-design-review.db.test.ts :: CR-14: the form exclusion > T1: a form met under another dimension, no review loaded: excluded
+D9: pass
+    [default] passed 35ms :: cr14-design-review.db.test.ts :: CR-14: the form exclusion > T1: a form met under another dimension, no review loaded: excluded
+    [sandbox] passed 90ms :: cr14-design-review.db.test.ts :: CR-14: the form exclusion > T1: a form met under another dimension, no review loaded: excluded

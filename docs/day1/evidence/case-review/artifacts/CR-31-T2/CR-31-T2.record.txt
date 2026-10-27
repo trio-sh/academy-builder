@@ -1,10 +1,10 @@
 case CR-31-T2
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 dimensions D1,D2,D3,D4,D5,D8,D9
 command bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr31-production-defaults.db.test.ts
-fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit 3cecc7e44fa1; other dimensions by the textual swap in vitest.db.dim.config.ts
-started 2026-10-26T20:50:58.812Z
-ended 2026-10-26T20:50:58.817Z
+fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit b4c285d2993c; other dimensions by the textual swap in vitest.db.dim.config.ts
+started 2026-10-27T05:40:02.831Z
+ended 2026-10-27T05:40:02.835Z
 observed 1 mapped test(s) in cr31-production-defaults.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-31 switch defaults > every switch reads off and lsa_activation reads off
-artifact artifacts/CR-31-T2/CR-31-T2.evidence.txt 2cc16db6d9268fa321049e0a316e1b892bde3979ff6673094a27d9e12a860501
+artifact artifacts/CR-31-T2/CR-31-T2.evidence.txt 39c2ed118905c78a5ab80e62c8bb76e5e114aadfce4543c5ea20c4098f9a19a8

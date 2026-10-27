@@ -1,6 +1,6 @@
 case CR-12-T6
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 rule CR-12
 what is run: An ending that matches no defined event
 expected: Fails closed; counts nothing; blocks a new attempt until classified; logged
@@ -11,22 +11,22 @@ mapped tests:
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
     [default] passed 22ms :: cr12-routes.db.test.ts :: CR-12 T6: an ending that matches no defined event > fails closed, is logged by name, blocks a new attempt until classified
-    [sandbox] passed 75ms :: cr12-routes.db.test.ts :: CR-12 T6: an ending that matches no defined event > fails closed, is logged by name, blocks a new attempt until classified
+    [sandbox] passed 78ms :: cr12-routes.db.test.ts :: CR-12 T6: an ending that matches no defined event > fails closed, is logged by name, blocks a new attempt until classified
 D2: pass
-    [default] passed 19ms :: cr12-routes.db.test.ts :: CR-12 T6: an ending that matches no defined event > fails closed, is logged by name, blocks a new attempt until classified
-    [sandbox] passed 108ms :: cr12-routes.db.test.ts :: CR-12 T6: an ending that matches no defined event > fails closed, is logged by name, blocks a new attempt until classified
-D3: pass
-    [default] passed 21ms :: cr12-routes.db.test.ts :: CR-12 T6: an ending that matches no defined event > fails closed, is logged by name, blocks a new attempt until classified
-    [sandbox] passed 88ms :: cr12-routes.db.test.ts :: CR-12 T6: an ending that matches no defined event > fails closed, is logged by name, blocks a new attempt until classified
-D4: pass
-    [default] passed 20ms :: cr12-routes.db.test.ts :: CR-12 T6: an ending that matches no defined event > fails closed, is logged by name, blocks a new attempt until classified
-    [sandbox] passed 91ms :: cr12-routes.db.test.ts :: CR-12 T6: an ending that matches no defined event > fails closed, is logged by name, blocks a new attempt until classified
-D5: pass
-    [default] passed 19ms :: cr12-routes.db.test.ts :: CR-12 T6: an ending that matches no defined event > fails closed, is logged by name, blocks a new attempt until classified
-    [sandbox] passed 127ms :: cr12-routes.db.test.ts :: CR-12 T6: an ending that matches no defined event > fails closed, is logged by name, blocks a new attempt until classified
-D8: pass
     [default] passed 23ms :: cr12-routes.db.test.ts :: CR-12 T6: an ending that matches no defined event > fails closed, is logged by name, blocks a new attempt until classified
-    [sandbox] passed 72ms :: cr12-routes.db.test.ts :: CR-12 T6: an ending that matches no defined event > fails closed, is logged by name, blocks a new attempt until classified
-D9: pass
-    [default] passed 20ms :: cr12-routes.db.test.ts :: CR-12 T6: an ending that matches no defined event > fails closed, is logged by name, blocks a new attempt until classified
     [sandbox] passed 83ms :: cr12-routes.db.test.ts :: CR-12 T6: an ending that matches no defined event > fails closed, is logged by name, blocks a new attempt until classified
+D3: pass
+    [default] passed 23ms :: cr12-routes.db.test.ts :: CR-12 T6: an ending that matches no defined event > fails closed, is logged by name, blocks a new attempt until classified
+    [sandbox] passed 87ms :: cr12-routes.db.test.ts :: CR-12 T6: an ending that matches no defined event > fails closed, is logged by name, blocks a new attempt until classified
+D4: pass
+    [default] passed 16ms :: cr12-routes.db.test.ts :: CR-12 T6: an ending that matches no defined event > fails closed, is logged by name, blocks a new attempt until classified
+    [sandbox] passed 83ms :: cr12-routes.db.test.ts :: CR-12 T6: an ending that matches no defined event > fails closed, is logged by name, blocks a new attempt until classified
+D5: pass
+    [default] passed 22ms :: cr12-routes.db.test.ts :: CR-12 T6: an ending that matches no defined event > fails closed, is logged by name, blocks a new attempt until classified
+    [sandbox] passed 78ms :: cr12-routes.db.test.ts :: CR-12 T6: an ending that matches no defined event > fails closed, is logged by name, blocks a new attempt until classified
+D8: pass
+    [default] passed 18ms :: cr12-routes.db.test.ts :: CR-12 T6: an ending that matches no defined event > fails closed, is logged by name, blocks a new attempt until classified
+    [sandbox] passed 76ms :: cr12-routes.db.test.ts :: CR-12 T6: an ending that matches no defined event > fails closed, is logged by name, blocks a new attempt until classified
+D9: pass
+    [default] passed 24ms :: cr12-routes.db.test.ts :: CR-12 T6: an ending that matches no defined event > fails closed, is logged by name, blocks a new attempt until classified
+    [sandbox] passed 86ms :: cr12-routes.db.test.ts :: CR-12 T6: an ending that matches no defined event > fails closed, is logged by name, blocks a new attempt until classified

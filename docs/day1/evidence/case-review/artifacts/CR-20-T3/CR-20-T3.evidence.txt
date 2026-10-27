@@ -1,6 +1,6 @@
 case CR-20-T3
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 rule CR-20
 what is run: Capture with an attestation missing
 expected: Refused
@@ -13,65 +13,65 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 80ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > Stage 2 needs A1 to A3 and each missing one is named; Stage 4 also needs A4; nothing else is live video
-    [default] passed 51ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a recording indicator ends capture and it does not resume even with every attestation
-    [default] passed 40ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a Stage entry that is not live video is unaffected, and a real entry needs an approved notice that names Google Meet
-    [default] passed 39ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a meeting hosted outside the institution's domain is refused at the start, and nothing is recorded
-    [sandbox] passed 320ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > Stage 2 needs A1 to A3 and each missing one is named; Stage 4 also needs A4; nothing else is live video
-    [sandbox] passed 127ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a recording indicator ends capture and it does not resume even with every attestation
-    [sandbox] passed 84ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a Stage entry that is not live video is unaffected, and a real entry needs an approved notice that names Google Meet
-    [sandbox] passed 175ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a meeting hosted outside the institution's domain is refused at the start, and nothing is recorded
+    [default] passed 66ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > Stage 2 needs A1 to A3 and each missing one is named; Stage 4 also needs A4; nothing else is live video
+    [default] passed 31ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a recording indicator ends capture and it does not resume even with every attestation
+    [default] passed 27ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a Stage entry that is not live video is unaffected, and a real entry needs an approved notice that names Google Meet
+    [default] passed 35ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a meeting hosted outside the institution's domain is refused at the start, and nothing is recorded
+    [sandbox] passed 207ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > Stage 2 needs A1 to A3 and each missing one is named; Stage 4 also needs A4; nothing else is live video
+    [sandbox] passed 104ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a recording indicator ends capture and it does not resume even with every attestation
+    [sandbox] passed 97ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a Stage entry that is not live video is unaffected, and a real entry needs an approved notice that names Google Meet
+    [sandbox] passed 181ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a meeting hosted outside the institution's domain is refused at the start, and nothing is recorded
 D2: pass
-    [default] passed 71ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > Stage 2 needs A1 to A3 and each missing one is named; Stage 4 also needs A4; nothing else is live video
-    [default] passed 35ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a recording indicator ends capture and it does not resume even with every attestation
-    [default] passed 37ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a Stage entry that is not live video is unaffected, and a real entry needs an approved notice that names Google Meet
-    [default] passed 42ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a meeting hosted outside the institution's domain is refused at the start, and nothing is recorded
-    [sandbox] passed 238ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > Stage 2 needs A1 to A3 and each missing one is named; Stage 4 also needs A4; nothing else is live video
-    [sandbox] passed 133ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a recording indicator ends capture and it does not resume even with every attestation
-    [sandbox] passed 108ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a Stage entry that is not live video is unaffected, and a real entry needs an approved notice that names Google Meet
-    [sandbox] passed 211ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a meeting hosted outside the institution's domain is refused at the start, and nothing is recorded
-D3: pass
-    [default] passed 93ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > Stage 2 needs A1 to A3 and each missing one is named; Stage 4 also needs A4; nothing else is live video
-    [default] passed 43ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a recording indicator ends capture and it does not resume even with every attestation
-    [default] passed 37ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a Stage entry that is not live video is unaffected, and a real entry needs an approved notice that names Google Meet
+    [default] passed 72ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > Stage 2 needs A1 to A3 and each missing one is named; Stage 4 also needs A4; nothing else is live video
+    [default] passed 36ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a recording indicator ends capture and it does not resume even with every attestation
+    [default] passed 34ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a Stage entry that is not live video is unaffected, and a real entry needs an approved notice that names Google Meet
     [default] passed 37ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a meeting hosted outside the institution's domain is refused at the start, and nothing is recorded
-    [sandbox] passed 198ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > Stage 2 needs A1 to A3 and each missing one is named; Stage 4 also needs A4; nothing else is live video
-    [sandbox] passed 90ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a recording indicator ends capture and it does not resume even with every attestation
-    [sandbox] passed 102ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a Stage entry that is not live video is unaffected, and a real entry needs an approved notice that names Google Meet
+    [sandbox] passed 170ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > Stage 2 needs A1 to A3 and each missing one is named; Stage 4 also needs A4; nothing else is live video
+    [sandbox] passed 79ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a recording indicator ends capture and it does not resume even with every attestation
+    [sandbox] passed 80ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a Stage entry that is not live video is unaffected, and a real entry needs an approved notice that names Google Meet
+    [sandbox] passed 208ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a meeting hosted outside the institution's domain is refused at the start, and nothing is recorded
+D3: pass
+    [default] passed 75ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > Stage 2 needs A1 to A3 and each missing one is named; Stage 4 also needs A4; nothing else is live video
+    [default] passed 33ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a recording indicator ends capture and it does not resume even with every attestation
+    [default] passed 35ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a Stage entry that is not live video is unaffected, and a real entry needs an approved notice that names Google Meet
+    [default] passed 43ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a meeting hosted outside the institution's domain is refused at the start, and nothing is recorded
+    [sandbox] passed 220ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > Stage 2 needs A1 to A3 and each missing one is named; Stage 4 also needs A4; nothing else is live video
+    [sandbox] passed 98ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a recording indicator ends capture and it does not resume even with every attestation
+    [sandbox] passed 90ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a Stage entry that is not live video is unaffected, and a real entry needs an approved notice that names Google Meet
     [sandbox] passed 155ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a meeting hosted outside the institution's domain is refused at the start, and nothing is recorded
 D4: pass
-    [default] passed 83ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > Stage 2 needs A1 to A3 and each missing one is named; Stage 4 also needs A4; nothing else is live video
-    [default] passed 47ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a recording indicator ends capture and it does not resume even with every attestation
-    [default] passed 48ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a Stage entry that is not live video is unaffected, and a real entry needs an approved notice that names Google Meet
-    [default] passed 55ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a meeting hosted outside the institution's domain is refused at the start, and nothing is recorded
-    [sandbox] passed 262ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > Stage 2 needs A1 to A3 and each missing one is named; Stage 4 also needs A4; nothing else is live video
-    [sandbox] passed 130ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a recording indicator ends capture and it does not resume even with every attestation
-    [sandbox] passed 95ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a Stage entry that is not live video is unaffected, and a real entry needs an approved notice that names Google Meet
-    [sandbox] passed 212ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a meeting hosted outside the institution's domain is refused at the start, and nothing is recorded
+    [default] passed 82ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > Stage 2 needs A1 to A3 and each missing one is named; Stage 4 also needs A4; nothing else is live video
+    [default] passed 37ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a recording indicator ends capture and it does not resume even with every attestation
+    [default] passed 32ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a Stage entry that is not live video is unaffected, and a real entry needs an approved notice that names Google Meet
+    [default] passed 43ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a meeting hosted outside the institution's domain is refused at the start, and nothing is recorded
+    [sandbox] passed 235ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > Stage 2 needs A1 to A3 and each missing one is named; Stage 4 also needs A4; nothing else is live video
+    [sandbox] passed 101ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a recording indicator ends capture and it does not resume even with every attestation
+    [sandbox] passed 88ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a Stage entry that is not live video is unaffected, and a real entry needs an approved notice that names Google Meet
+    [sandbox] passed 165ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a meeting hosted outside the institution's domain is refused at the start, and nothing is recorded
 D5: pass
-    [default] passed 85ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > Stage 2 needs A1 to A3 and each missing one is named; Stage 4 also needs A4; nothing else is live video
-    [default] passed 44ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a recording indicator ends capture and it does not resume even with every attestation
-    [default] passed 38ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a Stage entry that is not live video is unaffected, and a real entry needs an approved notice that names Google Meet
-    [default] passed 45ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a meeting hosted outside the institution's domain is refused at the start, and nothing is recorded
-    [sandbox] passed 195ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > Stage 2 needs A1 to A3 and each missing one is named; Stage 4 also needs A4; nothing else is live video
-    [sandbox] passed 123ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a recording indicator ends capture and it does not resume even with every attestation
-    [sandbox] passed 96ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a Stage entry that is not live video is unaffected, and a real entry needs an approved notice that names Google Meet
-    [sandbox] passed 164ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a meeting hosted outside the institution's domain is refused at the start, and nothing is recorded
+    [default] passed 74ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > Stage 2 needs A1 to A3 and each missing one is named; Stage 4 also needs A4; nothing else is live video
+    [default] passed 41ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a recording indicator ends capture and it does not resume even with every attestation
+    [default] passed 33ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a Stage entry that is not live video is unaffected, and a real entry needs an approved notice that names Google Meet
+    [default] passed 50ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a meeting hosted outside the institution's domain is refused at the start, and nothing is recorded
+    [sandbox] passed 209ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > Stage 2 needs A1 to A3 and each missing one is named; Stage 4 also needs A4; nothing else is live video
+    [sandbox] passed 145ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a recording indicator ends capture and it does not resume even with every attestation
+    [sandbox] passed 158ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a Stage entry that is not live video is unaffected, and a real entry needs an approved notice that names Google Meet
+    [sandbox] passed 260ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a meeting hosted outside the institution's domain is refused at the start, and nothing is recorded
 D8: pass
-    [default] passed 92ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > Stage 2 needs A1 to A3 and each missing one is named; Stage 4 also needs A4; nothing else is live video
-    [default] passed 44ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a recording indicator ends capture and it does not resume even with every attestation
-    [default] passed 39ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a Stage entry that is not live video is unaffected, and a real entry needs an approved notice that names Google Meet
-    [default] passed 56ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a meeting hosted outside the institution's domain is refused at the start, and nothing is recorded
-    [sandbox] passed 211ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > Stage 2 needs A1 to A3 and each missing one is named; Stage 4 also needs A4; nothing else is live video
-    [sandbox] passed 105ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a recording indicator ends capture and it does not resume even with every attestation
-    [sandbox] passed 82ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a Stage entry that is not live video is unaffected, and a real entry needs an approved notice that names Google Meet
-    [sandbox] passed 148ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a meeting hosted outside the institution's domain is refused at the start, and nothing is recorded
+    [default] passed 75ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > Stage 2 needs A1 to A3 and each missing one is named; Stage 4 also needs A4; nothing else is live video
+    [default] passed 40ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a recording indicator ends capture and it does not resume even with every attestation
+    [default] passed 35ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a Stage entry that is not live video is unaffected, and a real entry needs an approved notice that names Google Meet
+    [default] passed 39ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a meeting hosted outside the institution's domain is refused at the start, and nothing is recorded
+    [sandbox] passed 254ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > Stage 2 needs A1 to A3 and each missing one is named; Stage 4 also needs A4; nothing else is live video
+    [sandbox] passed 94ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a recording indicator ends capture and it does not resume even with every attestation
+    [sandbox] passed 96ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a Stage entry that is not live video is unaffected, and a real entry needs an approved notice that names Google Meet
+    [sandbox] passed 168ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a meeting hosted outside the institution's domain is refused at the start, and nothing is recorded
 D9: pass
-    [default] passed 128ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > Stage 2 needs A1 to A3 and each missing one is named; Stage 4 also needs A4; nothing else is live video
-    [default] passed 66ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a recording indicator ends capture and it does not resume even with every attestation
-    [default] passed 52ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a Stage entry that is not live video is unaffected, and a real entry needs an approved notice that names Google Meet
-    [default] passed 60ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a meeting hosted outside the institution's domain is refused at the start, and nothing is recorded
-    [sandbox] passed 217ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > Stage 2 needs A1 to A3 and each missing one is named; Stage 4 also needs A4; nothing else is live video
-    [sandbox] passed 129ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a recording indicator ends capture and it does not resume even with every attestation
-    [sandbox] passed 122ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a Stage entry that is not live video is unaffected, and a real entry needs an approved notice that names Google Meet
-    [sandbox] passed 192ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a meeting hosted outside the institution's domain is refused at the start, and nothing is recorded
+    [default] passed 68ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > Stage 2 needs A1 to A3 and each missing one is named; Stage 4 also needs A4; nothing else is live video
+    [default] passed 32ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a recording indicator ends capture and it does not resume even with every attestation
+    [default] passed 30ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a Stage entry that is not live video is unaffected, and a real entry needs an approved notice that names Google Meet
+    [default] passed 35ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a meeting hosted outside the institution's domain is refused at the start, and nothing is recorded
+    [sandbox] passed 202ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > Stage 2 needs A1 to A3 and each missing one is named; Stage 4 also needs A4; nothing else is live video
+    [sandbox] passed 98ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a recording indicator ends capture and it does not resume even with every attestation
+    [sandbox] passed 99ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a Stage entry that is not live video is unaffected, and a real entry needs an approved notice that names Google Meet
+    [sandbox] passed 196ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T3 live capture with an attestation missing > a meeting hosted outside the institution's domain is refused at the start, and nothing is recorded

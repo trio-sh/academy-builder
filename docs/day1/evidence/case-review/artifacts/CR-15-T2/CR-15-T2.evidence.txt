@@ -1,6 +1,6 @@
 case CR-15-T2
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 rule CR-15
 what is run: A second observer without consent
 expected: Refused
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 30ms :: cr15-second-observer.db.test.ts :: CR-15 adding a second observer > T2: a second observer without the participant's consent is refused
-    [sandbox] passed 260ms :: cr15-second-observer.db.test.ts :: CR-15 adding a second observer > T2: a second observer without the participant's consent is refused
+    [default] passed 26ms :: cr15-second-observer.db.test.ts :: CR-15 adding a second observer > T2: a second observer without the participant's consent is refused
+    [sandbox] passed 268ms :: cr15-second-observer.db.test.ts :: CR-15 adding a second observer > T2: a second observer without the participant's consent is refused
 D2: pass
-    [default] passed 31ms :: cr15-second-observer.db.test.ts :: CR-15 adding a second observer > T2: a second observer without the participant's consent is refused
-    [sandbox] passed 261ms :: cr15-second-observer.db.test.ts :: CR-15 adding a second observer > T2: a second observer without the participant's consent is refused
-D3: pass
-    [default] passed 34ms :: cr15-second-observer.db.test.ts :: CR-15 adding a second observer > T2: a second observer without the participant's consent is refused
-    [sandbox] passed 359ms :: cr15-second-observer.db.test.ts :: CR-15 adding a second observer > T2: a second observer without the participant's consent is refused
-D4: pass
-    [default] passed 37ms :: cr15-second-observer.db.test.ts :: CR-15 adding a second observer > T2: a second observer without the participant's consent is refused
-    [sandbox] passed 292ms :: cr15-second-observer.db.test.ts :: CR-15 adding a second observer > T2: a second observer without the participant's consent is refused
-D5: pass
     [default] passed 29ms :: cr15-second-observer.db.test.ts :: CR-15 adding a second observer > T2: a second observer without the participant's consent is refused
-    [sandbox] passed 191ms :: cr15-second-observer.db.test.ts :: CR-15 adding a second observer > T2: a second observer without the participant's consent is refused
+    [sandbox] passed 292ms :: cr15-second-observer.db.test.ts :: CR-15 adding a second observer > T2: a second observer without the participant's consent is refused
+D3: pass
+    [default] passed 26ms :: cr15-second-observer.db.test.ts :: CR-15 adding a second observer > T2: a second observer without the participant's consent is refused
+    [sandbox] passed 234ms :: cr15-second-observer.db.test.ts :: CR-15 adding a second observer > T2: a second observer without the participant's consent is refused
+D4: pass
+    [default] passed 35ms :: cr15-second-observer.db.test.ts :: CR-15 adding a second observer > T2: a second observer without the participant's consent is refused
+    [sandbox] passed 231ms :: cr15-second-observer.db.test.ts :: CR-15 adding a second observer > T2: a second observer without the participant's consent is refused
+D5: pass
+    [default] passed 34ms :: cr15-second-observer.db.test.ts :: CR-15 adding a second observer > T2: a second observer without the participant's consent is refused
+    [sandbox] passed 243ms :: cr15-second-observer.db.test.ts :: CR-15 adding a second observer > T2: a second observer without the participant's consent is refused
 D8: pass
-    [default] passed 33ms :: cr15-second-observer.db.test.ts :: CR-15 adding a second observer > T2: a second observer without the participant's consent is refused
-    [sandbox] passed 277ms :: cr15-second-observer.db.test.ts :: CR-15 adding a second observer > T2: a second observer without the participant's consent is refused
+    [default] passed 27ms :: cr15-second-observer.db.test.ts :: CR-15 adding a second observer > T2: a second observer without the participant's consent is refused
+    [sandbox] passed 297ms :: cr15-second-observer.db.test.ts :: CR-15 adding a second observer > T2: a second observer without the participant's consent is refused
 D9: pass
-    [default] passed 38ms :: cr15-second-observer.db.test.ts :: CR-15 adding a second observer > T2: a second observer without the participant's consent is refused
-    [sandbox] passed 217ms :: cr15-second-observer.db.test.ts :: CR-15 adding a second observer > T2: a second observer without the participant's consent is refused
+    [default] passed 27ms :: cr15-second-observer.db.test.ts :: CR-15 adding a second observer > T2: a second observer without the participant's consent is refused
+    [sandbox] passed 226ms :: cr15-second-observer.db.test.ts :: CR-15 adding a second observer > T2: a second observer without the participant's consent is refused

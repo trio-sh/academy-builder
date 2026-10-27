@@ -1,6 +1,6 @@
 case CR-12-T3
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 rule CR-12
 what is run: A commit at 14:00 on 31 August with two other counted attempts; requests at 13:59 and 14:00 on 28 February; a participant who changes display time zone
 expected: Refused at 13:59 and admitted at 14:00 on 28 February by the stored exclusion_expiry_at; eligibility unchanged by display zone
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 26ms :: cr12-window.db.test.ts :: CR-12 T3: month end rule, stored expiry, display zone > 31 August 14:00 plus six calendar months is 28 February 14:00, stored; refused at 13:59, admitted at 14:00
-    [sandbox] passed 100ms :: cr12-window.db.test.ts :: CR-12 T3: month end rule, stored expiry, display zone > 31 August 14:00 plus six calendar months is 28 February 14:00, stored; refused at 13:59, admitted at 14:00
-D2: pass
-    [default] passed 15ms :: cr12-window.db.test.ts :: CR-12 T3: month end rule, stored expiry, display zone > 31 August 14:00 plus six calendar months is 28 February 14:00, stored; refused at 13:59, admitted at 14:00
-    [sandbox] passed 106ms :: cr12-window.db.test.ts :: CR-12 T3: month end rule, stored expiry, display zone > 31 August 14:00 plus six calendar months is 28 February 14:00, stored; refused at 13:59, admitted at 14:00
-D3: pass
-    [default] passed 13ms :: cr12-window.db.test.ts :: CR-12 T3: month end rule, stored expiry, display zone > 31 August 14:00 plus six calendar months is 28 February 14:00, stored; refused at 13:59, admitted at 14:00
-    [sandbox] passed 96ms :: cr12-window.db.test.ts :: CR-12 T3: month end rule, stored expiry, display zone > 31 August 14:00 plus six calendar months is 28 February 14:00, stored; refused at 13:59, admitted at 14:00
-D4: pass
-    [default] passed 13ms :: cr12-window.db.test.ts :: CR-12 T3: month end rule, stored expiry, display zone > 31 August 14:00 plus six calendar months is 28 February 14:00, stored; refused at 13:59, admitted at 14:00
-    [sandbox] passed 113ms :: cr12-window.db.test.ts :: CR-12 T3: month end rule, stored expiry, display zone > 31 August 14:00 plus six calendar months is 28 February 14:00, stored; refused at 13:59, admitted at 14:00
-D5: pass
     [default] passed 14ms :: cr12-window.db.test.ts :: CR-12 T3: month end rule, stored expiry, display zone > 31 August 14:00 plus six calendar months is 28 February 14:00, stored; refused at 13:59, admitted at 14:00
-    [sandbox] passed 75ms :: cr12-window.db.test.ts :: CR-12 T3: month end rule, stored expiry, display zone > 31 August 14:00 plus six calendar months is 28 February 14:00, stored; refused at 13:59, admitted at 14:00
+    [sandbox] passed 85ms :: cr12-window.db.test.ts :: CR-12 T3: month end rule, stored expiry, display zone > 31 August 14:00 plus six calendar months is 28 February 14:00, stored; refused at 13:59, admitted at 14:00
+D2: pass
+    [default] passed 13ms :: cr12-window.db.test.ts :: CR-12 T3: month end rule, stored expiry, display zone > 31 August 14:00 plus six calendar months is 28 February 14:00, stored; refused at 13:59, admitted at 14:00
+    [sandbox] passed 112ms :: cr12-window.db.test.ts :: CR-12 T3: month end rule, stored expiry, display zone > 31 August 14:00 plus six calendar months is 28 February 14:00, stored; refused at 13:59, admitted at 14:00
+D3: pass
+    [default] passed 12ms :: cr12-window.db.test.ts :: CR-12 T3: month end rule, stored expiry, display zone > 31 August 14:00 plus six calendar months is 28 February 14:00, stored; refused at 13:59, admitted at 14:00
+    [sandbox] passed 76ms :: cr12-window.db.test.ts :: CR-12 T3: month end rule, stored expiry, display zone > 31 August 14:00 plus six calendar months is 28 February 14:00, stored; refused at 13:59, admitted at 14:00
+D4: pass
+    [default] passed 14ms :: cr12-window.db.test.ts :: CR-12 T3: month end rule, stored expiry, display zone > 31 August 14:00 plus six calendar months is 28 February 14:00, stored; refused at 13:59, admitted at 14:00
+    [sandbox] passed 72ms :: cr12-window.db.test.ts :: CR-12 T3: month end rule, stored expiry, display zone > 31 August 14:00 plus six calendar months is 28 February 14:00, stored; refused at 13:59, admitted at 14:00
+D5: pass
+    [default] passed 13ms :: cr12-window.db.test.ts :: CR-12 T3: month end rule, stored expiry, display zone > 31 August 14:00 plus six calendar months is 28 February 14:00, stored; refused at 13:59, admitted at 14:00
+    [sandbox] passed 70ms :: cr12-window.db.test.ts :: CR-12 T3: month end rule, stored expiry, display zone > 31 August 14:00 plus six calendar months is 28 February 14:00, stored; refused at 13:59, admitted at 14:00
 D8: pass
-    [default] passed 18ms :: cr12-window.db.test.ts :: CR-12 T3: month end rule, stored expiry, display zone > 31 August 14:00 plus six calendar months is 28 February 14:00, stored; refused at 13:59, admitted at 14:00
-    [sandbox] passed 73ms :: cr12-window.db.test.ts :: CR-12 T3: month end rule, stored expiry, display zone > 31 August 14:00 plus six calendar months is 28 February 14:00, stored; refused at 13:59, admitted at 14:00
+    [default] passed 14ms :: cr12-window.db.test.ts :: CR-12 T3: month end rule, stored expiry, display zone > 31 August 14:00 plus six calendar months is 28 February 14:00, stored; refused at 13:59, admitted at 14:00
+    [sandbox] passed 78ms :: cr12-window.db.test.ts :: CR-12 T3: month end rule, stored expiry, display zone > 31 August 14:00 plus six calendar months is 28 February 14:00, stored; refused at 13:59, admitted at 14:00
 D9: pass
-    [default] passed 15ms :: cr12-window.db.test.ts :: CR-12 T3: month end rule, stored expiry, display zone > 31 August 14:00 plus six calendar months is 28 February 14:00, stored; refused at 13:59, admitted at 14:00
-    [sandbox] passed 80ms :: cr12-window.db.test.ts :: CR-12 T3: month end rule, stored expiry, display zone > 31 August 14:00 plus six calendar months is 28 February 14:00, stored; refused at 13:59, admitted at 14:00
+    [default] passed 16ms :: cr12-window.db.test.ts :: CR-12 T3: month end rule, stored expiry, display zone > 31 August 14:00 plus six calendar months is 28 February 14:00, stored; refused at 13:59, admitted at 14:00
+    [sandbox] passed 67ms :: cr12-window.db.test.ts :: CR-12 T3: month end rule, stored expiry, display zone > 31 August 14:00 plus six calendar months is 28 February 14:00, stored; refused at 13:59, admitted at 14:00

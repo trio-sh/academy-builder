@@ -1,10 +1,10 @@
 case CR-05-T2
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 dimensions D1,D2,D3,D4,D5,D8,D9
 command bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr04-cr05-entry-identity-progression-challenge.db.test.ts
-fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit 3cecc7e44fa1; other dimensions by the textual swap in vitest.db.dim.config.ts
-started 2026-10-26T20:50:58.812Z
-ended 2026-10-26T20:50:58.988Z
+fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit b4c285d2993c; other dimensions by the textual swap in vitest.db.dim.config.ts
+started 2026-10-27T05:40:02.831Z
+ended 2026-10-27T05:40:02.962Z
 observed 1 mapped test(s) in cr04-cr05-entry-identity-progression-challenge.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-05 a progression challenge pauses nothing > T2: when the challenge succeeds the decision is corrected as of its original date, eligibility changes from the c
-artifact artifacts/CR-05-T2/CR-05-T2.evidence.txt 157e33de4b54d5708b11b88b1f3b5183d6dfcc747bcbc542ae90d2f4c0d0badd
+artifact artifacts/CR-05-T2/CR-05-T2.evidence.txt 69a389e072e9daa4ddab6dbf8a0fbe35e7d9dadb2a4af76776efb85962e7cee5

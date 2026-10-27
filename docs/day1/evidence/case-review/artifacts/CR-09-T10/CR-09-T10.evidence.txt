@@ -1,6 +1,6 @@
 case CR-09-T10
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 rule CR-09
 what is run: Turn general availability off while a direct release is active
 expected: The direct release still redeems
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 16ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T10: turning general availability off while a direct release is active leaves the direct release redeemable
-    [sandbox] passed 96ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T10: turning general availability off while a direct release is active leaves the direct release redeemable
+    [default] passed 14ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T10: turning general availability off while a direct release is active leaves the direct release redeemable
+    [sandbox] passed 67ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T10: turning general availability off while a direct release is active leaves the direct release redeemable
 D2: pass
-    [default] passed 17ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T10: turning general availability off while a direct release is active leaves the direct release redeemable
-    [sandbox] passed 84ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T10: turning general availability off while a direct release is active leaves the direct release redeemable
+    [default] passed 13ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T10: turning general availability off while a direct release is active leaves the direct release redeemable
+    [sandbox] passed 90ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T10: turning general availability off while a direct release is active leaves the direct release redeemable
 D3: pass
-    [default] passed 23ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T10: turning general availability off while a direct release is active leaves the direct release redeemable
-    [sandbox] passed 60ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T10: turning general availability off while a direct release is active leaves the direct release redeemable
-D4: pass
     [default] passed 17ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T10: turning general availability off while a direct release is active leaves the direct release redeemable
-    [sandbox] passed 108ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T10: turning general availability off while a direct release is active leaves the direct release redeemable
-D5: pass
-    [default] passed 16ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T10: turning general availability off while a direct release is active leaves the direct release redeemable
     [sandbox] passed 82ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T10: turning general availability off while a direct release is active leaves the direct release redeemable
+D4: pass
+    [default] passed 14ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T10: turning general availability off while a direct release is active leaves the direct release redeemable
+    [sandbox] passed 71ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T10: turning general availability off while a direct release is active leaves the direct release redeemable
+D5: pass
+    [default] passed 19ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T10: turning general availability off while a direct release is active leaves the direct release redeemable
+    [sandbox] passed 68ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T10: turning general availability off while a direct release is active leaves the direct release redeemable
 D8: pass
-    [default] passed 16ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T10: turning general availability off while a direct release is active leaves the direct release redeemable
-    [sandbox] passed 95ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T10: turning general availability off while a direct release is active leaves the direct release redeemable
+    [default] passed 17ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T10: turning general availability off while a direct release is active leaves the direct release redeemable
+    [sandbox] passed 70ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T10: turning general availability off while a direct release is active leaves the direct release redeemable
 D9: pass
     [default] passed 15ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T10: turning general availability off while a direct release is active leaves the direct release redeemable
-    [sandbox] passed 79ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T10: turning general availability off while a direct release is active leaves the direct release redeemable
+    [sandbox] passed 61ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T10: turning general availability off while a direct release is active leaves the direct release redeemable

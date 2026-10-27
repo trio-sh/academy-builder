@@ -1,6 +1,6 @@
 case CR-17-T1
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 rule CR-17
 what is run: First attempt on a Stage
 expected: Served from first_attempt
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 24ms :: cr17-retake-pools.db.test.ts :: CR-17 selection > T1: a first attempt is served from first_attempt
-    [sandbox] passed 82ms :: cr17-retake-pools.db.test.ts :: CR-17 selection > T1: a first attempt is served from first_attempt
+    [default] passed 18ms :: cr17-retake-pools.db.test.ts :: CR-17 selection > T1: a first attempt is served from first_attempt
+    [sandbox] passed 79ms :: cr17-retake-pools.db.test.ts :: CR-17 selection > T1: a first attempt is served from first_attempt
 D2: pass
-    [default] passed 17ms :: cr17-retake-pools.db.test.ts :: CR-17 selection > T1: a first attempt is served from first_attempt
-    [sandbox] passed 108ms :: cr17-retake-pools.db.test.ts :: CR-17 selection > T1: a first attempt is served from first_attempt
+    [default] passed 15ms :: cr17-retake-pools.db.test.ts :: CR-17 selection > T1: a first attempt is served from first_attempt
+    [sandbox] passed 84ms :: cr17-retake-pools.db.test.ts :: CR-17 selection > T1: a first attempt is served from first_attempt
 D3: pass
-    [default] passed 22ms :: cr17-retake-pools.db.test.ts :: CR-17 selection > T1: a first attempt is served from first_attempt
-    [sandbox] passed 117ms :: cr17-retake-pools.db.test.ts :: CR-17 selection > T1: a first attempt is served from first_attempt
+    [default] passed 15ms :: cr17-retake-pools.db.test.ts :: CR-17 selection > T1: a first attempt is served from first_attempt
+    [sandbox] passed 76ms :: cr17-retake-pools.db.test.ts :: CR-17 selection > T1: a first attempt is served from first_attempt
 D4: pass
-    [default] passed 13ms :: cr17-retake-pools.db.test.ts :: CR-17 selection > T1: a first attempt is served from first_attempt
-    [sandbox] passed 82ms :: cr17-retake-pools.db.test.ts :: CR-17 selection > T1: a first attempt is served from first_attempt
+    [default] passed 17ms :: cr17-retake-pools.db.test.ts :: CR-17 selection > T1: a first attempt is served from first_attempt
+    [sandbox] passed 71ms :: cr17-retake-pools.db.test.ts :: CR-17 selection > T1: a first attempt is served from first_attempt
 D5: pass
-    [default] passed 14ms :: cr17-retake-pools.db.test.ts :: CR-17 selection > T1: a first attempt is served from first_attempt
-    [sandbox] passed 66ms :: cr17-retake-pools.db.test.ts :: CR-17 selection > T1: a first attempt is served from first_attempt
+    [default] passed 15ms :: cr17-retake-pools.db.test.ts :: CR-17 selection > T1: a first attempt is served from first_attempt
+    [sandbox] passed 72ms :: cr17-retake-pools.db.test.ts :: CR-17 selection > T1: a first attempt is served from first_attempt
 D8: pass
-    [default] passed 19ms :: cr17-retake-pools.db.test.ts :: CR-17 selection > T1: a first attempt is served from first_attempt
-    [sandbox] passed 83ms :: cr17-retake-pools.db.test.ts :: CR-17 selection > T1: a first attempt is served from first_attempt
+    [default] passed 13ms :: cr17-retake-pools.db.test.ts :: CR-17 selection > T1: a first attempt is served from first_attempt
+    [sandbox] passed 81ms :: cr17-retake-pools.db.test.ts :: CR-17 selection > T1: a first attempt is served from first_attempt
 D9: pass
-    [default] passed 30ms :: cr17-retake-pools.db.test.ts :: CR-17 selection > T1: a first attempt is served from first_attempt
-    [sandbox] passed 90ms :: cr17-retake-pools.db.test.ts :: CR-17 selection > T1: a first attempt is served from first_attempt
+    [default] passed 15ms :: cr17-retake-pools.db.test.ts :: CR-17 selection > T1: a first attempt is served from first_attempt
+    [sandbox] passed 76ms :: cr17-retake-pools.db.test.ts :: CR-17 selection > T1: a first attempt is served from first_attempt

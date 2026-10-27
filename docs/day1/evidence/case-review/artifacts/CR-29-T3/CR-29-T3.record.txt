@@ -1,10 +1,10 @@
 case CR-29-T3
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 dimensions D1,D2,D3,D4,D5,D8,D9
 command bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr29-commit-seal-key.db.test.ts, cr29-key-pair-seal.db.test.ts
-fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit 3cecc7e44fa1; other dimensions by the textual swap in vitest.db.dim.config.ts
-started 2026-10-26T20:50:58.812Z
-ended 2026-10-26T20:50:58.838Z
+fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit b4c285d2993c; other dimensions by the textual swap in vitest.db.dim.config.ts
+started 2026-10-27T05:40:02.831Z
+ended 2026-10-27T05:40:02.856Z
 observed 2 mapped test(s) in cr29-commit-seal-key.db.test.ts, cr29-key-pair-seal.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-29 the commit seal key > T3: activation is refused while the shared Vault key is the current key, and allowed once a key pair version is current
-artifact artifacts/CR-29-T3/CR-29-T3.evidence.txt 883f52b4a738c1febe49de2568d3a3bbcdb9d7706e451f080772e0c414f02860
+artifact artifacts/CR-29-T3/CR-29-T3.evidence.txt 7826ba2a0502c263fc6e67e8f68d816f30eeb25c217a7379ed18bd77361d6e16

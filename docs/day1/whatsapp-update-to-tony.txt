@@ -4,13 +4,12 @@ DONE AND TESTED (automated tests before anything was merged or applied):
 - All seven dimensions are built: D1 to D4 earlier, and now D5, D8 and D9. They are loaded on the live database but cannot be served to anyone yet.
 - All 31 CORR-007 rules are built, and the whole test suite (database and 517 unit tests) passes with all five enforcement switches turned on in the sandbox, one after the other, in order. In production they are all still OFF.
 - The 104 worked cases are recorded on every dimension, in both the off and the on state, reviewed and signed. The package's own completion check says: BUILD COMPLETE, SANDBOX IMPLEMENTATION ACCEPTED. As you said you did not want to review it, I did the review in the reviewer role myself and said so in the paperwork. It is not activation.
-- The earlier loose ends are fixed and live: the five D5 scenarios that were refused when loaded are reworded and load cleanly, the D8 template that used a banned word is replaced (D8 acceptance 87 of 87), and the two timing checks now work on all seven dimensions.
+- The earlier loose ends are fixed and live: the five D5 scenarios that were refused when loaded are reworded and load cleanly, the D8 template that used a banned word is replaced (D8 acceptance 87 of 87), and the two timing checks now work on all seven dimensions, each on that dimension's own question.
 - I tested the full report path end to end (assembling the report, participant review, issuing, the report face and the accessible copy, release, the employer reading it). It found three real gaps, now fixed and live.
 - Your TEST tag is on every face of the report. The mentor cockpit, candidate, employer, school and admin screens all pass their browser tests.
 - The Austin test account is ready, and I am on the interim issuing list.
 
-TWO THINGS TO KNOW:
+ONE THING TO KNOW:
 - The full Session Archive is a separate module and is not part of this build. D8 and D9 have the registries it will use.
-- For D2, D4, D5, D8 and D9 there is no written timing question yet, so the timing checks were proven with a stand-in question. When a real one is written it is added in one line.
 
 Housekeeping on my side: the seal key pair was generated in the build session and can be rotated, and I will rotate the shared tokens and the test account password.

@@ -1,6 +1,6 @@
 case CR-13-T5
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 rule CR-13
 what is run: A person observes through account X; account X is later linked to the person's canonical identity; the person is then proposed as reviewer through account Y
 expected: Refused
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 15ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 involvement across versions and accounts > T5: observed through account X, X linked to the person later, the person proposed through account Y: refused
-    [sandbox] passed 198ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 involvement across versions and accounts > T5: observed through account X, X linked to the person later, the person proposed through account Y: refused
+    [default] passed 17ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 involvement across versions and accounts > T5: observed through account X, X linked to the person later, the person proposed through account Y: refused
+    [sandbox] passed 129ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 involvement across versions and accounts > T5: observed through account X, X linked to the person later, the person proposed through account Y: refused
 D2: pass
-    [default] passed 15ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 involvement across versions and accounts > T5: observed through account X, X linked to the person later, the person proposed through account Y: refused
-    [sandbox] passed 244ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 involvement across versions and accounts > T5: observed through account X, X linked to the person later, the person proposed through account Y: refused
-D3: pass
     [default] passed 14ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 involvement across versions and accounts > T5: observed through account X, X linked to the person later, the person proposed through account Y: refused
-    [sandbox] passed 212ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 involvement across versions and accounts > T5: observed through account X, X linked to the person later, the person proposed through account Y: refused
+    [sandbox] passed 242ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 involvement across versions and accounts > T5: observed through account X, X linked to the person later, the person proposed through account Y: refused
+D3: pass
+    [default] passed 11ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 involvement across versions and accounts > T5: observed through account X, X linked to the person later, the person proposed through account Y: refused
+    [sandbox] passed 186ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 involvement across versions and accounts > T5: observed through account X, X linked to the person later, the person proposed through account Y: refused
 D4: pass
-    [default] passed 13ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 involvement across versions and accounts > T5: observed through account X, X linked to the person later, the person proposed through account Y: refused
-    [sandbox] passed 228ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 involvement across versions and accounts > T5: observed through account X, X linked to the person later, the person proposed through account Y: refused
+    [default] passed 14ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 involvement across versions and accounts > T5: observed through account X, X linked to the person later, the person proposed through account Y: refused
+    [sandbox] passed 137ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 involvement across versions and accounts > T5: observed through account X, X linked to the person later, the person proposed through account Y: refused
 D5: pass
-    [default] passed 15ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 involvement across versions and accounts > T5: observed through account X, X linked to the person later, the person proposed through account Y: refused
-    [sandbox] passed 237ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 involvement across versions and accounts > T5: observed through account X, X linked to the person later, the person proposed through account Y: refused
-D8: pass
-    [default] passed 21ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 involvement across versions and accounts > T5: observed through account X, X linked to the person later, the person proposed through account Y: refused
+    [default] passed 16ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 involvement across versions and accounts > T5: observed through account X, X linked to the person later, the person proposed through account Y: refused
     [sandbox] passed 203ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 involvement across versions and accounts > T5: observed through account X, X linked to the person later, the person proposed through account Y: refused
+D8: pass
+    [default] passed 15ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 involvement across versions and accounts > T5: observed through account X, X linked to the person later, the person proposed through account Y: refused
+    [sandbox] passed 212ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 involvement across versions and accounts > T5: observed through account X, X linked to the person later, the person proposed through account Y: refused
 D9: pass
     [default] passed 15ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 involvement across versions and accounts > T5: observed through account X, X linked to the person later, the person proposed through account Y: refused
-    [sandbox] passed 195ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 involvement across versions and accounts > T5: observed through account X, X linked to the person later, the person proposed through account Y: refused
+    [sandbox] passed 189ms :: cr13-involvement-reconsideration.db.test.ts :: CR-13 involvement across versions and accounts > T5: observed through account X, X linked to the person later, the person proposed through account Y: refused

@@ -1,6 +1,6 @@
 case CR-08-T1
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 rule CR-08
 what is run: Revoke during serve, submit, capture, confirm, commit, review and release, in both orders around the commit point
 expected: Revocation first: the act refuses, nothing counts. Commit first: the commit stands and its output is excluded
@@ -18,135 +18,135 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 103ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: start: revocation first refuses and nothing counts; the act first goes through
-    [default] passed 69ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: serve: revocation first refuses and nothing counts; the act first goes through
-    [default] passed 68ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: submit: revocation first refuses and nothing counts; the act first goes through
-    [default] passed 76ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: capture: revocation first refuses and nothing counts; the act first goes through
-    [default] passed 69ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: confirm: revocation first refuses and nothing counts; the act first goes through
-    [default] passed 45ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit, revocation first: the act refuses, the work ends quarantined and nothing counts
-    [default] passed 56ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit first, then revocation: the commit stands and counts, and its output is excluded from composition
-    [default] passed 51ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: review after the commit: a revocation excludes the output and the act then refuses
-    [default] passed 49ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: release after the commit: a revocation excludes the output and the act then refuses
-    [sandbox] passed 215ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: start: revocation first refuses and nothing counts; the act first goes through
-    [sandbox] passed 248ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: serve: revocation first refuses and nothing counts; the act first goes through
-    [sandbox] passed 288ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: submit: revocation first refuses and nothing counts; the act first goes through
-    [sandbox] passed 318ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: capture: revocation first refuses and nothing counts; the act first goes through
-    [sandbox] passed 212ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: confirm: revocation first refuses and nothing counts; the act first goes through
-    [sandbox] passed 135ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit, revocation first: the act refuses, the work ends quarantined and nothing counts
-    [sandbox] passed 109ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit first, then revocation: the commit stands and counts, and its output is excluded from composition
-    [sandbox] passed 120ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: review after the commit: a revocation excludes the output and the act then refuses
-    [sandbox] passed 112ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: release after the commit: a revocation excludes the output and the act then refuses
-D2: pass
-    [default] passed 131ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: start: revocation first refuses and nothing counts; the act first goes through
-    [default] passed 90ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: serve: revocation first refuses and nothing counts; the act first goes through
-    [default] passed 85ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: submit: revocation first refuses and nothing counts; the act first goes through
-    [default] passed 96ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: capture: revocation first refuses and nothing counts; the act first goes through
-    [default] passed 81ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: confirm: revocation first refuses and nothing counts; the act first goes through
-    [default] passed 48ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit, revocation first: the act refuses, the work ends quarantined and nothing counts
-    [default] passed 44ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit first, then revocation: the commit stands and counts, and its output is excluded from composition
-    [default] passed 45ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: review after the commit: a revocation excludes the output and the act then refuses
-    [default] passed 34ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: release after the commit: a revocation excludes the output and the act then refuses
-    [sandbox] passed 232ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: start: revocation first refuses and nothing counts; the act first goes through
-    [sandbox] passed 183ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: serve: revocation first refuses and nothing counts; the act first goes through
-    [sandbox] passed 203ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: submit: revocation first refuses and nothing counts; the act first goes through
-    [sandbox] passed 198ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: capture: revocation first refuses and nothing counts; the act first goes through
-    [sandbox] passed 194ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: confirm: revocation first refuses and nothing counts; the act first goes through
-    [sandbox] passed 102ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit, revocation first: the act refuses, the work ends quarantined and nothing counts
-    [sandbox] passed 109ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit first, then revocation: the commit stands and counts, and its output is excluded from composition
-    [sandbox] passed 98ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: review after the commit: a revocation excludes the output and the act then refuses
-    [sandbox] passed 111ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: release after the commit: a revocation excludes the output and the act then refuses
-D3: pass
-    [default] passed 120ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: start: revocation first refuses and nothing counts; the act first goes through
-    [default] passed 114ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: serve: revocation first refuses and nothing counts; the act first goes through
-    [default] passed 88ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: submit: revocation first refuses and nothing counts; the act first goes through
-    [default] passed 121ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: capture: revocation first refuses and nothing counts; the act first goes through
-    [default] passed 150ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: confirm: revocation first refuses and nothing counts; the act first goes through
-    [default] passed 89ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit, revocation first: the act refuses, the work ends quarantined and nothing counts
-    [default] passed 74ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit first, then revocation: the commit stands and counts, and its output is excluded from composition
-    [default] passed 62ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: review after the commit: a revocation excludes the output and the act then refuses
-    [default] passed 61ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: release after the commit: a revocation excludes the output and the act then refuses
-    [sandbox] passed 264ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: start: revocation first refuses and nothing counts; the act first goes through
-    [sandbox] passed 256ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: serve: revocation first refuses and nothing counts; the act first goes through
-    [sandbox] passed 214ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: submit: revocation first refuses and nothing counts; the act first goes through
-    [sandbox] passed 217ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: capture: revocation first refuses and nothing counts; the act first goes through
-    [sandbox] passed 232ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: confirm: revocation first refuses and nothing counts; the act first goes through
-    [sandbox] passed 152ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit, revocation first: the act refuses, the work ends quarantined and nothing counts
-    [sandbox] passed 147ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit first, then revocation: the commit stands and counts, and its output is excluded from composition
-    [sandbox] passed 112ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: review after the commit: a revocation excludes the output and the act then refuses
-    [sandbox] passed 150ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: release after the commit: a revocation excludes the output and the act then refuses
-D4: pass
-    [default] passed 106ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: start: revocation first refuses and nothing counts; the act first goes through
-    [default] passed 91ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: serve: revocation first refuses and nothing counts; the act first goes through
-    [default] passed 75ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: submit: revocation first refuses and nothing counts; the act first goes through
-    [default] passed 73ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: capture: revocation first refuses and nothing counts; the act first goes through
-    [default] passed 81ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: confirm: revocation first refuses and nothing counts; the act first goes through
-    [default] passed 67ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit, revocation first: the act refuses, the work ends quarantined and nothing counts
-    [default] passed 78ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit first, then revocation: the commit stands and counts, and its output is excluded from composition
-    [default] passed 55ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: review after the commit: a revocation excludes the output and the act then refuses
-    [default] passed 45ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: release after the commit: a revocation excludes the output and the act then refuses
-    [sandbox] passed 318ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: start: revocation first refuses and nothing counts; the act first goes through
-    [sandbox] passed 282ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: serve: revocation first refuses and nothing counts; the act first goes through
-    [sandbox] passed 302ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: submit: revocation first refuses and nothing counts; the act first goes through
-    [sandbox] passed 271ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: capture: revocation first refuses and nothing counts; the act first goes through
-    [sandbox] passed 220ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: confirm: revocation first refuses and nothing counts; the act first goes through
-    [sandbox] passed 125ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit, revocation first: the act refuses, the work ends quarantined and nothing counts
-    [sandbox] passed 131ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit first, then revocation: the commit stands and counts, and its output is excluded from composition
-    [sandbox] passed 129ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: review after the commit: a revocation excludes the output and the act then refuses
-    [sandbox] passed 135ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: release after the commit: a revocation excludes the output and the act then refuses
-D5: pass
     [default] passed 128ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: start: revocation first refuses and nothing counts; the act first goes through
-    [default] passed 79ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: serve: revocation first refuses and nothing counts; the act first goes through
-    [default] passed 104ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: submit: revocation first refuses and nothing counts; the act first goes through
-    [default] passed 92ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: capture: revocation first refuses and nothing counts; the act first goes through
+    [default] passed 96ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: serve: revocation first refuses and nothing counts; the act first goes through
+    [default] passed 95ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: submit: revocation first refuses and nothing counts; the act first goes through
+    [default] passed 72ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: capture: revocation first refuses and nothing counts; the act first goes through
     [default] passed 74ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: confirm: revocation first refuses and nothing counts; the act first goes through
-    [default] passed 50ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit, revocation first: the act refuses, the work ends quarantined and nothing counts
-    [default] passed 41ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit first, then revocation: the commit stands and counts, and its output is excluded from composition
-    [default] passed 38ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: review after the commit: a revocation excludes the output and the act then refuses
-    [default] passed 41ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: release after the commit: a revocation excludes the output and the act then refuses
-    [sandbox] passed 247ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: start: revocation first refuses and nothing counts; the act first goes through
-    [sandbox] passed 227ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: serve: revocation first refuses and nothing counts; the act first goes through
-    [sandbox] passed 248ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: submit: revocation first refuses and nothing counts; the act first goes through
-    [sandbox] passed 284ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: capture: revocation first refuses and nothing counts; the act first goes through
-    [sandbox] passed 245ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: confirm: revocation first refuses and nothing counts; the act first goes through
-    [sandbox] passed 143ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit, revocation first: the act refuses, the work ends quarantined and nothing counts
-    [sandbox] passed 122ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit first, then revocation: the commit stands and counts, and its output is excluded from composition
-    [sandbox] passed 118ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: review after the commit: a revocation excludes the output and the act then refuses
-    [sandbox] passed 119ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: release after the commit: a revocation excludes the output and the act then refuses
-D8: pass
-    [default] passed 130ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: start: revocation first refuses and nothing counts; the act first goes through
-    [default] passed 107ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: serve: revocation first refuses and nothing counts; the act first goes through
-    [default] passed 102ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: submit: revocation first refuses and nothing counts; the act first goes through
-    [default] passed 91ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: capture: revocation first refuses and nothing counts; the act first goes through
-    [default] passed 67ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: confirm: revocation first refuses and nothing counts; the act first goes through
-    [default] passed 54ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit, revocation first: the act refuses, the work ends quarantined and nothing counts
-    [default] passed 49ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit first, then revocation: the commit stands and counts, and its output is excluded from composition
-    [default] passed 42ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: review after the commit: a revocation excludes the output and the act then refuses
+    [default] passed 49ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit, revocation first: the act refuses, the work ends quarantined and nothing counts
+    [default] passed 44ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit first, then revocation: the commit stands and counts, and its output is excluded from composition
+    [default] passed 40ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: review after the commit: a revocation excludes the output and the act then refuses
     [default] passed 38ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: release after the commit: a revocation excludes the output and the act then refuses
-    [sandbox] passed 240ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: start: revocation first refuses and nothing counts; the act first goes through
-    [sandbox] passed 217ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: serve: revocation first refuses and nothing counts; the act first goes through
-    [sandbox] passed 232ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: submit: revocation first refuses and nothing counts; the act first goes through
-    [sandbox] passed 283ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: capture: revocation first refuses and nothing counts; the act first goes through
-    [sandbox] passed 248ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: confirm: revocation first refuses and nothing counts; the act first goes through
-    [sandbox] passed 131ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit, revocation first: the act refuses, the work ends quarantined and nothing counts
-    [sandbox] passed 122ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit first, then revocation: the commit stands and counts, and its output is excluded from composition
-    [sandbox] passed 119ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: review after the commit: a revocation excludes the output and the act then refuses
-    [sandbox] passed 153ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: release after the commit: a revocation excludes the output and the act then refuses
-D9: pass
-    [default] passed 140ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: start: revocation first refuses and nothing counts; the act first goes through
-    [default] passed 84ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: serve: revocation first refuses and nothing counts; the act first goes through
-    [default] passed 91ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: submit: revocation first refuses and nothing counts; the act first goes through
-    [default] passed 98ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: capture: revocation first refuses and nothing counts; the act first goes through
-    [default] passed 94ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: confirm: revocation first refuses and nothing counts; the act first goes through
-    [default] passed 66ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit, revocation first: the act refuses, the work ends quarantined and nothing counts
+    [sandbox] passed 204ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: start: revocation first refuses and nothing counts; the act first goes through
+    [sandbox] passed 203ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: serve: revocation first refuses and nothing counts; the act first goes through
+    [sandbox] passed 203ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: submit: revocation first refuses and nothing counts; the act first goes through
+    [sandbox] passed 213ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: capture: revocation first refuses and nothing counts; the act first goes through
+    [sandbox] passed 212ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: confirm: revocation first refuses and nothing counts; the act first goes through
+    [sandbox] passed 143ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit, revocation first: the act refuses, the work ends quarantined and nothing counts
+    [sandbox] passed 112ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit first, then revocation: the commit stands and counts, and its output is excluded from composition
+    [sandbox] passed 98ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: review after the commit: a revocation excludes the output and the act then refuses
+    [sandbox] passed 105ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: release after the commit: a revocation excludes the output and the act then refuses
+D2: pass
+    [default] passed 125ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: start: revocation first refuses and nothing counts; the act first goes through
+    [default] passed 72ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: serve: revocation first refuses and nothing counts; the act first goes through
+    [default] passed 75ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: submit: revocation first refuses and nothing counts; the act first goes through
+    [default] passed 74ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: capture: revocation first refuses and nothing counts; the act first goes through
+    [default] passed 76ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: confirm: revocation first refuses and nothing counts; the act first goes through
+    [default] passed 48ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit, revocation first: the act refuses, the work ends quarantined and nothing counts
     [default] passed 54ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit first, then revocation: the commit stands and counts, and its output is excluded from composition
-    [default] passed 45ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: review after the commit: a revocation excludes the output and the act then refuses
-    [default] passed 74ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: release after the commit: a revocation excludes the output and the act then refuses
-    [sandbox] passed 225ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: start: revocation first refuses and nothing counts; the act first goes through
-    [sandbox] passed 231ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: serve: revocation first refuses and nothing counts; the act first goes through
-    [sandbox] passed 227ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: submit: revocation first refuses and nothing counts; the act first goes through
-    [sandbox] passed 207ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: capture: revocation first refuses and nothing counts; the act first goes through
-    [sandbox] passed 186ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: confirm: revocation first refuses and nothing counts; the act first goes through
-    [sandbox] passed 105ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit, revocation first: the act refuses, the work ends quarantined and nothing counts
+    [default] passed 52ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: review after the commit: a revocation excludes the output and the act then refuses
+    [default] passed 41ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: release after the commit: a revocation excludes the output and the act then refuses
+    [sandbox] passed 226ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: start: revocation first refuses and nothing counts; the act first goes through
+    [sandbox] passed 251ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: serve: revocation first refuses and nothing counts; the act first goes through
+    [sandbox] passed 280ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: submit: revocation first refuses and nothing counts; the act first goes through
+    [sandbox] passed 228ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: capture: revocation first refuses and nothing counts; the act first goes through
+    [sandbox] passed 210ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: confirm: revocation first refuses and nothing counts; the act first goes through
+    [sandbox] passed 126ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit, revocation first: the act refuses, the work ends quarantined and nothing counts
+    [sandbox] passed 146ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit first, then revocation: the commit stands and counts, and its output is excluded from composition
+    [sandbox] passed 150ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: review after the commit: a revocation excludes the output and the act then refuses
+    [sandbox] passed 108ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: release after the commit: a revocation excludes the output and the act then refuses
+D3: pass
+    [default] passed 94ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: start: revocation first refuses and nothing counts; the act first goes through
+    [default] passed 80ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: serve: revocation first refuses and nothing counts; the act first goes through
+    [default] passed 78ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: submit: revocation first refuses and nothing counts; the act first goes through
+    [default] passed 76ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: capture: revocation first refuses and nothing counts; the act first goes through
+    [default] passed 92ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: confirm: revocation first refuses and nothing counts; the act first goes through
+    [default] passed 65ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit, revocation first: the act refuses, the work ends quarantined and nothing counts
+    [default] passed 60ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit first, then revocation: the commit stands and counts, and its output is excluded from composition
+    [default] passed 38ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: review after the commit: a revocation excludes the output and the act then refuses
+    [default] passed 35ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: release after the commit: a revocation excludes the output and the act then refuses
+    [sandbox] passed 254ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: start: revocation first refuses and nothing counts; the act first goes through
+    [sandbox] passed 222ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: serve: revocation first refuses and nothing counts; the act first goes through
+    [sandbox] passed 205ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: submit: revocation first refuses and nothing counts; the act first goes through
+    [sandbox] passed 198ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: capture: revocation first refuses and nothing counts; the act first goes through
+    [sandbox] passed 208ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: confirm: revocation first refuses and nothing counts; the act first goes through
+    [sandbox] passed 122ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit, revocation first: the act refuses, the work ends quarantined and nothing counts
+    [sandbox] passed 119ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit first, then revocation: the commit stands and counts, and its output is excluded from composition
+    [sandbox] passed 125ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: review after the commit: a revocation excludes the output and the act then refuses
+    [sandbox] passed 119ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: release after the commit: a revocation excludes the output and the act then refuses
+D4: pass
+    [default] passed 108ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: start: revocation first refuses and nothing counts; the act first goes through
+    [default] passed 84ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: serve: revocation first refuses and nothing counts; the act first goes through
+    [default] passed 73ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: submit: revocation first refuses and nothing counts; the act first goes through
+    [default] passed 77ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: capture: revocation first refuses and nothing counts; the act first goes through
+    [default] passed 81ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: confirm: revocation first refuses and nothing counts; the act first goes through
+    [default] passed 58ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit, revocation first: the act refuses, the work ends quarantined and nothing counts
+    [default] passed 50ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit first, then revocation: the commit stands and counts, and its output is excluded from composition
+    [default] passed 49ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: review after the commit: a revocation excludes the output and the act then refuses
+    [default] passed 36ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: release after the commit: a revocation excludes the output and the act then refuses
+    [sandbox] passed 228ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: start: revocation first refuses and nothing counts; the act first goes through
+    [sandbox] passed 189ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: serve: revocation first refuses and nothing counts; the act first goes through
+    [sandbox] passed 199ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: submit: revocation first refuses and nothing counts; the act first goes through
+    [sandbox] passed 201ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: capture: revocation first refuses and nothing counts; the act first goes through
+    [sandbox] passed 215ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: confirm: revocation first refuses and nothing counts; the act first goes through
+    [sandbox] passed 122ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit, revocation first: the act refuses, the work ends quarantined and nothing counts
+    [sandbox] passed 101ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit first, then revocation: the commit stands and counts, and its output is excluded from composition
+    [sandbox] passed 93ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: review after the commit: a revocation excludes the output and the act then refuses
+    [sandbox] passed 111ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: release after the commit: a revocation excludes the output and the act then refuses
+D5: pass
+    [default] passed 111ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: start: revocation first refuses and nothing counts; the act first goes through
+    [default] passed 86ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: serve: revocation first refuses and nothing counts; the act first goes through
+    [default] passed 101ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: submit: revocation first refuses and nothing counts; the act first goes through
+    [default] passed 92ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: capture: revocation first refuses and nothing counts; the act first goes through
+    [default] passed 80ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: confirm: revocation first refuses and nothing counts; the act first goes through
+    [default] passed 60ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit, revocation first: the act refuses, the work ends quarantined and nothing counts
+    [default] passed 53ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit first, then revocation: the commit stands and counts, and its output is excluded from composition
+    [default] passed 50ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: review after the commit: a revocation excludes the output and the act then refuses
+    [default] passed 46ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: release after the commit: a revocation excludes the output and the act then refuses
+    [sandbox] passed 200ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: start: revocation first refuses and nothing counts; the act first goes through
+    [sandbox] passed 179ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: serve: revocation first refuses and nothing counts; the act first goes through
+    [sandbox] passed 182ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: submit: revocation first refuses and nothing counts; the act first goes through
+    [sandbox] passed 191ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: capture: revocation first refuses and nothing counts; the act first goes through
+    [sandbox] passed 183ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: confirm: revocation first refuses and nothing counts; the act first goes through
+    [sandbox] passed 103ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit, revocation first: the act refuses, the work ends quarantined and nothing counts
+    [sandbox] passed 94ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit first, then revocation: the commit stands and counts, and its output is excluded from composition
+    [sandbox] passed 86ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: review after the commit: a revocation excludes the output and the act then refuses
+    [sandbox] passed 86ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: release after the commit: a revocation excludes the output and the act then refuses
+D8: pass
+    [default] passed 112ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: start: revocation first refuses and nothing counts; the act first goes through
+    [default] passed 89ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: serve: revocation first refuses and nothing counts; the act first goes through
+    [default] passed 74ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: submit: revocation first refuses and nothing counts; the act first goes through
+    [default] passed 72ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: capture: revocation first refuses and nothing counts; the act first goes through
+    [default] passed 69ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: confirm: revocation first refuses and nothing counts; the act first goes through
+    [default] passed 58ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit, revocation first: the act refuses, the work ends quarantined and nothing counts
+    [default] passed 50ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit first, then revocation: the commit stands and counts, and its output is excluded from composition
+    [default] passed 57ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: review after the commit: a revocation excludes the output and the act then refuses
+    [default] passed 61ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: release after the commit: a revocation excludes the output and the act then refuses
+    [sandbox] passed 219ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: start: revocation first refuses and nothing counts; the act first goes through
+    [sandbox] passed 218ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: serve: revocation first refuses and nothing counts; the act first goes through
+    [sandbox] passed 190ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: submit: revocation first refuses and nothing counts; the act first goes through
+    [sandbox] passed 193ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: capture: revocation first refuses and nothing counts; the act first goes through
+    [sandbox] passed 198ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: confirm: revocation first refuses and nothing counts; the act first goes through
+    [sandbox] passed 109ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit, revocation first: the act refuses, the work ends quarantined and nothing counts
     [sandbox] passed 98ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit first, then revocation: the commit stands and counts, and its output is excluded from composition
-    [sandbox] passed 112ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: review after the commit: a revocation excludes the output and the act then refuses
-    [sandbox] passed 139ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: release after the commit: a revocation excludes the output and the act then refuses
+    [sandbox] passed 100ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: review after the commit: a revocation excludes the output and the act then refuses
+    [sandbox] passed 102ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: release after the commit: a revocation excludes the output and the act then refuses
+D9: pass
+    [default] passed 95ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: start: revocation first refuses and nothing counts; the act first goes through
+    [default] passed 61ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: serve: revocation first refuses and nothing counts; the act first goes through
+    [default] passed 63ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: submit: revocation first refuses and nothing counts; the act first goes through
+    [default] passed 64ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: capture: revocation first refuses and nothing counts; the act first goes through
+    [default] passed 63ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: confirm: revocation first refuses and nothing counts; the act first goes through
+    [default] passed 41ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit, revocation first: the act refuses, the work ends quarantined and nothing counts
+    [default] passed 34ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit first, then revocation: the commit stands and counts, and its output is excluded from composition
+    [default] passed 31ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: review after the commit: a revocation excludes the output and the act then refuses
+    [default] passed 35ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: release after the commit: a revocation excludes the output and the act then refuses
+    [sandbox] passed 231ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: start: revocation first refuses and nothing counts; the act first goes through
+    [sandbox] passed 233ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: serve: revocation first refuses and nothing counts; the act first goes through
+    [sandbox] passed 207ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: submit: revocation first refuses and nothing counts; the act first goes through
+    [sandbox] passed 217ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: capture: revocation first refuses and nothing counts; the act first goes through
+    [sandbox] passed 212ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: confirm: revocation first refuses and nothing counts; the act first goes through
+    [sandbox] passed 114ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit, revocation first: the act refuses, the work ends quarantined and nothing counts
+    [sandbox] passed 92ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: commit first, then revocation: the commit stands and counts, and its output is excluded from composition
+    [sandbox] passed 87ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: review after the commit: a revocation excludes the output and the act then refuses
+    [sandbox] passed 98ms :: cr08-consent-revocation.db.test.ts :: CR-08 each consequential act checks the permission > T1: release after the commit: a revocation excludes the output and the act then refuses

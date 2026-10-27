@@ -1,10 +1,10 @@
 case CR-12-T3
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 dimensions D1,D2,D3,D4,D5,D8,D9
 command bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr12-window.db.test.ts
-fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit 3cecc7e44fa1; other dimensions by the textual swap in vitest.db.dim.config.ts
-started 2026-10-26T20:50:58.812Z
-ended 2026-10-26T20:50:58.938Z
+fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit b4c285d2993c; other dimensions by the textual swap in vitest.db.dim.config.ts
+started 2026-10-27T05:40:02.831Z
+ended 2026-10-27T05:40:02.930Z
 observed 1 mapped test(s) in cr12-window.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-12 T3: month end rule, stored expiry, display zone > 31 August 14:00 plus six calendar months is 28 February 14:00, stored; refused at 13:59, admitted at 14:
-artifact artifacts/CR-12-T3/CR-12-T3.evidence.txt 8569ddd96a1beb6a2a82707a4b2e5d2155573a76c17a17acc2257793f10b9007
+artifact artifacts/CR-12-T3/CR-12-T3.evidence.txt 623dca9d5e80268924e544747ba71b50721574a528d9c79f3b3f697f49f80dd9

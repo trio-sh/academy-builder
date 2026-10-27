@@ -1,6 +1,6 @@
 case CR-20-T1
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 rule CR-20
 what is run: Each timing refusal in turn
 expected: Its own code
@@ -14,79 +14,79 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 76ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a reference that is not stated as a beat
+    [default] passed 56ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a reference that is not stated as a beat
     [default] passed 34ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat with no script loaded
-    [default] passed 34ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat that is not in the loaded script
-    [default] passed 51ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a loaded beat with no timestamp, then permitted once the beat is stamped; each code is only its own
-    [default] passed 36ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a determination that is not timing dependent is not refused
-    [sandbox] passed 102ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a reference that is not stated as a beat
-    [sandbox] passed 91ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat with no script loaded
-    [sandbox] passed 112ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat that is not in the loaded script
-    [sandbox] passed 125ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a loaded beat with no timestamp, then permitted once the beat is stamped; each code is only its own
+    [default] passed 37ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat that is not in the loaded script
+    [default] passed 32ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a loaded beat with no timestamp, then permitted once the beat is stamped; each code is only its own
+    [default] passed 28ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a determination that is not timing dependent is not refused
+    [sandbox] passed 114ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a reference that is not stated as a beat
+    [sandbox] passed 111ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat with no script loaded
+    [sandbox] passed 90ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat that is not in the loaded script
+    [sandbox] passed 103ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a loaded beat with no timestamp, then permitted once the beat is stamped; each code is only its own
     [sandbox] passed 95ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a determination that is not timing dependent is not refused
 D2: pass
-    [default] passed 67ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a reference that is not stated as a beat
-    [default] passed 35ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat with no script loaded
-    [default] passed 29ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat that is not in the loaded script
-    [default] passed 42ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a loaded beat with no timestamp, then permitted once the beat is stamped; each code is only its own
-    [default] passed 30ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a determination that is not timing dependent is not refused
-    [sandbox] passed 165ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a reference that is not stated as a beat
-    [sandbox] passed 141ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat with no script loaded
-    [sandbox] passed 127ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat that is not in the loaded script
-    [sandbox] passed 114ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a loaded beat with no timestamp, then permitted once the beat is stamped; each code is only its own
-    [sandbox] passed 97ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a determination that is not timing dependent is not refused
+    [default] passed 52ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a reference that is not stated as a beat
+    [default] passed 38ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat with no script loaded
+    [default] passed 38ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat that is not in the loaded script
+    [default] passed 40ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a loaded beat with no timestamp, then permitted once the beat is stamped; each code is only its own
+    [default] passed 27ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a determination that is not timing dependent is not refused
+    [sandbox] passed 91ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a reference that is not stated as a beat
+    [sandbox] passed 75ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat with no script loaded
+    [sandbox] passed 68ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat that is not in the loaded script
+    [sandbox] passed 84ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a loaded beat with no timestamp, then permitted once the beat is stamped; each code is only its own
+    [sandbox] passed 74ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a determination that is not timing dependent is not refused
 D3: pass
-    [default] passed 60ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a reference that is not stated as a beat
-    [default] passed 43ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat with no script loaded
-    [default] passed 40ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat that is not in the loaded script
-    [default] passed 48ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a loaded beat with no timestamp, then permitted once the beat is stamped; each code is only its own
-    [default] passed 42ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a determination that is not timing dependent is not refused
-    [sandbox] passed 109ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a reference that is not stated as a beat
-    [sandbox] passed 98ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat with no script loaded
-    [sandbox] passed 124ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat that is not in the loaded script
-    [sandbox] passed 105ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a loaded beat with no timestamp, then permitted once the beat is stamped; each code is only its own
-    [sandbox] passed 151ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a determination that is not timing dependent is not refused
+    [default] passed 64ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a reference that is not stated as a beat
+    [default] passed 38ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat with no script loaded
+    [default] passed 39ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat that is not in the loaded script
+    [default] passed 45ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a loaded beat with no timestamp, then permitted once the beat is stamped; each code is only its own
+    [default] passed 35ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a determination that is not timing dependent is not refused
+    [sandbox] passed 114ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a reference that is not stated as a beat
+    [sandbox] passed 85ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat with no script loaded
+    [sandbox] passed 81ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat that is not in the loaded script
+    [sandbox] passed 92ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a loaded beat with no timestamp, then permitted once the beat is stamped; each code is only its own
+    [sandbox] passed 85ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a determination that is not timing dependent is not refused
 D4: pass
-    [default] passed 58ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a reference that is not stated as a beat
+    [default] passed 53ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a reference that is not stated as a beat
+    [default] passed 46ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat with no script loaded
+    [default] passed 35ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat that is not in the loaded script
+    [default] passed 36ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a loaded beat with no timestamp, then permitted once the beat is stamped; each code is only its own
+    [default] passed 30ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a determination that is not timing dependent is not refused
+    [sandbox] passed 112ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a reference that is not stated as a beat
+    [sandbox] passed 88ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat with no script loaded
+    [sandbox] passed 87ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat that is not in the loaded script
+    [sandbox] passed 95ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a loaded beat with no timestamp, then permitted once the beat is stamped; each code is only its own
+    [sandbox] passed 95ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a determination that is not timing dependent is not refused
+D5: pass
+    [default] passed 57ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a reference that is not stated as a beat
+    [default] passed 34ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat with no script loaded
+    [default] passed 41ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat that is not in the loaded script
+    [default] passed 46ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a loaded beat with no timestamp, then permitted once the beat is stamped; each code is only its own
+    [default] passed 30ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a determination that is not timing dependent is not refused
+    [sandbox] passed 124ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a reference that is not stated as a beat
+    [sandbox] passed 97ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat with no script loaded
+    [sandbox] passed 105ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat that is not in the loaded script
+    [sandbox] passed 126ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a loaded beat with no timestamp, then permitted once the beat is stamped; each code is only its own
+    [sandbox] passed 103ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a determination that is not timing dependent is not refused
+D8: pass
+    [default] passed 53ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a reference that is not stated as a beat
+    [default] passed 29ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat with no script loaded
+    [default] passed 28ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat that is not in the loaded script
+    [default] passed 31ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a loaded beat with no timestamp, then permitted once the beat is stamped; each code is only its own
+    [default] passed 25ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a determination that is not timing dependent is not refused
+    [sandbox] passed 105ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a reference that is not stated as a beat
+    [sandbox] passed 86ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat with no script loaded
+    [sandbox] passed 93ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat that is not in the loaded script
+    [sandbox] passed 100ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a loaded beat with no timestamp, then permitted once the beat is stamped; each code is only its own
+    [sandbox] passed 126ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a determination that is not timing dependent is not refused
+D9: pass
+    [default] passed 57ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a reference that is not stated as a beat
     [default] passed 33ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat with no script loaded
     [default] passed 32ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat that is not in the loaded script
-    [default] passed 41ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a loaded beat with no timestamp, then permitted once the beat is stamped; each code is only its own
-    [default] passed 37ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a determination that is not timing dependent is not refused
-    [sandbox] passed 140ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a reference that is not stated as a beat
-    [sandbox] passed 142ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat with no script loaded
-    [sandbox] passed 146ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat that is not in the loaded script
-    [sandbox] passed 130ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a loaded beat with no timestamp, then permitted once the beat is stamped; each code is only its own
-    [sandbox] passed 100ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a determination that is not timing dependent is not refused
-D5: pass
-    [default] passed 54ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a reference that is not stated as a beat
-    [default] passed 33ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat with no script loaded
-    [default] passed 35ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat that is not in the loaded script
-    [default] passed 42ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a loaded beat with no timestamp, then permitted once the beat is stamped; each code is only its own
-    [default] passed 40ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a determination that is not timing dependent is not refused
-    [sandbox] passed 110ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a reference that is not stated as a beat
-    [sandbox] passed 96ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat with no script loaded
-    [sandbox] passed 93ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat that is not in the loaded script
-    [sandbox] passed 107ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a loaded beat with no timestamp, then permitted once the beat is stamped; each code is only its own
-    [sandbox] passed 90ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a determination that is not timing dependent is not refused
-D8: pass
-    [default] passed 75ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a reference that is not stated as a beat
-    [default] passed 35ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat with no script loaded
-    [default] passed 44ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat that is not in the loaded script
-    [default] passed 41ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a loaded beat with no timestamp, then permitted once the beat is stamped; each code is only its own
-    [default] passed 34ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a determination that is not timing dependent is not refused
-    [sandbox] passed 114ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a reference that is not stated as a beat
-    [sandbox] passed 109ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat with no script loaded
-    [sandbox] passed 116ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat that is not in the loaded script
-    [sandbox] passed 107ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a loaded beat with no timestamp, then permitted once the beat is stamped; each code is only its own
-    [sandbox] passed 92ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a determination that is not timing dependent is not refused
-D9: pass
-    [default] passed 101ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a reference that is not stated as a beat
-    [default] passed 37ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat with no script loaded
-    [default] passed 40ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat that is not in the loaded script
-    [default] passed 54ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a loaded beat with no timestamp, then permitted once the beat is stamped; each code is only its own
-    [default] passed 37ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a determination that is not timing dependent is not refused
-    [sandbox] passed 115ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a reference that is not stated as a beat
-    [sandbox] passed 98ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat with no script loaded
-    [sandbox] passed 101ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat that is not in the loaded script
-    [sandbox] passed 92ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a loaded beat with no timestamp, then permitted once the beat is stamped; each code is only its own
-    [sandbox] passed 94ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a determination that is not timing dependent is not refused
+    [default] passed 30ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a loaded beat with no timestamp, then permitted once the beat is stamped; each code is only its own
+    [default] passed 26ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a determination that is not timing dependent is not refused
+    [sandbox] passed 132ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a reference that is not stated as a beat
+    [sandbox] passed 100ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat with no script loaded
+    [sandbox] passed 94ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a stated beat that is not in the loaded script
+    [sandbox] passed 117ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a loaded beat with no timestamp, then permitted once the beat is stamped; each code is only its own
+    [sandbox] passed 102ms :: cr20-timing-and-capture-refusals.db.test.ts :: CR-20-T1 each timing refusal returns its own code > a determination that is not timing dependent is not refused
