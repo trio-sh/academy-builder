@@ -1,0 +1,104 @@
+{
+ "what": "Live apply of migration 20270251 (each dimension's own timing dependent question registered, CR-334)",
+ "when": "2026-10-27",
+ "authority": "CR-219",
+ "tests_before": "PR 410 CI green (unit, database); database 554/554 default and with all five switches on; unit 517/517; CR-20 13/13 on each of D2, D3, D4, D5, D8, D9 with its own question; removing a registered row fails the new tests",
+ "files": [
+  {
+   "file": "20270251000000_timing_questions_registered_all_dimensions.sql",
+   "sha256": "641357860bd7aabfdb33b7edf0a3e567f853e5b953c19579f91d982a6bca53d0",
+   "ok": true,
+   "error": null,
+   "seconds": 0.43
+  }
+ ],
+ "registry_rows": [
+  {
+   "question_code": "Q-D1-02",
+   "dimension_id": "D1",
+   "source_sheet_field": "enquiry_point"
+  },
+  {
+   "question_code": "Q-D1-07",
+   "dimension_id": "D1",
+   "source_sheet_field": "account_test_point"
+  },
+  {
+   "question_code": "Q-D1-08a",
+   "dimension_id": "D1",
+   "source_sheet_field": "bearing_interest"
+  },
+  {
+   "question_code": "Q-D2-09",
+   "dimension_id": "D2",
+   "source_sheet_field": "knowledge_test_point"
+  },
+  {
+   "question_code": "Q-D3-09",
+   "dimension_id": "D3",
+   "source_sheet_field": "delivery_test_point"
+  },
+  {
+   "question_code": "Q-D4-09",
+   "dimension_id": "D4",
+   "source_sheet_field": "statement_test_point"
+  },
+  {
+   "question_code": "Q-D5-09",
+   "dimension_id": "D5",
+   "source_sheet_field": "exchange_test_point"
+  },
+  {
+   "question_code": "Q-D8-09",
+   "dimension_id": "D8",
+   "source_sheet_field": "account_test_point"
+  },
+  {
+   "question_code": "Q-D9-09",
+   "dimension_id": "D9",
+   "source_sheet_field": "account_test_point"
+  }
+ ],
+ "reference_field_checks": {
+  "q_d2_09": "knowledge_test_point",
+  "q_d3_09": "delivery_test_point",
+  "q_d4_09": "statement_test_point",
+  "q_d5_09": "exchange_test_point",
+  "q_d8_09": "account_test_point",
+  "q_d9_09": "account_test_point",
+  "q_d3_07_unregistered": null
+ },
+ "loaded_sources_by_dimension": [
+  {
+   "d": "D2",
+   "n": 34
+  },
+  {
+   "d": "D3",
+   "n": 39
+  },
+  {
+   "d": "D4",
+   "n": 33
+  },
+  {
+   "d": "D5",
+   "n": 33
+  },
+  {
+   "d": "D8",
+   "n": 34
+  },
+  {
+   "d": "D9",
+   "n": 35
+  }
+ ],
+ "loaded_sources_with_non_beat_field": [],
+ "switches_after": {
+  "cw": "off",
+  "im": "legacy_tolerant"
+ },
+ "note": "canonical_writers off, ingest legacy_tolerant; the migration only inserts six registry rows and touches no switch",
+ "rollback": "docs/day1/evidence/rollback_20270251.sql"
+}
