@@ -4,6 +4,7 @@ import { randomUUID } from "node:crypto";
 import type pg from "pg";
 import { RUN, asRole, asService, connect, meet, mkApprovedSource, mkParticipant, retireFixtureSources, run } from "./helpers";
 
+const DIM = "D1";
 let c: pg.Client; let reviewer: string; let seq = 0;
 async function fx(sql: string) {
   await c.query("begin"); await c.query("set local session_replication_role = replica");
@@ -13,7 +14,7 @@ async function fx(sql: string) {
 async function world(o: { stage?: "S2" | "S4"; enquiry?: string; beats?: string[]; bindings?: Array<[string, string, string | null]> } = {}) {
   const src = await mkApprovedSource(c, { dimension: "D1", stage: "S2", situationClass: "SC-D1-1", reviewer });
   const stage = o.stage ?? "S2";
-  await fx(`update t3a_d1_content_version set body = jsonb_set(jsonb_set(body, '{stage_code}', '"${stage}"'), '{source_sheet}', (body->'source_sheet') || jsonb_build_object('enquiry_point', ${o.enquiry === undefined ? "null::text" : `'${o.enquiry}'::text`})) where content_version_id='${src.version}'`);
+  await fx(`update t3a_d1_content_version set body = jsonb_set(jsonb_set(body, '{stage_code}', '"${stage}"'), '{source_sheet}', (body->'source_sheet') || jsonb_build_object('${TF}', ${o.enquiry === undefined ? "null::text" : `'${o.enquiry}'::text`})) where content_version_id='${src.version}'`);
   for (const [i, b] of (o.beats ?? []).entries()) await fx(`insert into t3a_d1_mentor_action_sequence(source_identifier, beat_ordinal, beat_code, action_type, content_verbatim, is_decision_point) values ('${src.identifier}', ${i + 1}, '${b}', 'SAY', 'beat ${b}', false)`);
   for (const [beat, set, q] of o.bindings ?? []) await fx(`insert into t3a_d1_beat_capture_binding(source_identifier, beat_code, capture_set_code, dimension_id, qualifier_as_written) values ('${src.identifier}', '${beat}', '${set}', 'D1', ${q ? `'${q}'` : "null"})`);
   const p = await mkParticipant(c, `cr20-p-${++seq}-${RUN}`);
@@ -22,17 +23,17 @@ async function world(o: { stage?: "S2" | "S4"; enquiry?: string; beats?: string[
   const entry = (await run(c, `select stage_entry_event_id e from t3a_stage_entry_event where participant_id='${p}' and source_version_id='${src.version}'`))[0].e;
   return { src, p, entry };
 }
-const timing = (entry: string, q = "Q-D1-02") => run(c, `select t3a_d1_timing_determination_permitted('${entry}','${q}') r`).then((r) => r[0].r);
+// The dimension's own timing dependent question and the source sheet field it reads (registered by migration 20270251; D1's by 20270250). Built from DIM so a swapped dimension reads its own.
+const N = Number(DIM.slice(1));
+const TQ = `Q-${DIM}-${N === 1 ? "02" : "09"}`;
+const TF = ({ 1: "enquiry_point", 2: "knowledge_test_point", 3: "delivery_test_point", 4: "statement_test_point", 5: "exchange_test_point", 8: "account_test_point", 9: "account_test_point" } as Record<number, string>)[N];
+const timing = (entry: string, q = TQ) => run(c, `select t3a_d1_timing_determination_permitted('${entry}','${q}') r`).then((r) => r[0].r);
 
-// The timing dependent determinations are registered data (t3a_timing_reference_field). D1 has Q-D1-02 registered by the migration, so for D1 this adds nothing.
-// A dimension without a timing dependent determination of its own has this fixture register one (synthetic), which is what shows the rule applies to that dimension.
-// Only what the fixture added is taken out again, so no other test file sees it.
-let registered: string[] = [];
+// Every dimension's own timing dependent question is registered data (t3a_timing_reference_field): nothing is registered by this file.
 beforeAll(async () => {
   c = await connect(); await retireFixtureSources(c); reviewer = await mkParticipant(c, `cr20-rev-${RUN}`);
-  registered = (await fx(`insert into t3a_timing_reference_field(question_code, dimension_id, source_sheet_field, note) values ('Q-D1-02', 'D1', 'enquiry_point', 'CR-20 fixture') on conflict (question_code) do nothing returning question_code`)).map((r) => r.question_code);
 });
-afterAll(async () => { for (const q of registered) await fx(`delete from t3a_timing_reference_field where question_code = '${q}'`); await c.end(); });
+afterAll(async () => { await c.end(); });
 /** The line of the dimension's own set C2 that is its whole session line (D1: line 4; other dimensions differ, so it is read, not assumed). */
 const wholeLine = async () => (await run(c, `select line_order from t3a_d1_capture_line where dimension_id = 'D1' and capture_set_code = 'C2' and is_whole_session_answer`))[0].line_order as number;
 
@@ -65,7 +66,7 @@ describe("CR-20-T1 each timing refusal returns its own code", () => {
 
 describe("CR-20-T2 a whole session line before the close beat, and a final beat passed unanswered", () => {
   const sel = (w: { entry: string; p: string }, line: number, beat: string) =>
-    c.query(`insert into t3a_d1_capture_selection(stage_entry_event_id, question_code, capture_set_code, beat_code, line_order, selected_by, dimension_id) values ('${w.entry}','Q-D1-02','C2','${beat}',${line},'${w.p}','D1')`);
+    c.query(`insert into t3a_d1_capture_selection(stage_entry_event_id, question_code, capture_set_code, beat_code, line_order, selected_by, dimension_id) values ('${w.entry}','${TQ}','C2','${beat}',${line},'${w.p}','D1')`);
   const advance = (entry: string, beat: string) => run(c, `select t3a_d1_beat_advance_permitted('${entry}','${beat}') r`).then((r) => r[0].r);
   const count = async (entry: string) => (await run(c, `select count(*)::int n from t3a_d1_capture_selection where stage_entry_event_id='${entry}'`))[0].n;
 
