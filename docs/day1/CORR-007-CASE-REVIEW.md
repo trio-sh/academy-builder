@@ -2,7 +2,7 @@
 
 Reviewer: Claude, in the reviewer role. Builder: the same Claude model in the builder role (session `session_01HsSQ1TEzdCLan4rGpsqE4A`). **No other person or system reviewed this.** Dr Tony Mofoke's written approval of 23 October 2026 (CR-219) delegated the build, the tests and their review to the session and said he expects no review of his own; section 5.1 of the package, which asks for a reviewer who is not the one who ran the cases, is met here by role, as the founder allowed, and by nothing more. The key that signs the results is the reviewer role's own (public key `docs/day1/evidence/case-review/reviewer_public.pem`, fingerprint `40176912a64c2edf`); anyone who wants a human or independent review can re-run everything below and sign their own copy.
 
-Build recorded: `T3A-LEVELER-SANDBOX-3cecc7e-20261026`, code commit `3cecc7e44fa1` (main at PRs 405 and 406, migrations to 20270250). Results folder: `docs/day1/evidence/case-review/` (`platform_results.json`, its signature, 104 evidence files).
+Build recorded: `T3A-LEVELER-SANDBOX-b4c285d-20261027`, code commit `b4c285d2993c` (main at PR 410, migrations to 20270251). Results folder: `docs/day1/evidence/case-review/` (`platform_results.json`, its signature, 104 evidence files).
 
 ## What was run
 
@@ -10,7 +10,7 @@ The rule tests of CR-01 to CR-32 were run **once per dimension** (D1, D2, D3, D4
 
 Each test file has a primary dimension (the one it declares or names most). For another dimension the run swaps it with the primary everywhere in the file, so the same assertions run on synthetic fixtures of that dimension (sources, mentors, clearances, reports). That proves the platform rule works for that dimension's records; it does not prove anything about a dimension's authored content, which has its own acceptance runs (D2 to D9).
 
-Results (default state / sandbox state, whole database suite per dimension, every test, not only the case tests): D1 552 pass 0 fail in both; D2 551 (1 fail) in both; D3 550 (2) / 549 (3); D4 549 (3) in both; D5 547 (5) in both; D8 547 (5) in both; D9 547 (5) in both. The failures are tests that belong to one dimension's own content (named in the limits below), not case tests. The one extra failure in the sandbox D3 run, `step0_release_test.mjs` check "a withdrawn report leaves the pool" (a legacy script, mapped to no case), did not reproduce: the same file passed 99/99 when re-run alone in the same state and dimension, and it passed in all other runs, so it is recorded here as a timing flake and not hidden. The unit suite ran 517/517 and the switch log (all five on, in order, the whole suite after each) is `docs/day1/evidence/switch-rehearsal.json`.
+Results (default state / sandbox state, whole database suite per dimension, every test, not only the case tests): D1 554 pass 0 fail in both; D2 553 (1 fail) in both; D3 552 (2) in both; D4 551 (3) in both; D5 549 (5) in both; D8 549 (5) in both; D9 549 (5) in both. The failures are tests that belong to one dimension's own content (named in the limits below), not case tests. The two states agree on every dimension. The unit suite ran 517/517 and the switch log (all five on, in order, the whole suite after each) is `docs/day1/evidence/switch-rehearsal.json`.
 
 ## What I checked as reviewer
 

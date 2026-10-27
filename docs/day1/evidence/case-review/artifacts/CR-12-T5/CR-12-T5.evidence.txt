@@ -1,6 +1,6 @@
 case CR-12-T5
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 rule CR-12
 what is run: The same completion callback delivered twice, and two callbacks racing
 expected: Counted once; one cooldown; one attempt number
@@ -11,37 +11,37 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 16ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > delivered twice
-    [default] passed 13ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > two racing
-    [sandbox] passed 99ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > delivered twice
-    [sandbox] passed 70ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > two racing
+    [default] passed 13ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > delivered twice
+    [default] passed 10ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > two racing
+    [sandbox] passed 86ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > delivered twice
+    [sandbox] passed 68ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > two racing
 D2: pass
     [default] passed 15ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > delivered twice
-    [default] passed 13ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > two racing
-    [sandbox] passed 103ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > delivered twice
-    [sandbox] passed 95ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > two racing
-D3: pass
-    [default] passed 15ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > delivered twice
-    [default] passed 16ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > two racing
-    [sandbox] passed 93ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > delivered twice
-    [sandbox] passed 69ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > two racing
-D4: pass
-    [default] passed 15ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > delivered twice
-    [default] passed 13ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > two racing
-    [sandbox] passed 91ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > delivered twice
-    [sandbox] passed 89ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > two racing
-D5: pass
-    [default] passed 13ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > delivered twice
-    [default] passed 12ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > two racing
-    [sandbox] passed 77ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > delivered twice
-    [sandbox] passed 91ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > two racing
-D8: pass
-    [default] passed 16ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > delivered twice
-    [default] passed 14ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > two racing
-    [sandbox] passed 93ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > delivered twice
-    [sandbox] passed 72ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > two racing
-D9: pass
-    [default] passed 16ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > delivered twice
     [default] passed 14ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > two racing
     [sandbox] passed 70ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > delivered twice
-    [sandbox] passed 77ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > two racing
+    [sandbox] passed 66ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > two racing
+D3: pass
+    [default] passed 15ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > delivered twice
+    [default] passed 14ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > two racing
+    [sandbox] passed 79ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > delivered twice
+    [sandbox] passed 88ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > two racing
+D4: pass
+    [default] passed 14ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > delivered twice
+    [default] passed 10ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > two racing
+    [sandbox] passed 70ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > delivered twice
+    [sandbox] passed 65ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > two racing
+D5: pass
+    [default] passed 14ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > delivered twice
+    [default] passed 12ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > two racing
+    [sandbox] passed 72ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > delivered twice
+    [sandbox] passed 73ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > two racing
+D8: pass
+    [default] passed 16ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > delivered twice
+    [default] passed 12ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > two racing
+    [sandbox] passed 75ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > delivered twice
+    [sandbox] passed 65ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > two racing
+D9: pass
+    [default] passed 16ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > delivered twice
+    [default] passed 12ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > two racing
+    [sandbox] passed 81ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > delivered twice
+    [sandbox] passed 75ms :: cr12-routes.db.test.ts :: CR-12 T5: a completion callback counts once > two racing

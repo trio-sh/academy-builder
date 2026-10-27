@@ -1,6 +1,6 @@
 case CR-12-T9
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 rule CR-12
 what is run: A completion callback with no active attempt
 expected: Refused; no attempt and no count are created
@@ -11,37 +11,37 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 4ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > is refused and logged, creating no attempt and no count
-    [default] passed 12ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > a refused early callback does not reserve its identifier: the same identifier counts once later
-    [sandbox] passed 61ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > is refused and logged, creating no attempt and no count
-    [sandbox] passed 64ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > a refused early callback does not reserve its identifier: the same identifier counts once later
+    [default] passed 7ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > is refused and logged, creating no attempt and no count
+    [default] passed 10ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > a refused early callback does not reserve its identifier: the same identifier counts once later
+    [sandbox] passed 64ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > is refused and logged, creating no attempt and no count
+    [sandbox] passed 74ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > a refused early callback does not reserve its identifier: the same identifier counts once later
 D2: pass
     [default] passed 5ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > is refused and logged, creating no attempt and no count
-    [default] passed 13ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > a refused early callback does not reserve its identifier: the same identifier counts once later
-    [sandbox] passed 76ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > is refused and logged, creating no attempt and no count
-    [sandbox] passed 95ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > a refused early callback does not reserve its identifier: the same identifier counts once later
-D3: pass
-    [default] passed 5ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > is refused and logged, creating no attempt and no count
     [default] passed 10ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > a refused early callback does not reserve its identifier: the same identifier counts once later
-    [sandbox] passed 63ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > is refused and logged, creating no attempt and no count
-    [sandbox] passed 78ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > a refused early callback does not reserve its identifier: the same identifier counts once later
+    [sandbox] passed 61ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > is refused and logged, creating no attempt and no count
+    [sandbox] passed 65ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > a refused early callback does not reserve its identifier: the same identifier counts once later
+D3: pass
+    [default] passed 6ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > is refused and logged, creating no attempt and no count
+    [default] passed 14ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > a refused early callback does not reserve its identifier: the same identifier counts once later
+    [sandbox] passed 82ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > is refused and logged, creating no attempt and no count
+    [sandbox] passed 73ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > a refused early callback does not reserve its identifier: the same identifier counts once later
 D4: pass
-    [default] passed 4ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > is refused and logged, creating no attempt and no count
-    [default] passed 11ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > a refused early callback does not reserve its identifier: the same identifier counts once later
-    [sandbox] passed 80ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > is refused and logged, creating no attempt and no count
-    [sandbox] passed 100ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > a refused early callback does not reserve its identifier: the same identifier counts once later
-D5: pass
     [default] passed 5ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > is refused and logged, creating no attempt and no count
+    [default] passed 9ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > a refused early callback does not reserve its identifier: the same identifier counts once later
+    [sandbox] passed 58ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > is refused and logged, creating no attempt and no count
+    [sandbox] passed 78ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > a refused early callback does not reserve its identifier: the same identifier counts once later
+D5: pass
+    [default] passed 6ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > is refused and logged, creating no attempt and no count
     [default] passed 12ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > a refused early callback does not reserve its identifier: the same identifier counts once later
-    [sandbox] passed 63ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > is refused and logged, creating no attempt and no count
+    [sandbox] passed 67ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > is refused and logged, creating no attempt and no count
     [sandbox] passed 73ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > a refused early callback does not reserve its identifier: the same identifier counts once later
 D8: pass
-    [default] passed 5ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > is refused and logged, creating no attempt and no count
-    [default] passed 11ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > a refused early callback does not reserve its identifier: the same identifier counts once later
-    [sandbox] passed 60ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > is refused and logged, creating no attempt and no count
+    [default] passed 6ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > is refused and logged, creating no attempt and no count
+    [default] passed 10ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > a refused early callback does not reserve its identifier: the same identifier counts once later
+    [sandbox] passed 58ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > is refused and logged, creating no attempt and no count
     [sandbox] passed 64ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > a refused early callback does not reserve its identifier: the same identifier counts once later
 D9: pass
-    [default] passed 6ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > is refused and logged, creating no attempt and no count
+    [default] passed 5ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > is refused and logged, creating no attempt and no count
     [default] passed 11ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > a refused early callback does not reserve its identifier: the same identifier counts once later
-    [sandbox] passed 73ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > is refused and logged, creating no attempt and no count
-    [sandbox] passed 77ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > a refused early callback does not reserve its identifier: the same identifier counts once later
+    [sandbox] passed 66ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > is refused and logged, creating no attempt and no count
+    [sandbox] passed 72ms :: cr12-routes.db.test.ts :: CR-12 T9, T10: an ending with no active attempt > a refused early callback does not reserve its identifier: the same identifier counts once later

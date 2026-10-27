@@ -1,6 +1,6 @@
 case CR-26-T2
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 rule CR-26
 what is run: A source request outside an allocation event
 expected: Refused, indistinguishable from other ineligibility
@@ -11,37 +11,37 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 95ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: whatever the reason, the answer is one answer: rehearsal exposure cannot be told from the other reasons
-    [default] passed 208ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: a source request outside an allocation event is refused with the same answer
-    [sandbox] passed 600ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: whatever the reason, the answer is one answer: rehearsal exposure cannot be told from the other reasons
-    [sandbox] passed 755ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: a source request outside an allocation event is refused with the same answer
+    [default] passed 89ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: whatever the reason, the answer is one answer: rehearsal exposure cannot be told from the other reasons
+    [default] passed 131ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: a source request outside an allocation event is refused with the same answer
+    [sandbox] passed 624ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: whatever the reason, the answer is one answer: rehearsal exposure cannot be told from the other reasons
+    [sandbox] passed 794ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: a source request outside an allocation event is refused with the same answer
 D2: pass
-    [default] passed 130ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: whatever the reason, the answer is one answer: rehearsal exposure cannot be told from the other reasons
-    [default] passed 146ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: a source request outside an allocation event is refused with the same answer
-    [sandbox] passed 617ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: whatever the reason, the answer is one answer: rehearsal exposure cannot be told from the other reasons
-    [sandbox] passed 908ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: a source request outside an allocation event is refused with the same answer
+    [default] passed 98ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: whatever the reason, the answer is one answer: rehearsal exposure cannot be told from the other reasons
+    [default] passed 113ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: a source request outside an allocation event is refused with the same answer
+    [sandbox] passed 504ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: whatever the reason, the answer is one answer: rehearsal exposure cannot be told from the other reasons
+    [sandbox] passed 718ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: a source request outside an allocation event is refused with the same answer
 D3: pass
-    [default] passed 141ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: whatever the reason, the answer is one answer: rehearsal exposure cannot be told from the other reasons
-    [default] passed 137ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: a source request outside an allocation event is refused with the same answer
-    [sandbox] passed 630ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: whatever the reason, the answer is one answer: rehearsal exposure cannot be told from the other reasons
-    [sandbox] passed 767ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: a source request outside an allocation event is refused with the same answer
-D4: pass
     [default] passed 97ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: whatever the reason, the answer is one answer: rehearsal exposure cannot be told from the other reasons
-    [default] passed 125ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: a source request outside an allocation event is refused with the same answer
-    [sandbox] passed 543ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: whatever the reason, the answer is one answer: rehearsal exposure cannot be told from the other reasons
-    [sandbox] passed 962ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: a source request outside an allocation event is refused with the same answer
+    [default] passed 92ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: a source request outside an allocation event is refused with the same answer
+    [sandbox] passed 671ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: whatever the reason, the answer is one answer: rehearsal exposure cannot be told from the other reasons
+    [sandbox] passed 772ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: a source request outside an allocation event is refused with the same answer
+D4: pass
+    [default] passed 98ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: whatever the reason, the answer is one answer: rehearsal exposure cannot be told from the other reasons
+    [default] passed 117ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: a source request outside an allocation event is refused with the same answer
+    [sandbox] passed 540ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: whatever the reason, the answer is one answer: rehearsal exposure cannot be told from the other reasons
+    [sandbox] passed 785ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: a source request outside an allocation event is refused with the same answer
 D5: pass
-    [default] passed 103ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: whatever the reason, the answer is one answer: rehearsal exposure cannot be told from the other reasons
-    [default] passed 101ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: a source request outside an allocation event is refused with the same answer
-    [sandbox] passed 632ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: whatever the reason, the answer is one answer: rehearsal exposure cannot be told from the other reasons
-    [sandbox] passed 727ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: a source request outside an allocation event is refused with the same answer
+    [default] passed 105ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: whatever the reason, the answer is one answer: rehearsal exposure cannot be told from the other reasons
+    [default] passed 139ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: a source request outside an allocation event is refused with the same answer
+    [sandbox] passed 483ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: whatever the reason, the answer is one answer: rehearsal exposure cannot be told from the other reasons
+    [sandbox] passed 601ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: a source request outside an allocation event is refused with the same answer
 D8: pass
-    [default] passed 111ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: whatever the reason, the answer is one answer: rehearsal exposure cannot be told from the other reasons
-    [default] passed 160ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: a source request outside an allocation event is refused with the same answer
-    [sandbox] passed 859ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: whatever the reason, the answer is one answer: rehearsal exposure cannot be told from the other reasons
-    [sandbox] passed 1032ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: a source request outside an allocation event is refused with the same answer
+    [default] passed 78ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: whatever the reason, the answer is one answer: rehearsal exposure cannot be told from the other reasons
+    [default] passed 107ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: a source request outside an allocation event is refused with the same answer
+    [sandbox] passed 606ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: whatever the reason, the answer is one answer: rehearsal exposure cannot be told from the other reasons
+    [sandbox] passed 861ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: a source request outside an allocation event is refused with the same answer
 D9: pass
-    [default] passed 140ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: whatever the reason, the answer is one answer: rehearsal exposure cannot be told from the other reasons
-    [default] passed 167ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: a source request outside an allocation event is refused with the same answer
-    [sandbox] passed 555ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: whatever the reason, the answer is one answer: rehearsal exposure cannot be told from the other reasons
-    [sandbox] passed 783ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: a source request outside an allocation event is refused with the same answer
+    [default] passed 78ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: whatever the reason, the answer is one answer: rehearsal exposure cannot be told from the other reasons
+    [default] passed 99ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: a source request outside an allocation event is refused with the same answer
+    [sandbox] passed 594ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: whatever the reason, the answer is one answer: rehearsal exposure cannot be told from the other reasons
+    [sandbox] passed 790ms :: cr26-eligibility-entry.db.test.ts :: CR-26 every ineligibility looks the same > T2: a source request outside an allocation event is refused with the same answer

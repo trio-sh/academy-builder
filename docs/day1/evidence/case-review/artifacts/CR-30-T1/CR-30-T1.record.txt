@@ -1,10 +1,10 @@
 case CR-30-T1
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 dimensions D1,D2,D3,D4,D5,D8,D9
 command bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr30-stage4-permission.db.test.ts
-fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit 3cecc7e44fa1; other dimensions by the textual swap in vitest.db.dim.config.ts
-started 2026-10-26T20:50:58.812Z
-ended 2026-10-26T20:50:58.862Z
+fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit b4c285d2993c; other dimensions by the textual swap in vitest.db.dim.config.ts
+started 2026-10-27T05:40:02.831Z
+ended 2026-10-27T05:40:02.867Z
 observed 1 mapped test(s) in cr30-stage4-permission.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-30 the Stage 4 permission > T1: Stage 4 entry while s4_activation_state is not activated is refused with s4_not_activated, whatever the answer
-artifact artifacts/CR-30-T1/CR-30-T1.evidence.txt 790972d6375eb5ae48df7b5a837f736c55875cf61ed96e17f2d2e05aad02b0f3
+artifact artifacts/CR-30-T1/CR-30-T1.evidence.txt 65bdab927297e2be5c7e6e0bcd1b4b725c4ae6e30bd485c6a0eb105622bdb141

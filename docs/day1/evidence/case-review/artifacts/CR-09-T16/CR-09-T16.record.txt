@@ -1,10 +1,10 @@
 case CR-09-T16
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 dimensions D1,D2,D3,D4,D5,D8,D9
 command bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr09-release-routes.db.test.ts
-fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit 3cecc7e44fa1; other dimensions by the textual swap in vitest.db.dim.config.ts
-started 2026-10-26T20:50:58.812Z
-ended 2026-10-26T20:50:59.008Z
+fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit b4c285d2993c; other dimensions by the textual swap in vitest.db.dim.config.ts
+started 2026-10-27T05:40:02.831Z
+ended 2026-10-27T05:40:02.987Z
 observed 1 mapped test(s) in cr09-release-routes.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-09 amendment > T9 + T16: an amended report shows the new version in the pool, notifies the participant, and returns the superseded state to a direct release
-artifact artifacts/CR-09-T16/CR-09-T16.evidence.txt 27f314a628849b781930a9b8ca4b3225ebdee3e58b67196c30f1c84a142f0319
+artifact artifacts/CR-09-T16/CR-09-T16.evidence.txt ba75e2b45d96f4b6942be66aadec25ef109a0f8e1de84b360e9d0e3063b12e91

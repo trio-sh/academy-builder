@@ -1,6 +1,6 @@
 case CR-11-T1
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 rule CR-11
 what is run: Fail one dimension item of a two dimension report
 expected: Issuance blocks; no override
@@ -12,51 +12,51 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 60ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > issuance blocks for that dimension only, with no override; the other dimension's pass does not carry it
-    [default] passed 66ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a platform item failed on one dimension blocks that dimension; not_established is not a pass; a missing item blocks
-    [default] passed 32ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a single dimension report needs every item of its two lists; one missing item blocks
-    [sandbox] passed 124ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > issuance blocks for that dimension only, with no override; the other dimension's pass does not carry it
-    [sandbox] passed 207ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a platform item failed on one dimension blocks that dimension; not_established is not a pass; a missing item blocks
-    [sandbox] passed 107ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a single dimension report needs every item of its two lists; one missing item blocks
+    [default] passed 51ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > issuance blocks for that dimension only, with no override; the other dimension's pass does not carry it
+    [default] passed 68ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a platform item failed on one dimension blocks that dimension; not_established is not a pass; a missing item blocks
+    [default] passed 28ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a single dimension report needs every item of its two lists; one missing item blocks
+    [sandbox] passed 149ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > issuance blocks for that dimension only, with no override; the other dimension's pass does not carry it
+    [sandbox] passed 172ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a platform item failed on one dimension blocks that dimension; not_established is not a pass; a missing item blocks
+    [sandbox] passed 84ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a single dimension report needs every item of its two lists; one missing item blocks
 D2: pass
-    [default] passed 84ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > issuance blocks for that dimension only, with no override; the other dimension's pass does not carry it
-    [default] passed 75ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a platform item failed on one dimension blocks that dimension; not_established is not a pass; a missing item blocks
-    [default] passed 30ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a single dimension report needs every item of its two lists; one missing item blocks
-    [sandbox] passed 142ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > issuance blocks for that dimension only, with no override; the other dimension's pass does not carry it
-    [sandbox] passed 206ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a platform item failed on one dimension blocks that dimension; not_established is not a pass; a missing item blocks
-    [sandbox] passed 106ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a single dimension report needs every item of its two lists; one missing item blocks
-D3: pass
-    [default] passed 65ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > issuance blocks for that dimension only, with no override; the other dimension's pass does not carry it
-    [default] passed 65ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a platform item failed on one dimension blocks that dimension; not_established is not a pass; a missing item blocks
-    [default] passed 36ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a single dimension report needs every item of its two lists; one missing item blocks
-    [sandbox] passed 140ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > issuance blocks for that dimension only, with no override; the other dimension's pass does not carry it
-    [sandbox] passed 197ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a platform item failed on one dimension blocks that dimension; not_established is not a pass; a missing item blocks
-    [sandbox] passed 98ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a single dimension report needs every item of its two lists; one missing item blocks
-D4: pass
-    [default] passed 63ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > issuance blocks for that dimension only, with no override; the other dimension's pass does not carry it
-    [default] passed 64ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a platform item failed on one dimension blocks that dimension; not_established is not a pass; a missing item blocks
-    [default] passed 23ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a single dimension report needs every item of its two lists; one missing item blocks
-    [sandbox] passed 145ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > issuance blocks for that dimension only, with no override; the other dimension's pass does not carry it
-    [sandbox] passed 213ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a platform item failed on one dimension blocks that dimension; not_established is not a pass; a missing item blocks
-    [sandbox] passed 100ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a single dimension report needs every item of its two lists; one missing item blocks
-D5: pass
-    [default] passed 71ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > issuance blocks for that dimension only, with no override; the other dimension's pass does not carry it
-    [default] passed 77ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a platform item failed on one dimension blocks that dimension; not_established is not a pass; a missing item blocks
-    [default] passed 30ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a single dimension report needs every item of its two lists; one missing item blocks
-    [sandbox] passed 163ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > issuance blocks for that dimension only, with no override; the other dimension's pass does not carry it
-    [sandbox] passed 284ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a platform item failed on one dimension blocks that dimension; not_established is not a pass; a missing item blocks
-    [sandbox] passed 102ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a single dimension report needs every item of its two lists; one missing item blocks
-D8: pass
-    [default] passed 98ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > issuance blocks for that dimension only, with no override; the other dimension's pass does not carry it
-    [default] passed 85ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a platform item failed on one dimension blocks that dimension; not_established is not a pass; a missing item blocks
-    [default] passed 36ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a single dimension report needs every item of its two lists; one missing item blocks
-    [sandbox] passed 134ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > issuance blocks for that dimension only, with no override; the other dimension's pass does not carry it
-    [sandbox] passed 177ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a platform item failed on one dimension blocks that dimension; not_established is not a pass; a missing item blocks
-    [sandbox] passed 88ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a single dimension report needs every item of its two lists; one missing item blocks
-D9: pass
-    [default] passed 79ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > issuance blocks for that dimension only, with no override; the other dimension's pass does not carry it
-    [default] passed 74ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a platform item failed on one dimension blocks that dimension; not_established is not a pass; a missing item blocks
+    [default] passed 77ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > issuance blocks for that dimension only, with no override; the other dimension's pass does not carry it
+    [default] passed 94ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a platform item failed on one dimension blocks that dimension; not_established is not a pass; a missing item blocks
     [default] passed 31ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a single dimension report needs every item of its two lists; one missing item blocks
-    [sandbox] passed 126ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > issuance blocks for that dimension only, with no override; the other dimension's pass does not carry it
-    [sandbox] passed 229ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a platform item failed on one dimension blocks that dimension; not_established is not a pass; a missing item blocks
-    [sandbox] passed 98ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a single dimension report needs every item of its two lists; one missing item blocks
+    [sandbox] passed 115ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > issuance blocks for that dimension only, with no override; the other dimension's pass does not carry it
+    [sandbox] passed 176ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a platform item failed on one dimension blocks that dimension; not_established is not a pass; a missing item blocks
+    [sandbox] passed 88ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a single dimension report needs every item of its two lists; one missing item blocks
+D3: pass
+    [default] passed 61ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > issuance blocks for that dimension only, with no override; the other dimension's pass does not carry it
+    [default] passed 46ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a platform item failed on one dimension blocks that dimension; not_established is not a pass; a missing item blocks
+    [default] passed 24ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a single dimension report needs every item of its two lists; one missing item blocks
+    [sandbox] passed 106ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > issuance blocks for that dimension only, with no override; the other dimension's pass does not carry it
+    [sandbox] passed 228ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a platform item failed on one dimension blocks that dimension; not_established is not a pass; a missing item blocks
+    [sandbox] passed 113ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a single dimension report needs every item of its two lists; one missing item blocks
+D4: pass
+    [default] passed 59ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > issuance blocks for that dimension only, with no override; the other dimension's pass does not carry it
+    [default] passed 65ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a platform item failed on one dimension blocks that dimension; not_established is not a pass; a missing item blocks
+    [default] passed 33ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a single dimension report needs every item of its two lists; one missing item blocks
+    [sandbox] passed 107ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > issuance blocks for that dimension only, with no override; the other dimension's pass does not carry it
+    [sandbox] passed 174ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a platform item failed on one dimension blocks that dimension; not_established is not a pass; a missing item blocks
+    [sandbox] passed 94ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a single dimension report needs every item of its two lists; one missing item blocks
+D5: pass
+    [default] passed 87ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > issuance blocks for that dimension only, with no override; the other dimension's pass does not carry it
+    [default] passed 80ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a platform item failed on one dimension blocks that dimension; not_established is not a pass; a missing item blocks
+    [default] passed 27ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a single dimension report needs every item of its two lists; one missing item blocks
+    [sandbox] passed 111ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > issuance blocks for that dimension only, with no override; the other dimension's pass does not carry it
+    [sandbox] passed 186ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a platform item failed on one dimension blocks that dimension; not_established is not a pass; a missing item blocks
+    [sandbox] passed 88ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a single dimension report needs every item of its two lists; one missing item blocks
+D8: pass
+    [default] passed 68ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > issuance blocks for that dimension only, with no override; the other dimension's pass does not carry it
+    [default] passed 55ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a platform item failed on one dimension blocks that dimension; not_established is not a pass; a missing item blocks
+    [default] passed 27ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a single dimension report needs every item of its two lists; one missing item blocks
+    [sandbox] passed 150ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > issuance blocks for that dimension only, with no override; the other dimension's pass does not carry it
+    [sandbox] passed 190ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a platform item failed on one dimension blocks that dimension; not_established is not a pass; a missing item blocks
+    [sandbox] passed 94ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a single dimension report needs every item of its two lists; one missing item blocks
+D9: pass
+    [default] passed 57ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > issuance blocks for that dimension only, with no override; the other dimension's pass does not carry it
+    [default] passed 50ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a platform item failed on one dimension blocks that dimension; not_established is not a pass; a missing item blocks
+    [default] passed 30ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a single dimension report needs every item of its two lists; one missing item blocks
+    [sandbox] passed 183ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > issuance blocks for that dimension only, with no override; the other dimension's pass does not carry it
+    [sandbox] passed 246ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a platform item failed on one dimension blocks that dimension; not_established is not a pass; a missing item blocks
+    [sandbox] passed 102ms :: cr11-checklist-two-lists.db.test.ts :: CR-11-T1 fail one dimension item of a two dimension report > a single dimension report needs every item of its two lists; one missing item blocks

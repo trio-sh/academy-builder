@@ -1,6 +1,6 @@
 case CR-09-T13
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 rule CR-09
 what is run: Verify a report by its verification identifier
 expected: Status only; never content
@@ -11,22 +11,22 @@ mapped tests:
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
     [default] passed 7ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T13: verifying by the verification identifier gives status only
-    [sandbox] passed 74ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T13: verifying by the verification identifier gives status only
+    [sandbox] passed 63ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T13: verifying by the verification identifier gives status only
 D2: pass
     [default] passed 7ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T13: verifying by the verification identifier gives status only
     [sandbox] passed 70ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T13: verifying by the verification identifier gives status only
 D3: pass
-    [default] passed 12ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T13: verifying by the verification identifier gives status only
-    [sandbox] passed 80ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T13: verifying by the verification identifier gives status only
+    [default] passed 9ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T13: verifying by the verification identifier gives status only
+    [sandbox] passed 103ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T13: verifying by the verification identifier gives status only
 D4: pass
-    [default] passed 7ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T13: verifying by the verification identifier gives status only
-    [sandbox] passed 101ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T13: verifying by the verification identifier gives status only
+    [default] passed 8ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T13: verifying by the verification identifier gives status only
+    [sandbox] passed 62ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T13: verifying by the verification identifier gives status only
 D5: pass
     [default] passed 9ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T13: verifying by the verification identifier gives status only
-    [sandbox] passed 79ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T13: verifying by the verification identifier gives status only
-D8: pass
-    [default] passed 19ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T13: verifying by the verification identifier gives status only
     [sandbox] passed 71ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T13: verifying by the verification identifier gives status only
+D8: pass
+    [default] passed 10ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T13: verifying by the verification identifier gives status only
+    [sandbox] passed 80ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T13: verifying by the verification identifier gives status only
 D9: pass
-    [default] passed 7ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T13: verifying by the verification identifier gives status only
-    [sandbox] passed 67ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T13: verifying by the verification identifier gives status only
+    [default] passed 10ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T13: verifying by the verification identifier gives status only
+    [sandbox] passed 90ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T13: verifying by the verification identifier gives status only

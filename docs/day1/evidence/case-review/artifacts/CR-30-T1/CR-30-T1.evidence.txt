@@ -1,6 +1,6 @@
 case CR-30-T1
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 rule CR-30
 what is run: Reach Stage 4 entry while s4_activation_state is not activated
 expected: Refused with s4_not_activated
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 25ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T1: Stage 4 entry while s4_activation_state is not activated is refused with s4_not_activated, whatever the answer
-    [sandbox] passed 25ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T1: Stage 4 entry while s4_activation_state is not activated is refused with s4_not_activated, whatever the answer
-D2: pass
-    [default] passed 25ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T1: Stage 4 entry while s4_activation_state is not activated is refused with s4_not_activated, whatever the answer
-    [sandbox] passed 32ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T1: Stage 4 entry while s4_activation_state is not activated is refused with s4_not_activated, whatever the answer
-D3: pass
-    [default] passed 30ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T1: Stage 4 entry while s4_activation_state is not activated is refused with s4_not_activated, whatever the answer
-    [sandbox] passed 21ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T1: Stage 4 entry while s4_activation_state is not activated is refused with s4_not_activated, whatever the answer
-D4: pass
-    [default] passed 30ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T1: Stage 4 entry while s4_activation_state is not activated is refused with s4_not_activated, whatever the answer
+    [default] passed 18ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T1: Stage 4 entry while s4_activation_state is not activated is refused with s4_not_activated, whatever the answer
     [sandbox] passed 18ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T1: Stage 4 entry while s4_activation_state is not activated is refused with s4_not_activated, whatever the answer
+D2: pass
+    [default] passed 29ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T1: Stage 4 entry while s4_activation_state is not activated is refused with s4_not_activated, whatever the answer
+    [sandbox] passed 20ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T1: Stage 4 entry while s4_activation_state is not activated is refused with s4_not_activated, whatever the answer
+D3: pass
+    [default] passed 20ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T1: Stage 4 entry while s4_activation_state is not activated is refused with s4_not_activated, whatever the answer
+    [sandbox] passed 17ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T1: Stage 4 entry while s4_activation_state is not activated is refused with s4_not_activated, whatever the answer
+D4: pass
+    [default] passed 25ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T1: Stage 4 entry while s4_activation_state is not activated is refused with s4_not_activated, whatever the answer
+    [sandbox] passed 20ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T1: Stage 4 entry while s4_activation_state is not activated is refused with s4_not_activated, whatever the answer
 D5: pass
-    [default] passed 22ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T1: Stage 4 entry while s4_activation_state is not activated is refused with s4_not_activated, whatever the answer
-    [sandbox] passed 26ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T1: Stage 4 entry while s4_activation_state is not activated is refused with s4_not_activated, whatever the answer
+    [default] passed 21ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T1: Stage 4 entry while s4_activation_state is not activated is refused with s4_not_activated, whatever the answer
+    [sandbox] passed 18ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T1: Stage 4 entry while s4_activation_state is not activated is refused with s4_not_activated, whatever the answer
 D8: pass
-    [default] passed 22ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T1: Stage 4 entry while s4_activation_state is not activated is refused with s4_not_activated, whatever the answer
-    [sandbox] passed 22ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T1: Stage 4 entry while s4_activation_state is not activated is refused with s4_not_activated, whatever the answer
+    [default] passed 21ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T1: Stage 4 entry while s4_activation_state is not activated is refused with s4_not_activated, whatever the answer
+    [sandbox] passed 21ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T1: Stage 4 entry while s4_activation_state is not activated is refused with s4_not_activated, whatever the answer
 D9: pass
     [default] passed 25ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T1: Stage 4 entry while s4_activation_state is not activated is refused with s4_not_activated, whatever the answer
-    [sandbox] passed 22ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T1: Stage 4 entry while s4_activation_state is not activated is refused with s4_not_activated, whatever the answer
+    [sandbox] passed 19ms :: cr30-stage4-permission.db.test.ts :: CR-30 the Stage 4 permission > T1: Stage 4 entry while s4_activation_state is not activated is refused with s4_not_activated, whatever the answer

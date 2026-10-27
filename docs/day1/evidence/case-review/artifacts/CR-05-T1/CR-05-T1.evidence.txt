@@ -1,6 +1,6 @@
 case CR-05-T1
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 rule CR-05
 what is run: Re enter while a progression challenge is open
 expected: Admitted if otherwise eligible; the attempt is counted; the participant was told before entry
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 38ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T1: re-entering while a challenge is open is admitted if otherwise eligible, is counted, and the participant was told before entry
-    [sandbox] passed 282ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T1: re-entering while a challenge is open is admitted if otherwise eligible, is counted, and the participant was told before entry
+    [default] passed 29ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T1: re-entering while a challenge is open is admitted if otherwise eligible, is counted, and the participant was told before entry
+    [sandbox] passed 239ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T1: re-entering while a challenge is open is admitted if otherwise eligible, is counted, and the participant was told before entry
 D2: pass
-    [default] passed 59ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T1: re-entering while a challenge is open is admitted if otherwise eligible, is counted, and the participant was told before entry
-    [sandbox] passed 252ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T1: re-entering while a challenge is open is admitted if otherwise eligible, is counted, and the participant was told before entry
+    [default] passed 34ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T1: re-entering while a challenge is open is admitted if otherwise eligible, is counted, and the participant was told before entry
+    [sandbox] passed 259ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T1: re-entering while a challenge is open is admitted if otherwise eligible, is counted, and the participant was told before entry
 D3: pass
-    [default] passed 39ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T1: re-entering while a challenge is open is admitted if otherwise eligible, is counted, and the participant was told before entry
-    [sandbox] passed 307ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T1: re-entering while a challenge is open is admitted if otherwise eligible, is counted, and the participant was told before entry
+    [default] passed 35ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T1: re-entering while a challenge is open is admitted if otherwise eligible, is counted, and the participant was told before entry
+    [sandbox] passed 232ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T1: re-entering while a challenge is open is admitted if otherwise eligible, is counted, and the participant was told before entry
 D4: pass
-    [default] passed 43ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T1: re-entering while a challenge is open is admitted if otherwise eligible, is counted, and the participant was told before entry
-    [sandbox] passed 284ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T1: re-entering while a challenge is open is admitted if otherwise eligible, is counted, and the participant was told before entry
+    [default] passed 32ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T1: re-entering while a challenge is open is admitted if otherwise eligible, is counted, and the participant was told before entry
+    [sandbox] passed 239ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T1: re-entering while a challenge is open is admitted if otherwise eligible, is counted, and the participant was told before entry
 D5: pass
-    [default] passed 43ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T1: re-entering while a challenge is open is admitted if otherwise eligible, is counted, and the participant was told before entry
-    [sandbox] passed 267ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T1: re-entering while a challenge is open is admitted if otherwise eligible, is counted, and the participant was told before entry
+    [default] passed 37ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T1: re-entering while a challenge is open is admitted if otherwise eligible, is counted, and the participant was told before entry
+    [sandbox] passed 219ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T1: re-entering while a challenge is open is admitted if otherwise eligible, is counted, and the participant was told before entry
 D8: pass
-    [default] passed 46ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T1: re-entering while a challenge is open is admitted if otherwise eligible, is counted, and the participant was told before entry
-    [sandbox] passed 256ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T1: re-entering while a challenge is open is admitted if otherwise eligible, is counted, and the participant was told before entry
+    [default] passed 31ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T1: re-entering while a challenge is open is admitted if otherwise eligible, is counted, and the participant was told before entry
+    [sandbox] passed 194ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T1: re-entering while a challenge is open is admitted if otherwise eligible, is counted, and the participant was told before entry
 D9: pass
-    [default] passed 55ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T1: re-entering while a challenge is open is admitted if otherwise eligible, is counted, and the participant was told before entry
-    [sandbox] passed 280ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T1: re-entering while a challenge is open is admitted if otherwise eligible, is counted, and the participant was told before entry
+    [default] passed 36ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T1: re-entering while a challenge is open is admitted if otherwise eligible, is counted, and the participant was told before entry
+    [sandbox] passed 254ms :: cr04-cr05-entry-identity-progression-challenge.db.test.ts :: CR-05 a progression challenge pauses nothing > T1: re-entering while a challenge is open is admitted if otherwise eligible, is counted, and the participant was told before entry

@@ -1,6 +1,6 @@
 case CR-14-T3
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 rule CR-14
 what is run: A review that names the participant's already met situation
 expected: Cannot waive it; refused
@@ -11,22 +11,22 @@ mapped tests:
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
     [default] passed 42ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T3: a review never waives a source or pattern family the participant has already met
-    [sandbox] passed 100ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T3: a review never waives a source or pattern family the participant has already met
+    [sandbox] passed 98ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T3: a review never waives a source or pattern family the participant has already met
 D2: pass
-    [default] passed 46ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T3: a review never waives a source or pattern family the participant has already met
-    [sandbox] passed 148ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T3: a review never waives a source or pattern family the participant has already met
+    [default] passed 57ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T3: a review never waives a source or pattern family the participant has already met
+    [sandbox] passed 92ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T3: a review never waives a source or pattern family the participant has already met
 D3: pass
-    [default] passed 48ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T3: a review never waives a source or pattern family the participant has already met
-    [sandbox] passed 149ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T3: a review never waives a source or pattern family the participant has already met
-D4: pass
-    [default] passed 51ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T3: a review never waives a source or pattern family the participant has already met
+    [default] passed 44ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T3: a review never waives a source or pattern family the participant has already met
     [sandbox] passed 83ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T3: a review never waives a source or pattern family the participant has already met
+D4: pass
+    [default] passed 41ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T3: a review never waives a source or pattern family the participant has already met
+    [sandbox] passed 85ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T3: a review never waives a source or pattern family the participant has already met
 D5: pass
     [default] passed 43ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T3: a review never waives a source or pattern family the participant has already met
-    [sandbox] passed 88ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T3: a review never waives a source or pattern family the participant has already met
-D8: pass
-    [default] passed 61ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T3: a review never waives a source or pattern family the participant has already met
-    [sandbox] passed 96ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T3: a review never waives a source or pattern family the participant has already met
-D9: pass
-    [default] passed 42ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T3: a review never waives a source or pattern family the participant has already met
     [sandbox] passed 92ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T3: a review never waives a source or pattern family the participant has already met
+D8: pass
+    [default] passed 48ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T3: a review never waives a source or pattern family the participant has already met
+    [sandbox] passed 100ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T3: a review never waives a source or pattern family the participant has already met
+D9: pass
+    [default] passed 43ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T3: a review never waives a source or pattern family the participant has already met
+    [sandbox] passed 91ms :: cr14-design-review.db.test.ts :: CR-14: the approved source design review > T3: a review never waives a source or pattern family the participant has already met

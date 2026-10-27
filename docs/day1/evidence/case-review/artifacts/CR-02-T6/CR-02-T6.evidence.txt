@@ -1,6 +1,6 @@
 case CR-02-T6
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 rule CR-02
 what is run: A Stage 4 repeat attempt with an earlier group composition
 expected: Refused by the planner
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 20ms :: cr02-mentor-rotation.db.test.ts :: CR-02 Stage 4 composition > T6: a Stage 4 repeat attempt with an earlier group composition is refused by the planner
-    [sandbox] passed 166ms :: cr02-mentor-rotation.db.test.ts :: CR-02 Stage 4 composition > T6: a Stage 4 repeat attempt with an earlier group composition is refused by the planner
-D2: pass
-    [default] passed 20ms :: cr02-mentor-rotation.db.test.ts :: CR-02 Stage 4 composition > T6: a Stage 4 repeat attempt with an earlier group composition is refused by the planner
-    [sandbox] passed 166ms :: cr02-mentor-rotation.db.test.ts :: CR-02 Stage 4 composition > T6: a Stage 4 repeat attempt with an earlier group composition is refused by the planner
-D3: pass
-    [default] passed 22ms :: cr02-mentor-rotation.db.test.ts :: CR-02 Stage 4 composition > T6: a Stage 4 repeat attempt with an earlier group composition is refused by the planner
-    [sandbox] passed 214ms :: cr02-mentor-rotation.db.test.ts :: CR-02 Stage 4 composition > T6: a Stage 4 repeat attempt with an earlier group composition is refused by the planner
-D4: pass
-    [default] passed 16ms :: cr02-mentor-rotation.db.test.ts :: CR-02 Stage 4 composition > T6: a Stage 4 repeat attempt with an earlier group composition is refused by the planner
-    [sandbox] passed 181ms :: cr02-mentor-rotation.db.test.ts :: CR-02 Stage 4 composition > T6: a Stage 4 repeat attempt with an earlier group composition is refused by the planner
-D5: pass
     [default] passed 13ms :: cr02-mentor-rotation.db.test.ts :: CR-02 Stage 4 composition > T6: a Stage 4 repeat attempt with an earlier group composition is refused by the planner
-    [sandbox] passed 172ms :: cr02-mentor-rotation.db.test.ts :: CR-02 Stage 4 composition > T6: a Stage 4 repeat attempt with an earlier group composition is refused by the planner
-D8: pass
+    [sandbox] passed 175ms :: cr02-mentor-rotation.db.test.ts :: CR-02 Stage 4 composition > T6: a Stage 4 repeat attempt with an earlier group composition is refused by the planner
+D2: pass
     [default] passed 18ms :: cr02-mentor-rotation.db.test.ts :: CR-02 Stage 4 composition > T6: a Stage 4 repeat attempt with an earlier group composition is refused by the planner
-    [sandbox] passed 163ms :: cr02-mentor-rotation.db.test.ts :: CR-02 Stage 4 composition > T6: a Stage 4 repeat attempt with an earlier group composition is refused by the planner
-D9: pass
+    [sandbox] passed 151ms :: cr02-mentor-rotation.db.test.ts :: CR-02 Stage 4 composition > T6: a Stage 4 repeat attempt with an earlier group composition is refused by the planner
+D3: pass
     [default] passed 15ms :: cr02-mentor-rotation.db.test.ts :: CR-02 Stage 4 composition > T6: a Stage 4 repeat attempt with an earlier group composition is refused by the planner
-    [sandbox] passed 225ms :: cr02-mentor-rotation.db.test.ts :: CR-02 Stage 4 composition > T6: a Stage 4 repeat attempt with an earlier group composition is refused by the planner
+    [sandbox] passed 143ms :: cr02-mentor-rotation.db.test.ts :: CR-02 Stage 4 composition > T6: a Stage 4 repeat attempt with an earlier group composition is refused by the planner
+D4: pass
+    [default] passed 13ms :: cr02-mentor-rotation.db.test.ts :: CR-02 Stage 4 composition > T6: a Stage 4 repeat attempt with an earlier group composition is refused by the planner
+    [sandbox] passed 160ms :: cr02-mentor-rotation.db.test.ts :: CR-02 Stage 4 composition > T6: a Stage 4 repeat attempt with an earlier group composition is refused by the planner
+D5: pass
+    [default] passed 19ms :: cr02-mentor-rotation.db.test.ts :: CR-02 Stage 4 composition > T6: a Stage 4 repeat attempt with an earlier group composition is refused by the planner
+    [sandbox] passed 256ms :: cr02-mentor-rotation.db.test.ts :: CR-02 Stage 4 composition > T6: a Stage 4 repeat attempt with an earlier group composition is refused by the planner
+D8: pass
+    [default] passed 15ms :: cr02-mentor-rotation.db.test.ts :: CR-02 Stage 4 composition > T6: a Stage 4 repeat attempt with an earlier group composition is refused by the planner
+    [sandbox] passed 175ms :: cr02-mentor-rotation.db.test.ts :: CR-02 Stage 4 composition > T6: a Stage 4 repeat attempt with an earlier group composition is refused by the planner
+D9: pass
+    [default] passed 19ms :: cr02-mentor-rotation.db.test.ts :: CR-02 Stage 4 composition > T6: a Stage 4 repeat attempt with an earlier group composition is refused by the planner
+    [sandbox] passed 231ms :: cr02-mentor-rotation.db.test.ts :: CR-02 Stage 4 composition > T6: a Stage 4 repeat attempt with an earlier group composition is refused by the planner

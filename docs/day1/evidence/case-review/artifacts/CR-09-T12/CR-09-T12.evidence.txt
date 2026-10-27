@@ -1,6 +1,6 @@
 case CR-09-T12
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 rule CR-09
 what is run: From either route, attempt to contact the participant
 expected: No contact element renders; contact permission is a separate grant
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 18ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T12: neither route renders a contact element or confers contact permission
-    [sandbox] passed 139ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T12: neither route renders a contact element or confers contact permission
-D2: pass
-    [default] passed 14ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T12: neither route renders a contact element or confers contact permission
-    [sandbox] passed 132ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T12: neither route renders a contact element or confers contact permission
-D3: pass
-    [default] passed 21ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T12: neither route renders a contact element or confers contact permission
-    [sandbox] passed 161ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T12: neither route renders a contact element or confers contact permission
-D4: pass
-    [default] passed 15ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T12: neither route renders a contact element or confers contact permission
-    [sandbox] passed 189ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T12: neither route renders a contact element or confers contact permission
-D5: pass
-    [default] passed 20ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T12: neither route renders a contact element or confers contact permission
-    [sandbox] passed 169ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T12: neither route renders a contact element or confers contact permission
-D8: pass
-    [default] passed 22ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T12: neither route renders a contact element or confers contact permission
-    [sandbox] passed 137ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T12: neither route renders a contact element or confers contact permission
-D9: pass
     [default] passed 16ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T12: neither route renders a contact element or confers contact permission
-    [sandbox] passed 144ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T12: neither route renders a contact element or confers contact permission
+    [sandbox] passed 123ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T12: neither route renders a contact element or confers contact permission
+D2: pass
+    [default] passed 13ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T12: neither route renders a contact element or confers contact permission
+    [sandbox] passed 145ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T12: neither route renders a contact element or confers contact permission
+D3: pass
+    [default] passed 15ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T12: neither route renders a contact element or confers contact permission
+    [sandbox] passed 147ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T12: neither route renders a contact element or confers contact permission
+D4: pass
+    [default] passed 16ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T12: neither route renders a contact element or confers contact permission
+    [sandbox] passed 150ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T12: neither route renders a contact element or confers contact permission
+D5: pass
+    [default] passed 17ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T12: neither route renders a contact element or confers contact permission
+    [sandbox] passed 134ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T12: neither route renders a contact element or confers contact permission
+D8: pass
+    [default] passed 24ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T12: neither route renders a contact element or confers contact permission
+    [sandbox] passed 132ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T12: neither route renders a contact element or confers contact permission
+D9: pass
+    [default] passed 22ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T12: neither route renders a contact element or confers contact permission
+    [sandbox] passed 140ms :: cr09-release-routes.db.test.ts :: CR-09 what neither route gives > T12: neither route renders a contact element or confers contact permission

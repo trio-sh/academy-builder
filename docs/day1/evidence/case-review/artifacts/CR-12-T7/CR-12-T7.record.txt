@@ -1,10 +1,10 @@
 case CR-12-T7
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 dimensions D1,D2,D3,D4,D5,D8,D9
 command bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr12-routes.db.test.ts
-fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit 3cecc7e44fa1; other dimensions by the textual swap in vitest.db.dim.config.ts
-started 2026-10-26T20:50:58.812Z
-ended 2026-10-26T20:50:58.915Z
+fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit b4c285d2993c; other dimensions by the textual swap in vitest.db.dim.config.ts
+started 2026-10-27T05:40:02.831Z
+ended 2026-10-27T05:40:02.970Z
 observed 1 mapped test(s) in cr12-routes.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-12 T7: reclassifying a counted completion > keeps the original, supersedes it, keeps the number, recalculates the count, leaves a visible gap
-artifact artifacts/CR-12-T7/CR-12-T7.evidence.txt d6276e4b97b980bd8d3f7df4b1394ace0adcbae800232917e9136d194dcf1bd6
+artifact artifacts/CR-12-T7/CR-12-T7.evidence.txt 5e2e99ac76f3842a1d3e64aabf40c879fa13ce360252cc9cefe0d63558abe61b

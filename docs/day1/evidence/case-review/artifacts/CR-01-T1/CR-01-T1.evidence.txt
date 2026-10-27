@@ -1,6 +1,6 @@
 case CR-01-T1
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 rule CR-01
 what is run: As the Stage 2 mentor, request Stage 1 content before the Stage 2 commit
 expected: Refused; logged
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 36ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T1: the Stage 2 mentor is refused and the refusal is logged
-    [sandbox] passed 386ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T1: the Stage 2 mentor is refused and the refusal is logged
+    [default] passed 33ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T1: the Stage 2 mentor is refused and the refusal is logged
+    [sandbox] passed 296ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T1: the Stage 2 mentor is refused and the refusal is logged
 D2: pass
-    [default] passed 37ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T1: the Stage 2 mentor is refused and the refusal is logged
+    [default] passed 29ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T1: the Stage 2 mentor is refused and the refusal is logged
     [sandbox] passed 309ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T1: the Stage 2 mentor is refused and the refusal is logged
 D3: pass
-    [default] passed 42ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T1: the Stage 2 mentor is refused and the refusal is logged
-    [sandbox] passed 319ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T1: the Stage 2 mentor is refused and the refusal is logged
+    [default] passed 28ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T1: the Stage 2 mentor is refused and the refusal is logged
+    [sandbox] passed 330ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T1: the Stage 2 mentor is refused and the refusal is logged
 D4: pass
-    [default] passed 38ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T1: the Stage 2 mentor is refused and the refusal is logged
-    [sandbox] passed 346ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T1: the Stage 2 mentor is refused and the refusal is logged
+    [default] passed 27ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T1: the Stage 2 mentor is refused and the refusal is logged
+    [sandbox] passed 300ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T1: the Stage 2 mentor is refused and the refusal is logged
 D5: pass
-    [default] passed 40ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T1: the Stage 2 mentor is refused and the refusal is logged
-    [sandbox] passed 393ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T1: the Stage 2 mentor is refused and the refusal is logged
+    [default] passed 32ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T1: the Stage 2 mentor is refused and the refusal is logged
+    [sandbox] passed 359ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T1: the Stage 2 mentor is refused and the refusal is logged
 D8: pass
-    [default] passed 31ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T1: the Stage 2 mentor is refused and the refusal is logged
-    [sandbox] passed 305ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T1: the Stage 2 mentor is refused and the refusal is logged
+    [default] passed 29ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T1: the Stage 2 mentor is refused and the refusal is logged
+    [sandbox] passed 313ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T1: the Stage 2 mentor is refused and the refusal is logged
 D9: pass
-    [default] passed 63ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T1: the Stage 2 mentor is refused and the refusal is logged
-    [sandbox] passed 236ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T1: the Stage 2 mentor is refused and the refusal is logged
+    [default] passed 26ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T1: the Stage 2 mentor is refused and the refusal is logged
+    [sandbox] passed 343ms :: cr01-sequential-unmasking.db.test.ts :: CR-01 before the Stage 2 commit: the mask > T1: the Stage 2 mentor is refused and the refusal is logged

@@ -1,6 +1,6 @@
 case CR-12-T2
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 rule CR-12
 what is run: Counted attempts 11 January, 1 February, 15 March, 19 July; starts requested 5 August and 26 August
 expected: 5 August refused by the 21 day cooldown; 26 August admitted with three counted attempts in its trailing six months
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 19ms :: cr12-window.db.test.ts :: CR-12 T2: the wait by position in the window > 5 August is refused by the 21 day wait; 26 August is admitted; after another commit the cap refuses
-    [sandbox] passed 106ms :: cr12-window.db.test.ts :: CR-12 T2: the wait by position in the window > 5 August is refused by the 21 day wait; 26 August is admitted; after another commit the cap refuses
+    [default] passed 16ms :: cr12-window.db.test.ts :: CR-12 T2: the wait by position in the window > 5 August is refused by the 21 day wait; 26 August is admitted; after another commit the cap refuses
+    [sandbox] passed 82ms :: cr12-window.db.test.ts :: CR-12 T2: the wait by position in the window > 5 August is refused by the 21 day wait; 26 August is admitted; after another commit the cap refuses
 D2: pass
-    [default] passed 20ms :: cr12-window.db.test.ts :: CR-12 T2: the wait by position in the window > 5 August is refused by the 21 day wait; 26 August is admitted; after another commit the cap refuses
-    [sandbox] passed 95ms :: cr12-window.db.test.ts :: CR-12 T2: the wait by position in the window > 5 August is refused by the 21 day wait; 26 August is admitted; after another commit the cap refuses
+    [default] passed 16ms :: cr12-window.db.test.ts :: CR-12 T2: the wait by position in the window > 5 August is refused by the 21 day wait; 26 August is admitted; after another commit the cap refuses
+    [sandbox] passed 77ms :: cr12-window.db.test.ts :: CR-12 T2: the wait by position in the window > 5 August is refused by the 21 day wait; 26 August is admitted; after another commit the cap refuses
 D3: pass
     [default] passed 16ms :: cr12-window.db.test.ts :: CR-12 T2: the wait by position in the window > 5 August is refused by the 21 day wait; 26 August is admitted; after another commit the cap refuses
-    [sandbox] passed 120ms :: cr12-window.db.test.ts :: CR-12 T2: the wait by position in the window > 5 August is refused by the 21 day wait; 26 August is admitted; after another commit the cap refuses
+    [sandbox] passed 73ms :: cr12-window.db.test.ts :: CR-12 T2: the wait by position in the window > 5 August is refused by the 21 day wait; 26 August is admitted; after another commit the cap refuses
 D4: pass
-    [default] passed 16ms :: cr12-window.db.test.ts :: CR-12 T2: the wait by position in the window > 5 August is refused by the 21 day wait; 26 August is admitted; after another commit the cap refuses
-    [sandbox] passed 117ms :: cr12-window.db.test.ts :: CR-12 T2: the wait by position in the window > 5 August is refused by the 21 day wait; 26 August is admitted; after another commit the cap refuses
-D5: pass
-    [default] passed 18ms :: cr12-window.db.test.ts :: CR-12 T2: the wait by position in the window > 5 August is refused by the 21 day wait; 26 August is admitted; after another commit the cap refuses
-    [sandbox] passed 83ms :: cr12-window.db.test.ts :: CR-12 T2: the wait by position in the window > 5 August is refused by the 21 day wait; 26 August is admitted; after another commit the cap refuses
-D8: pass
-    [default] passed 26ms :: cr12-window.db.test.ts :: CR-12 T2: the wait by position in the window > 5 August is refused by the 21 day wait; 26 August is admitted; after another commit the cap refuses
-    [sandbox] passed 77ms :: cr12-window.db.test.ts :: CR-12 T2: the wait by position in the window > 5 August is refused by the 21 day wait; 26 August is admitted; after another commit the cap refuses
-D9: pass
     [default] passed 14ms :: cr12-window.db.test.ts :: CR-12 T2: the wait by position in the window > 5 August is refused by the 21 day wait; 26 August is admitted; after another commit the cap refuses
-    [sandbox] passed 72ms :: cr12-window.db.test.ts :: CR-12 T2: the wait by position in the window > 5 August is refused by the 21 day wait; 26 August is admitted; after another commit the cap refuses
+    [sandbox] passed 71ms :: cr12-window.db.test.ts :: CR-12 T2: the wait by position in the window > 5 August is refused by the 21 day wait; 26 August is admitted; after another commit the cap refuses
+D5: pass
+    [default] passed 15ms :: cr12-window.db.test.ts :: CR-12 T2: the wait by position in the window > 5 August is refused by the 21 day wait; 26 August is admitted; after another commit the cap refuses
+    [sandbox] passed 73ms :: cr12-window.db.test.ts :: CR-12 T2: the wait by position in the window > 5 August is refused by the 21 day wait; 26 August is admitted; after another commit the cap refuses
+D8: pass
+    [default] passed 16ms :: cr12-window.db.test.ts :: CR-12 T2: the wait by position in the window > 5 August is refused by the 21 day wait; 26 August is admitted; after another commit the cap refuses
+    [sandbox] passed 79ms :: cr12-window.db.test.ts :: CR-12 T2: the wait by position in the window > 5 August is refused by the 21 day wait; 26 August is admitted; after another commit the cap refuses
+D9: pass
+    [default] passed 21ms :: cr12-window.db.test.ts :: CR-12 T2: the wait by position in the window > 5 August is refused by the 21 day wait; 26 August is admitted; after another commit the cap refuses
+    [sandbox] passed 73ms :: cr12-window.db.test.ts :: CR-12 T2: the wait by position in the window > 5 August is refused by the 21 day wait; 26 August is admitted; after another commit the cap refuses

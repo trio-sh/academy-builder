@@ -1,6 +1,6 @@
 case CR-09-T9
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 rule CR-09
 what is run: Amend the report after a direct release
 expected: The recipient sees the superseded state, never the new version, until a new release
@@ -11,22 +11,22 @@ mapped tests:
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
     [default] passed 23ms :: cr09-release-routes.db.test.ts :: CR-09 amendment > T9 + T16: an amended report shows the new version in the pool, notifies the participant, and returns the superseded state to a direct release
-    [sandbox] passed 173ms :: cr09-release-routes.db.test.ts :: CR-09 amendment > T9 + T16: an amended report shows the new version in the pool, notifies the participant, and returns the superseded state to a direct release
+    [sandbox] passed 133ms :: cr09-release-routes.db.test.ts :: CR-09 amendment > T9 + T16: an amended report shows the new version in the pool, notifies the participant, and returns the superseded state to a direct release
 D2: pass
-    [default] passed 26ms :: cr09-release-routes.db.test.ts :: CR-09 amendment > T9 + T16: an amended report shows the new version in the pool, notifies the participant, and returns the superseded state to a direct release
-    [sandbox] passed 176ms :: cr09-release-routes.db.test.ts :: CR-09 amendment > T9 + T16: an amended report shows the new version in the pool, notifies the participant, and returns the superseded state to a direct release
+    [default] passed 23ms :: cr09-release-routes.db.test.ts :: CR-09 amendment > T9 + T16: an amended report shows the new version in the pool, notifies the participant, and returns the superseded state to a direct release
+    [sandbox] passed 153ms :: cr09-release-routes.db.test.ts :: CR-09 amendment > T9 + T16: an amended report shows the new version in the pool, notifies the participant, and returns the superseded state to a direct release
 D3: pass
-    [default] passed 37ms :: cr09-release-routes.db.test.ts :: CR-09 amendment > T9 + T16: an amended report shows the new version in the pool, notifies the participant, and returns the superseded state to a direct release
-    [sandbox] passed 102ms :: cr09-release-routes.db.test.ts :: CR-09 amendment > T9 + T16: an amended report shows the new version in the pool, notifies the participant, and returns the superseded state to a direct release
+    [default] passed 28ms :: cr09-release-routes.db.test.ts :: CR-09 amendment > T9 + T16: an amended report shows the new version in the pool, notifies the participant, and returns the superseded state to a direct release
+    [sandbox] passed 136ms :: cr09-release-routes.db.test.ts :: CR-09 amendment > T9 + T16: an amended report shows the new version in the pool, notifies the participant, and returns the superseded state to a direct release
 D4: pass
-    [default] passed 31ms :: cr09-release-routes.db.test.ts :: CR-09 amendment > T9 + T16: an amended report shows the new version in the pool, notifies the participant, and returns the superseded state to a direct release
-    [sandbox] passed 159ms :: cr09-release-routes.db.test.ts :: CR-09 amendment > T9 + T16: an amended report shows the new version in the pool, notifies the participant, and returns the superseded state to a direct release
+    [default] passed 23ms :: cr09-release-routes.db.test.ts :: CR-09 amendment > T9 + T16: an amended report shows the new version in the pool, notifies the participant, and returns the superseded state to a direct release
+    [sandbox] passed 162ms :: cr09-release-routes.db.test.ts :: CR-09 amendment > T9 + T16: an amended report shows the new version in the pool, notifies the participant, and returns the superseded state to a direct release
 D5: pass
-    [default] passed 32ms :: cr09-release-routes.db.test.ts :: CR-09 amendment > T9 + T16: an amended report shows the new version in the pool, notifies the participant, and returns the superseded state to a direct release
-    [sandbox] passed 150ms :: cr09-release-routes.db.test.ts :: CR-09 amendment > T9 + T16: an amended report shows the new version in the pool, notifies the participant, and returns the superseded state to a direct release
+    [default] passed 25ms :: cr09-release-routes.db.test.ts :: CR-09 amendment > T9 + T16: an amended report shows the new version in the pool, notifies the participant, and returns the superseded state to a direct release
+    [sandbox] passed 146ms :: cr09-release-routes.db.test.ts :: CR-09 amendment > T9 + T16: an amended report shows the new version in the pool, notifies the participant, and returns the superseded state to a direct release
 D8: pass
-    [default] passed 29ms :: cr09-release-routes.db.test.ts :: CR-09 amendment > T9 + T16: an amended report shows the new version in the pool, notifies the participant, and returns the superseded state to a direct release
-    [sandbox] passed 147ms :: cr09-release-routes.db.test.ts :: CR-09 amendment > T9 + T16: an amended report shows the new version in the pool, notifies the participant, and returns the superseded state to a direct release
+    [default] passed 26ms :: cr09-release-routes.db.test.ts :: CR-09 amendment > T9 + T16: an amended report shows the new version in the pool, notifies the participant, and returns the superseded state to a direct release
+    [sandbox] passed 129ms :: cr09-release-routes.db.test.ts :: CR-09 amendment > T9 + T16: an amended report shows the new version in the pool, notifies the participant, and returns the superseded state to a direct release
 D9: pass
-    [default] passed 31ms :: cr09-release-routes.db.test.ts :: CR-09 amendment > T9 + T16: an amended report shows the new version in the pool, notifies the participant, and returns the superseded state to a direct release
-    [sandbox] passed 137ms :: cr09-release-routes.db.test.ts :: CR-09 amendment > T9 + T16: an amended report shows the new version in the pool, notifies the participant, and returns the superseded state to a direct release
+    [default] passed 41ms :: cr09-release-routes.db.test.ts :: CR-09 amendment > T9 + T16: an amended report shows the new version in the pool, notifies the participant, and returns the superseded state to a direct release
+    [sandbox] passed 165ms :: cr09-release-routes.db.test.ts :: CR-09 amendment > T9 + T16: an amended report shows the new version in the pool, notifies the participant, and returns the superseded state to a direct release

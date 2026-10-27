@@ -1,6 +1,6 @@
 case CR-17-T7
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 rule CR-17
 what is run: Every approved source has been met
 expected: Refused with RETAKE_SOURCE_UNAVAILABLE and logged; a met source is never served again
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 69ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T7: every approved source has been met: refused and logged; a met source is never served again
-    [sandbox] passed 184ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T7: every approved source has been met: refused and logged; a met source is never served again
+    [default] passed 47ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T7: every approved source has been met: refused and logged; a met source is never served again
+    [sandbox] passed 194ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T7: every approved source has been met: refused and logged; a met source is never served again
 D2: pass
-    [default] passed 76ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T7: every approved source has been met: refused and logged; a met source is never served again
-    [sandbox] passed 215ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T7: every approved source has been met: refused and logged; a met source is never served again
+    [default] passed 61ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T7: every approved source has been met: refused and logged; a met source is never served again
+    [sandbox] passed 183ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T7: every approved source has been met: refused and logged; a met source is never served again
 D3: pass
-    [default] passed 76ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T7: every approved source has been met: refused and logged; a met source is never served again
-    [sandbox] passed 167ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T7: every approved source has been met: refused and logged; a met source is never served again
+    [default] passed 51ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T7: every approved source has been met: refused and logged; a met source is never served again
+    [sandbox] passed 174ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T7: every approved source has been met: refused and logged; a met source is never served again
 D4: pass
-    [default] passed 89ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T7: every approved source has been met: refused and logged; a met source is never served again
-    [sandbox] passed 251ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T7: every approved source has been met: refused and logged; a met source is never served again
+    [default] passed 53ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T7: every approved source has been met: refused and logged; a met source is never served again
+    [sandbox] passed 162ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T7: every approved source has been met: refused and logged; a met source is never served again
 D5: pass
-    [default] passed 56ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T7: every approved source has been met: refused and logged; a met source is never served again
-    [sandbox] passed 151ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T7: every approved source has been met: refused and logged; a met source is never served again
+    [default] passed 55ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T7: every approved source has been met: refused and logged; a met source is never served again
+    [sandbox] passed 172ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T7: every approved source has been met: refused and logged; a met source is never served again
 D8: pass
-    [default] passed 76ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T7: every approved source has been met: refused and logged; a met source is never served again
-    [sandbox] passed 188ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T7: every approved source has been met: refused and logged; a met source is never served again
+    [default] passed 54ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T7: every approved source has been met: refused and logged; a met source is never served again
+    [sandbox] passed 168ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T7: every approved source has been met: refused and logged; a met source is never served again
 D9: pass
-    [default] passed 78ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T7: every approved source has been met: refused and logged; a met source is never served again
-    [sandbox] passed 182ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T7: every approved source has been met: refused and logged; a met source is never served again
+    [default] passed 54ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T7: every approved source has been met: refused and logged; a met source is never served again
+    [sandbox] passed 180ms :: cr17-retake-pools.db.test.ts :: CR-17 borrowing, the family fallback and unavailable > T7: every approved source has been met: refused and logged; a met source is never served again

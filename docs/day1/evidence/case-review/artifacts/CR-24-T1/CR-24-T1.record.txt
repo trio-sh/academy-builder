@@ -1,10 +1,10 @@
 case CR-24-T1
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 dimensions D1,D2,D3,D4,D5,D8,D9
 command bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr23-cr24-evidence-state.db.test.ts
-fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit 3cecc7e44fa1; other dimensions by the textual swap in vitest.db.dim.config.ts
-started 2026-10-26T20:50:58.812Z
-ended 2026-10-26T20:50:59.161Z
+fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit b4c285d2993c; other dimensions by the textual swap in vitest.db.dim.config.ts
+started 2026-10-27T05:40:02.831Z
+ended 2026-10-27T05:40:03.125Z
 observed 1 mapped test(s) in cr23-cr24-evidence-state.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-24 the second evidence state where breadth cannot be established > T1: two valid Stage 2 observations by different observers with no approved cross context r
-artifact artifacts/CR-24-T1/CR-24-T1.evidence.txt 7f14493dd8eebd84b0cba2a711b71d18a099a95ed8f56d5cacb699d2b2b5ffc7
+artifact artifacts/CR-24-T1/CR-24-T1.evidence.txt a86219e9285e67fef02742280b07700931cfb8654ce02863d5fce719483fa1ab

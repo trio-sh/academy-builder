@@ -1,6 +1,6 @@
 case CR-18-T1
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 rule CR-18
 what is run: Record a progression decision before commit
 expected: Refused
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 65ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T1: a progression decision before commit is refused and logged; after the commit it is recorded
-    [sandbox] passed 196ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T1: a progression decision before commit is refused and logged; after the commit it is recorded
+    [default] passed 51ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T1: a progression decision before commit is refused and logged; after the commit it is recorded
+    [sandbox] passed 179ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T1: a progression decision before commit is refused and logged; after the commit it is recorded
 D2: pass
-    [default] passed 61ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T1: a progression decision before commit is refused and logged; after the commit it is recorded
-    [sandbox] passed 237ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T1: a progression decision before commit is refused and logged; after the commit it is recorded
+    [default] passed 68ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T1: a progression decision before commit is refused and logged; after the commit it is recorded
+    [sandbox] passed 157ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T1: a progression decision before commit is refused and logged; after the commit it is recorded
 D3: pass
-    [default] passed 62ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T1: a progression decision before commit is refused and logged; after the commit it is recorded
-    [sandbox] passed 262ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T1: a progression decision before commit is refused and logged; after the commit it is recorded
+    [default] passed 49ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T1: a progression decision before commit is refused and logged; after the commit it is recorded
+    [sandbox] passed 170ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T1: a progression decision before commit is refused and logged; after the commit it is recorded
 D4: pass
-    [default] passed 57ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T1: a progression decision before commit is refused and logged; after the commit it is recorded
-    [sandbox] passed 221ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T1: a progression decision before commit is refused and logged; after the commit it is recorded
+    [default] passed 53ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T1: a progression decision before commit is refused and logged; after the commit it is recorded
+    [sandbox] passed 188ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T1: a progression decision before commit is refused and logged; after the commit it is recorded
 D5: pass
-    [default] passed 58ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T1: a progression decision before commit is refused and logged; after the commit it is recorded
-    [sandbox] passed 176ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T1: a progression decision before commit is refused and logged; after the commit it is recorded
+    [default] passed 77ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T1: a progression decision before commit is refused and logged; after the commit it is recorded
+    [sandbox] passed 263ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T1: a progression decision before commit is refused and logged; after the commit it is recorded
 D8: pass
-    [default] passed 67ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T1: a progression decision before commit is refused and logged; after the commit it is recorded
-    [sandbox] passed 266ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T1: a progression decision before commit is refused and logged; after the commit it is recorded
+    [default] passed 45ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T1: a progression decision before commit is refused and logged; after the commit it is recorded
+    [sandbox] passed 204ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T1: a progression decision before commit is refused and logged; after the commit it is recorded
 D9: pass
-    [default] passed 63ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T1: a progression decision before commit is refused and logged; after the commit it is recorded
-    [sandbox] passed 234ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T1: a progression decision before commit is refused and logged; after the commit it is recorded
+    [default] passed 54ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T1: a progression decision before commit is refused and logged; after the commit it is recorded
+    [sandbox] passed 197ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T1: a progression decision before commit is refused and logged; after the commit it is recorded

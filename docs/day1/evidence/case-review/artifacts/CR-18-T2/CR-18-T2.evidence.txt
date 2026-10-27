@@ -1,6 +1,6 @@
 case CR-18-T2
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 rule CR-18
 what is run: A combined commit and progression request
 expected: Refused
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 19ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T2: a combined commit and progression request is refused before anything is written
-    [sandbox] passed 86ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T2: a combined commit and progression request is refused before anything is written
+    [default] passed 14ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T2: a combined commit and progression request is refused before anything is written
+    [sandbox] passed 85ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T2: a combined commit and progression request is refused before anything is written
 D2: pass
     [default] passed 14ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T2: a combined commit and progression request is refused before anything is written
-    [sandbox] passed 89ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T2: a combined commit and progression request is refused before anything is written
+    [sandbox] passed 67ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T2: a combined commit and progression request is refused before anything is written
 D3: pass
-    [default] passed 12ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T2: a combined commit and progression request is refused before anything is written
-    [sandbox] passed 78ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T2: a combined commit and progression request is refused before anything is written
+    [default] passed 11ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T2: a combined commit and progression request is refused before anything is written
+    [sandbox] passed 75ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T2: a combined commit and progression request is refused before anything is written
 D4: pass
-    [default] passed 21ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T2: a combined commit and progression request is refused before anything is written
-    [sandbox] passed 98ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T2: a combined commit and progression request is refused before anything is written
+    [default] passed 13ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T2: a combined commit and progression request is refused before anything is written
+    [sandbox] passed 79ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T2: a combined commit and progression request is refused before anything is written
 D5: pass
-    [default] passed 15ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T2: a combined commit and progression request is refused before anything is written
-    [sandbox] passed 82ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T2: a combined commit and progression request is refused before anything is written
+    [default] passed 16ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T2: a combined commit and progression request is refused before anything is written
+    [sandbox] passed 77ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T2: a combined commit and progression request is refused before anything is written
 D8: pass
-    [default] passed 14ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T2: a combined commit and progression request is refused before anything is written
-    [sandbox] passed 130ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T2: a combined commit and progression request is refused before anything is written
+    [default] passed 10ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T2: a combined commit and progression request is refused before anything is written
+    [sandbox] passed 98ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T2: a combined commit and progression request is refused before anything is written
 D9: pass
-    [default] passed 22ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T2: a combined commit and progression request is refused before anything is written
-    [sandbox] passed 83ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T2: a combined commit and progression request is refused before anything is written
+    [default] passed 14ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T2: a combined commit and progression request is refused before anything is written
+    [sandbox] passed 88ms :: cr18-cr19-progression-after-commit-mentor-context.db.test.ts :: CR-18 a progression decision follows the commit > T2: a combined commit and progression request is refused before anything is written

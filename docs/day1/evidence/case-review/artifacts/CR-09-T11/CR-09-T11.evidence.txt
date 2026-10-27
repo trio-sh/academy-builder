@@ -1,6 +1,6 @@
 case CR-09-T11
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 rule CR-09
 what is run: Revoke a direct release while general availability is on
 expected: The employer can still read through the pool, and the interface stated this before the revocation
@@ -10,23 +10,23 @@ mapped tests:
 
 results by dimension (a dimension is recorded as run only where every line reads passed):
 D1: pass
-    [default] passed 19ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
-    [sandbox] passed 138ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
+    [default] passed 16ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
+    [sandbox] passed 131ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
 D2: pass
-    [default] passed 21ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
-    [sandbox] passed 146ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
+    [default] passed 15ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
+    [sandbox] passed 154ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
 D3: pass
-    [default] passed 25ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
-    [sandbox] passed 113ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
+    [default] passed 21ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
+    [sandbox] passed 135ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
 D4: pass
-    [default] passed 18ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
-    [sandbox] passed 212ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
+    [default] passed 17ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
+    [sandbox] passed 136ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
 D5: pass
     [default] passed 23ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
-    [sandbox] passed 145ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
+    [sandbox] passed 127ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
 D8: pass
-    [default] passed 27ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
-    [sandbox] passed 141ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
+    [default] passed 19ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
+    [sandbox] passed 126ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
 D9: pass
-    [default] passed 23ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
-    [sandbox] passed 142ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
+    [default] passed 21ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used
+    [sandbox] passed 129ms :: cr09-release-routes.db.test.ts :: CR-09 the routes are independent > T11: revoking a direct release while general availability is on leaves the pool read intact, and the interface states this before either control is used

@@ -1,10 +1,10 @@
 case CR-18-T2
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 dimensions D1,D2,D3,D4,D5,D8,D9
 command bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr18-cr19-progression-after-commit-mentor-context.db.test.ts
-fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit 3cecc7e44fa1; other dimensions by the textual swap in vitest.db.dim.config.ts
-started 2026-10-26T20:50:58.812Z
-ended 2026-10-26T20:50:58.917Z
+fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit b4c285d2993c; other dimensions by the textual swap in vitest.db.dim.config.ts
+started 2026-10-27T05:40:02.831Z
+ended 2026-10-27T05:40:02.930Z
 observed 1 mapped test(s) in cr18-cr19-progression-after-commit-mentor-context.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-18 a progression decision follows the commit > T2: a combined commit and progression request is refused before anything is written
-artifact artifacts/CR-18-T2/CR-18-T2.evidence.txt 0aabd5bd16625335ceed30ba857d23cd023a13ce748a014ba1c897cea2f3570d
+artifact artifacts/CR-18-T2/CR-18-T2.evidence.txt f243824c562a58332a8b6bc3245b2e85bd8f7e9e980ceb925c7a4c8355fbcc5a

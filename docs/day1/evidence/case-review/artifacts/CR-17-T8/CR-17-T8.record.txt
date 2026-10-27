@@ -1,10 +1,10 @@
 case CR-17-T8
-build T3A-LEVELER-SANDBOX-3cecc7e-20261026
-commit 3cecc7e44fa1f0bc1ff3998cfd72a7ab5190930d
+build T3A-LEVELER-SANDBOX-b4c285d-20261027
+commit b4c285d2993c2a75b799fea7c16c54603f68dafb
 dimensions D1,D2,D3,D4,D5,D8,D9
 command bash tools/day1/case_review/run_matrix.sh (per dimension; SANDBOX=1 for the sandbox state) then tools/day1/case_review/analyze.py; tests: cr17-retake-pools.db.test.ts
-fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit 3cecc7e44fa1; other dimensions by the textual swap in vitest.db.dim.config.ts
-started 2026-10-26T20:50:58.812Z
-ended 2026-10-26T20:50:58.961Z
+fixture synthetic participants, mentors and sources made by src/test/db/helpers.ts on a throwaway database built from supabase/migrations at commit b4c285d2993c; other dimensions by the textual swap in vitest.db.dim.config.ts
+started 2026-10-27T05:40:02.831Z
+ended 2026-10-27T05:40:02.969Z
 observed 1 mapped test(s) in cr17-retake-pools.db.test.ts ran on a throwaway Postgres 16 built from the migrations: passed on D1, D2, D3, D4, D5, D8, D9. First test: CR-17 borrowing, the family fallback and unavailable > T8: a first attempt whose pool holds no unmet source borrows from the retake pools; the source's own pool
-artifact artifacts/CR-17-T8/CR-17-T8.evidence.txt 771ccedf347587b60ba1f91a3b634703e6c573cbf6bb64551e5ae3af1f49e3fd
+artifact artifacts/CR-17-T8/CR-17-T8.evidence.txt 0b8649e95fbe6462101b38a0eb98ac05bc05e9fd67cf5c24fbb6932a4f6d4e79
