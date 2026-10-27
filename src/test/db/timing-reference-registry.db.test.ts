@@ -41,6 +41,30 @@ describe("the timing registry", () => {
     expect(await field("Q-D1-07")).toBe("account_test_point");
     expect(await field("Q-D1-08a")).toBe("bearing_interest");
   });
+  it("every dimension has its own authored timing dependent question registered, and it refuses by its own code against the field it names", async () => {
+    const real: Record<string, [string, string]> = { D1: ["Q-D1-02", "enquiry_point"], D2: ["Q-D2-09", "knowledge_test_point"], D3: ["Q-D3-09", "delivery_test_point"], D4: ["Q-D4-09", "statement_test_point"], D5: ["Q-D5-09", "exchange_test_point"], D8: ["Q-D8-09", "account_test_point"], D9: ["Q-D9-09", "account_test_point"] };
+    for (const d of DIMS) {
+      const [q, f] = real[d];
+      expect(await field(q), `${d} ${q}`).toBe(f);
+      expect((await run(c, `select count(*)::int n from t3a_d1_question_object where question_code='${q}' and dimension_id='${d}'`))[0].n, `${q} is an authored question`).toBe(1);
+      const setField = (v: string, ver: string) => fx(`update t3a_d1_content_version set body = jsonb_set(body, '{source_sheet}', (body->'source_sheet') || jsonb_build_object('${f}', '${v}'::text)) where content_version_id='${ver}'`);
+      const words = await world(d, { beats: ["B1", "B2"] }); await setField("when the mentor asks", words.src.version);
+      expect(await timing(words.entry, q)).toMatchObject({ permitted: false, timing_dependent: true, refusal: "REFERENCE_BEAT_NOT_STATED_AS_BEAT" });
+      const none = await world(d, { beats: [] }); await setField("at B3", none.src.version);
+      expect(await timing(none.entry, q)).toMatchObject({ permitted: false, refusal: "BEAT_SCRIPT_NOT_LOADED", reference_beat: "B3" });
+      const ok = await world(d, { beats: ["B1", "B2", "B3"] }); await setField("at B2", ok.src.version);
+      expect(await timing(ok.entry, q)).toMatchObject({ permitted: false, refusal: "BEAT_TIMESTAMP_MISSING" });
+      await fx(`insert into t3a_d1_beat_timestamp(stage_entry_event_id, beat_code, recorded_at, duration_seconds, recorded_by) values ('${ok.entry}','B2', now(), 5, '${ok.p}')`);
+      expect(await timing(ok.entry, q)).toMatchObject({ permitted: true, timing_dependent: true, reference_beat: "B2" });
+    }
+  });
+  it("no loaded source is made unservable by the registration: every non blank value of a registered field in a loaded source states a beat", async () => {
+    for (const [q, f] of [["Q-D2-09", "knowledge_test_point"], ["Q-D3-09", "delivery_test_point"], ["Q-D4-09", "statement_test_point"], ["Q-D5-09", "exchange_test_point"], ["Q-D8-09", "account_test_point"], ["Q-D9-09", "account_test_point"]]) {
+      const d = q.split("-")[1];
+      const bad = await run(c, `select cv.body->>'source_identifier' id from t3a_d1_content_version cv where cv.retired_at is null and cv.body->>'source_identifier' ~ '^SRC-${d}-S[0-9]-[0-9]{3}$' and coalesce(cv.body #>> '{source_sheet,${f}}','') <> '' and cv.body #>> '{source_sheet,${f}}' !~ '[BR][0-9]+'`);
+      expect(bad, `${q} on ${f}`).toEqual([]);
+    }
+  });
   it("a question that is not in the registry is not timing dependent, on any dimension", async () => {
     expect(await field("Q-D2-77")).toBeNull();
     for (const d of DIMS) {
