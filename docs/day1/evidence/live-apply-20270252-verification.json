@@ -1,0 +1,42 @@
+{
+ "what": "Live apply of migration 20270252 (mentor reads desk-assigned candidates) and the Austin assignment script (CR-336, CR-337)",
+ "when": "2026-10-28",
+ "authority": "CR-219 and the founder-side owner's choice of both fixes (28 Oct 2026)",
+ "tests_before": "PR 414 CI green (unit, database); database 565/565 default and with all five switches on; unit 517/517; ratchet and vocabulary clean; 11 new tests, weakening the role or active-status condition fails them; rollback tested on the throwaway database (policy restored, function removed, migration re-applies)",
+ "files": [
+  {
+   "file": "20270252000000_mentor_reads_legacy_assigned_candidates.sql",
+   "ok": true
+  },
+  {
+   "file": "tools/day1/live_data/austin_mentor_assignment.sql",
+   "ok": true
+  }
+ ],
+ "before": {
+  "austin_stage_instances": 0,
+  "austin_mentor_assignments": 0,
+  "helper_function": 0
+ },
+ "after_checks": {
+  "tony_mentor_account_sees": [
+   "Ekosse Mofoke",
+   "Catherine Litanga",
+   "Austine Gakehmi"
+  ],
+  "tony_candidate_profiles_readable": 3,
+  "catherine_candidate_profiles_readable": 1,
+  "austin_candidate_profiles_readable": 1,
+  "austin_eligible_stage1_instances": 1,
+  "austin_coordinator_assignments_to_tony": 1,
+  "read_policy_has_desk_rule": true
+ },
+ "switches_after": {
+  "cw": "off",
+  "im": "legacy_tolerant"
+ },
+ "rollback": [
+  "docs/day1/evidence/rollback_20270252.sql",
+  "docs/day1/evidence/rollback_austin_mentor_assignment.sql"
+ ]
+}
