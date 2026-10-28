@@ -1,4 +1,4 @@
-Hi Tony, it's Hans. Update for 26 October. No questions, nothing needs your answer.
+Hi Tony, it's Hans. Update for 27 October. No questions, nothing needs your answer.
 
 DONE AND TESTED (automated tests before anything was merged or applied):
 - All seven dimensions are built: D1 to D4 earlier, and now D5, D8 and D9. They are loaded on the live database but cannot be served to anyone yet.
@@ -8,8 +8,5 @@ DONE AND TESTED (automated tests before anything was merged or applied):
 - I tested the full report path end to end (assembling the report, participant review, issuing, the report face and the accessible copy, release, the employer reading it). It found three real gaps, now fixed and live.
 - Your TEST tag is on every face of the report. The mentor cockpit, candidate, employer, school and admin screens all pass their browser tests.
 - The Austin test account is ready, and I am on the interim issuing list.
-
-ONE THING TO KNOW:
-- The full Session Archive is a separate module and is not part of this build. D8 and D9 have the registries it will use.
 
 Housekeeping on my side: the seal key pair was generated in the build session and can be rotated, and I will rotate the shared tokens and the test account password.
