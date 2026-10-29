@@ -1,0 +1,31 @@
+{
+ "what": "Live apply of migration 20270253 (mentor_assigned_dimensions scoped access) and live check of the assign-dimensions save (CR-338, CR-339)",
+ "when": "2026-10-29",
+ "authority": "CR-219",
+ "tests_before": "PR 416 CI green (unit, database); database 570/570 default and with all five switches on; unit 522/522; ratchet and vocabulary clean; Playwright screen tests for the Growth Log (4) and the assign-dimensions page (3, with the database calls answered by the test); weakening the policy or sending the old ids fails the database test",
+ "files": [
+  {
+   "file": "20270253000000_assigned_dimensions_scoped_access.sql",
+   "ok": true
+  }
+ ],
+ "policies_before": [
+  "assigned_dims_candidate_read",
+  "assigned_dims_mentor_all",
+  "mentor_assigned_dimensions_rw"
+ ],
+ "policies_after": [
+  "assigned_dims_candidate_read",
+  "assigned_dims_mentor_all"
+ ],
+ "rows_before": 0,
+ "live_check_in_rolled_back_transaction": {
+  "as_tony_mentor_account": "insert with the page's new payload (profile ids) for Austin's active assignment: accepted",
+  "tony_sees_active_rows": 1,
+  "austin_sees_active_rows": 1,
+  "another_candidate_sees_rows": 0,
+  "rows_after_rollback": 0
+ },
+ "switches": "unchanged (this migration touches one policy on one table)",
+ "rollback": "docs/day1/evidence/rollback_20270253.sql"
+}
