@@ -4,6 +4,8 @@ import { Link, Routes, Route, useLocation, useParams, useNavigate } from "react-
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
 import { startLoop, completeLoop, mentorOverride } from "@/lib/observationLoops";
+import { saveAssignedDimensions } from "@/lib/assignedDimensions";
+import { useToast } from "@/hooks/use-toast";
 import { useUnreadMessageCount, usePresence, isUserOnline, sendMessageNotification } from "@/hooks/useMessaging";
 import { uploadMessageAttachment, isImageFile, formatFileSize } from "@/lib/fileUpload";
 import AIAgent from "@/pages/dashboard/AIAgent";
@@ -1673,10 +1675,13 @@ const Mentees = () => {
 // Dimension Assignment Page — Mentor assigns behavioral dimensions to a candidate
 const AssignDimensions = () => {
   const { user } = useAuth();
+  const { toast } = useToast();
   const location = useLocation();
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [candidateName, setCandidateName] = useState("");
+  // profiles.id of the candidate: the table keys on it, not on candidate_profiles.id (see lib/assignedDimensions.ts)
+  const [candidateUserId, setCandidateUserId] = useState<string | null>(null);
   const [selectedDimensions, setSelectedDimensions] = useState<string[]>([]);
   const [existingDimensions, setExistingDimensions] = useState<string[]>([]);
 
@@ -1697,6 +1702,7 @@ const AssignDimensions = () => {
           .eq("id", candidateId)
           .single();
         if (cp) {
+          setCandidateUserId(cp.profile_id);
           const { data: profile } = await supabase
             .from("profiles")
             .select("first_name, last_name")
@@ -1737,54 +1743,36 @@ const AssignDimensions = () => {
 
   const saveDimensions = async () => {
     if (!user?.id || !assignmentId || !candidateId) return;
+    if (!candidateUserId) {
+      toast({ title: "Could not save", description: "This person's account could not be read. Reload the page and try again.", variant: "destructive" });
+      return;
+    }
     setIsSaving(true);
-
     try {
-      // Deactivate existing dimensions not in new selection
-      const toDeactivate = existingDimensions.filter(d => !selectedDimensions.includes(d));
-      if (toDeactivate.length > 0) {
-        for (const dimId of toDeactivate) {
-          await supabase
-            .from("mentor_assigned_dimensions")
-            .update({ is_active: false, updated_at: new Date().toISOString() })
-            .eq("assignment_id", assignmentId)
-            .eq("dimension_id", dimId);
-        }
+      const result = await saveAssignedDimensions(supabase, {
+        assignmentId,
+        mentorUserId: user.id,
+        candidateUserId,
+        existing: existingDimensions,
+        selected: selectedDimensions,
+      });
+      if (!result.ok) {
+        toast({ title: "The dimensions were not saved", description: result.message ?? "Unknown error", variant: "destructive" });
+        return;
       }
-
-      // Get mentor_profiles.id for the FK
-      const { data: mp } = await supabase
-        .from("mentor_profiles")
-        .select("id")
-        .eq("profile_id", user.id)
-        .single();
-      const mentorProfileId = mp?.id || user.id;
-
-      // Insert new dimensions
-      const toInsert = selectedDimensions.filter(d => !existingDimensions.includes(d));
-      if (toInsert.length > 0) {
-        await supabase.from("mentor_assigned_dimensions").insert(
-          toInsert.map(dimId => ({
-            assignment_id: assignmentId,
-            mentor_id: mentorProfileId,
-            candidate_id: candidateId,
-            dimension_id: dimId,
-          }))
-        );
-      }
-
       setExistingDimensions(selectedDimensions);
-
+      toast({ title: "Dimensions saved", description: "The candidate will see them on their profile." });
     } catch (error) {
       console.error("Error saving dimensions:", error);
+      toast({ title: "The dimensions were not saved", description: error instanceof Error ? error.message : "Unknown error", variant: "destructive" });
     } finally {
       setIsSaving(false);
     }
   };
 
-  // MVP dimensions (first 5)
+  // MVP dimensions (the first 7) and the rest, each dimension listed once
   const mvpDimensions = BEHAVIORAL_DIMENSIONS.slice(0, 7);
-  const futureDimensions = BEHAVIORAL_DIMENSIONS.slice(5);
+  const futureDimensions = BEHAVIORAL_DIMENSIONS.slice(7);
 
   if (isLoading) {
     return (
@@ -1901,6 +1889,9 @@ const AssignDimensions = () => {
           )}
         </Button>
       </motion.div>
+
+      {/* room below the Save bar: the floating Editor's desk card sits at the bottom right of every page and would otherwise cover the Save button */}
+      <div className="h-28" aria-hidden="true" />
     </motion.div>
   );
 };

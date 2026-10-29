@@ -3,7 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
-import { DashboardPageHeader, DashSection, EmptyState, LedgerLoading } from "@/components/dashboard/primitives";
+import { DashboardPageHeader, DashSection, EmptyState, LedgerBadge, LedgerCard, LedgerLoading, LedgerSplit } from "@/components/dashboard/primitives";
 
 /**
  * The Growth Log (T3A-DEV-DAY1-001 Domain J, REQ-GL-001).
@@ -107,6 +107,8 @@ const GrowthLog = () => {
 
   if (loading) return <LedgerLoading text="Opening your notebook…" />;
 
+  const field = "w-full border border-foreground/30 bg-transparent px-3 py-2 text-foreground placeholder:text-foreground/40 focus-visible:outline-none focus-visible:border-foreground focus-visible:ring-1 focus-visible:ring-foreground/40";
+
   return (
     <div>
       <DashboardPageHeader
@@ -115,80 +117,108 @@ const GrowthLog = () => {
         meta="Only you can see this page. The platform writes nothing here, and nothing here is measured, compared, shared or used to decide anything."
       />
 
-      <DashSection eyebrow={editingId ? "Editing" : "New"} title={editingId ? "Change your note" : "Write a note"}>
-        <div className="space-y-4 max-w-2xl">
-          {!editingId && (
-            <div className="flex gap-2" role="group" aria-label="Kind of note">
-              {(Object.keys(KIND_LABEL) as EntryKind[]).map((k) => (
-                <Button key={k} type="button" size="sm" variant={kind === k ? "default" : "outline"} onClick={() => setKind(k)} className="border-foreground/25">
-                  {KIND_LABEL[k]}
-                </Button>
-              ))}
-            </div>
-          )}
-          <textarea
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            rows={5}
-            maxLength={5000}
-            placeholder="What did you notice? What would you try next time?"
-            aria-label="Note text"
-            className="w-full border border-foreground/30 bg-background p-3 text-foreground"
-          />
-          <input
-            value={moduleRef}
-            onChange={(e) => setModuleRef(e.target.value)}
-            maxLength={200}
-            placeholder="Practice or module this is about (optional)"
-            aria-label="Module reference"
-            className="w-full border border-foreground/30 bg-background p-3 text-foreground"
-          />
-          <div className="flex gap-3">
-            <Button onClick={save} disabled={saving || !text.trim()}>{editingId ? "Save changes" : "Save note"}</Button>
-            {editingId && <Button variant="outline" onClick={reset} className="border-foreground/25">Cancel</Button>}
-          </div>
-        </div>
-      </DashSection>
-
-      <DashSection eyebrow="Notes" title="What you have written">
-        {notes.length === 0 ? (
-          <EmptyState title="Nothing here yet." body="Notes you write will appear here, and only to you." />
-        ) : (
-          <ul className="space-y-4">
-            {notes.map((n) => (
-              <li key={n.entry_id} className="border border-foreground/30 p-4">
-                <div className="mono-label text-foreground/60 mb-2">
-                  {KIND_LABEL[n.entry_kind]} · {new Date(n.created_at).toLocaleDateString()}
-                  {n.module_reference ? ` · ${n.module_reference}` : ""}
+      <LedgerSplit
+        main={
+          <>
+            <DashSection eyebrow={editingId ? "Editing" : "New"} title={editingId ? "Change your note" : "Write a note"}>
+              <LedgerCard className="space-y-5">
+                {!editingId && (
+                  <div>
+                    <div className="mono-label text-foreground/70 mb-2">Kind of note</div>
+                    <div className="flex flex-wrap gap-2" role="group" aria-label="Kind of note">
+                      {(Object.keys(KIND_LABEL) as EntryKind[]).map((k) => (
+                        <Button
+                          key={k}
+                          type="button"
+                          size="sm"
+                          variant={kind === k ? "default" : "outline"}
+                          aria-pressed={kind === k}
+                          onClick={() => setKind(k)}
+                          className={kind === k ? "" : "border-foreground/30 bg-transparent"}
+                        >
+                          {KIND_LABEL[k]}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                <label className="block">
+                  <span className="mono-label text-foreground/70 block mb-2">Note</span>
+                  <textarea
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
+                    rows={6}
+                    maxLength={5000}
+                    placeholder="What did you notice? What would you try next time?"
+                    aria-label="Note text"
+                    className={`${field} leading-relaxed`}
+                  />
+                  <span className="marginalia text-[0.8125rem] mt-1 block">{text.length} of 5000 characters</span>
+                </label>
+                <label className="block">
+                  <span className="mono-label text-foreground/70 block mb-2">About (optional)</span>
+                  <input
+                    value={moduleRef}
+                    onChange={(e) => setModuleRef(e.target.value)}
+                    maxLength={200}
+                    placeholder="Practice or module this is about (optional)"
+                    aria-label="Module reference"
+                    className={field}
+                  />
+                </label>
+                <div className="flex flex-wrap gap-3 pt-1">
+                  <Button onClick={save} disabled={saving || !text.trim()}>{editingId ? "Save changes" : "Save note"}</Button>
+                  {editingId && <Button variant="outline" onClick={reset} className="border-foreground/30 bg-transparent">Cancel</Button>}
                 </div>
-                <p className="whitespace-pre-wrap text-foreground">{n.text}</p>
-                <div className="mt-3 flex gap-3">
-                  <Button size="sm" variant="outline" onClick={() => edit(n)} className="border-foreground/25">Edit</Button>
-                  <Button size="sm" variant="outline" onClick={() => remove(n.entry_id)} className="border-foreground/25">Delete</Button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-      </DashSection>
+              </LedgerCard>
+            </DashSection>
 
-      <DashSection eyebrow="From your record" title="Observations on file">
-        <p className="text-foreground/60 mb-4 max-w-2xl">
-          This list is rebuilt from your observation record each time you open the page. It is not stored here and it does not measure anything.
-        </p>
-        {observations.length === 0 ? (
-          <EmptyState title="No observations yet." />
-        ) : (
-          <ul className="divide-y divide-foreground/20 border-y border-foreground/30">
-            {observations.map((o) => (
-              <li key={o.observation_id} className="py-3 flex justify-between gap-4 text-foreground">
-                <span>Stage {o.stage_code.replace(/^S/, "")} · {o.dimension_id}</span>
-                <span className="text-foreground/60">{new Date(o.committed_at).toLocaleDateString()}</span>
-              </li>
-            ))}
-          </ul>
-        )}
-      </DashSection>
+            <DashSection eyebrow="Notes" title="What you have written">
+              {notes.length === 0 ? (
+                <EmptyState title="Nothing here yet." body="Notes you write will appear here, and only to you." />
+              ) : (
+                <div className="border-t-2 border-foreground">
+                  {notes.map((n) => (
+                    <article key={n.entry_id} className="py-6 border-b border-foreground/20">
+                      <div className="flex flex-wrap items-center gap-3 mb-3">
+                        <LedgerBadge variant="outline">{KIND_LABEL[n.entry_kind]}</LedgerBadge>
+                        <span className="mono-label text-foreground/60">{new Date(n.created_at).toLocaleDateString()}</span>
+                        {n.module_reference && <span className="mono-label text-foreground/60">· {n.module_reference}</span>}
+                      </div>
+                      <p className="whitespace-pre-wrap text-foreground/90 leading-relaxed max-w-2xl">{n.text}</p>
+                      <div className="mt-4 flex gap-3">
+                        <Button size="sm" variant="outline" onClick={() => edit(n)} className="border-foreground/30 bg-transparent">Edit</Button>
+                        <Button size="sm" variant="outline" onClick={() => remove(n.entry_id)} className="border-foreground/30 bg-transparent">Delete</Button>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              )}
+            </DashSection>
+          </>
+        }
+        side={
+          <DashSection eyebrow="From your record" title="Observations on file">
+            <p className="marginalia mb-5 leading-relaxed">
+              This list is rebuilt from your observation record each time you open the page. It is not stored here and it does not measure anything.
+            </p>
+            {observations.length === 0 ? (
+              <LedgerCard>
+                <div className="display-serif text-xl text-foreground">No observations yet.</div>
+              </LedgerCard>
+            ) : (
+              <ul className="border-t-2 border-foreground">
+                {observations.map((o) => (
+                  <li key={o.observation_id} className="py-3 flex justify-between gap-4 border-b border-foreground/20 text-foreground">
+                    <span>Stage {o.stage_code.replace(/^S/, "")} · {o.dimension_id}</span>
+                    <span className="mono-label text-foreground/60">{new Date(o.committed_at).toLocaleDateString()}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </DashSection>
+        }
+      />
     </div>
   );
 };
