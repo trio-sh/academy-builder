@@ -142,6 +142,8 @@ export default defineConfig({
       },
       dependencies: ["setup"],
     },
+    // the live dual-role accounts (CR-340); present only when the account script's credentials file is named
+    ...(process.env.DUAL_CREDS ? [{ name: "dual-role-tests", testMatch: /dual-role-desks\.spec\.ts/, use: { ...sharedUse } }] : []),
   ],
   webServer: {
     // Bound to loopback explicitly. vite.config sets host "::", which
