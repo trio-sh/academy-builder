@@ -30,7 +30,10 @@ const okEntry = await as(null, null, entry(`'${GW}'`, sinst.i || randomUUID()) +
 rec("DT-10", "Stage entry with the participant's gateway is accepted", okEntry.msg === "ok" && okEntry.rows.length === 1, okEntry.msg.slice(0, 120));
 rec("C-state", "administration_conditions capture state filled by the trigger", okEntry.rows[0]?.cs === "captured", okEntry.rows[0]);
 // DT-11
-const a1 = await run(`insert into t3a_mentor_assignment(mentor_id, participant_id, stage_instance_id, assignment_method, prior_allocation_count) values ('${P}','${P}','${sinst.i}','system_allocated',0) returning created_at`).catch(e => [{ err: e.message }]);
+const MENTOR = randomUUID(); // a person cannot be their own mentor (CR-340), so the allocation names a separate mentor
+await c.query(`insert into auth.users(id,email,email_confirmed_at) values ('${MENTOR}','m-${RUN}@t.local',now())`);
+await c.query(`insert into profiles(id,email,role) values ('${MENTOR}','m-${RUN}@t.local','mentor')`);
+const a1 = await run(`insert into t3a_mentor_assignment(mentor_id, participant_id, stage_instance_id, assignment_method, prior_allocation_count) values ('${MENTOR}','${P}','${sinst.i}','system_allocated',0) returning created_at`).catch(e => [{ err: e.message }]);
 await new Promise(r => setTimeout(r, 1500));
 await run(`insert into t3a_d1_s1_confirmation(stage_instance_id, participant_id, dimension_id, confirmed_by, captured_at) values ('${sinst.i}','${P}','D1','${P}',now())`);
 const si2 = await si("D1", "S2");
