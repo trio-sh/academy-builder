@@ -9,7 +9,7 @@ Created by `tools/day1/live_data/dual_role_accounts.mjs` (environment `pilot_act
 | dual-participant-employer@t3a.test | candidate | verified employer |
 | dual-admin-mentor@t3a.test | mentor | oversight administrator |
 | dual-mentee@t3a.test | candidate | participant (mentored by the three mentor accounts) |
-| dual-stranger-mentee@t3a.test | candidate | participant (mentored by testmentor only) |
+| dual-stranger-mentee@t3a.test | candidate | participant (mentored by dual-stranger-mentor only) |
 
 Screen and data-layer test `e2e/dual-role-desks.spec.ts` (`DUAL_CREDS=<file> npx playwright test --project=dual-role-tests`), 19 checks:
 

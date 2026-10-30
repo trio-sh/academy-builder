@@ -58,7 +58,7 @@ test.describe("Mentor - assign dimensions", () => {
     await page.getByRole("button", { name: /Integrity & Ethics/ }).click({ timeout: 20000 });
     await page.getByRole("button", { name: /Save Assigned Dimensions/ }).click();
     await expect(page.getByText("The dimensions were not saved")).toBeVisible();
-    await expect(page.getByText("violates foreign key constraint")).toBeVisible();
+    await expect(page.getByText("violates foreign key constraint").first()).toBeVisible();
     await expect(page.getByText("Dimensions saved", { exact: true })).toHaveCount(0);
   });
 
