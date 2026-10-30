@@ -21,6 +21,7 @@ const ACCOUNTS = [
   { key: "participant_employer", email: "dual-participant-employer@t3a.test", first: "Dual", last: "ParticipantEmployer", profileRole: "candidate", roles: ["participant", "employer_user"] },
   { key: "admin_mentor", email: "dual-admin-mentor@t3a.test", first: "Dual", last: "AdminMentor", profileRole: "mentor", roles: ["mentor", "oversight_administrator"] },
   { key: "mentee", email: "dual-mentee@t3a.test", first: "Dual", last: "Mentee", profileRole: "candidate", roles: ["participant"] },
+  { key: "stranger_mentor", email: "dual-stranger-mentor@t3a.test", first: "Dual", last: "StrangerMentor", profileRole: "mentor", roles: ["mentor"] },
   { key: "stranger_mentee", email: "dual-stranger-mentee@t3a.test", first: "Dual", last: "StrangerMentee", profileRole: "candidate", roles: ["participant"] },
 ];
 const q = (s) => `'${String(s).replace(/'/g, "''")}'`;
@@ -84,13 +85,12 @@ for (const a of ACCOUNTS) {
   await sql(stmts.join(";\n"));
 }
 
-// a private note for each of the two mentees, and the desk assignments: the dual mentors mentor `mentee`; `stranger_mentee` belongs to the existing test mentor
+// a private note for each of the two mentees, and the desk assignments: the dual mentors mentor `mentee`; `stranger_mentee` belongs to its own mentor (the existing test mentor's list stays untouched, the mentor suites expect it empty)
 await sql(`
   insert into public.t3a_growth_log_entry(created_by,entry_kind,text) select ${q(ids.mentee)},'practice_note','Private note of the test mentee: no mentor, employer or administrator should ever read this.' where not exists (select 1 from public.t3a_growth_log_entry where created_by=${q(ids.mentee)});
   insert into public.t3a_growth_log_entry(created_by,entry_kind,text) select ${q(ids.stranger_mentee)},'practice_note','Private note of the stranger mentee.' where not exists (select 1 from public.t3a_growth_log_entry where created_by=${q(ids.stranger_mentee)});
-  insert into public.mentor_profiles(profile_id) select id from public.profiles where email='testmentor@t3a.test' and not exists (select 1 from public.mentor_profiles m where m.profile_id=profiles.id);
   insert into public.mentor_assignments(mentor_id,candidate_id,status) select mp.id, cp.id,'active' from public.mentor_profiles mp, public.candidate_profiles cp where mp.profile_id in (${[ids.mentor_participant, ids.mentor_employer, ids.admin_mentor].map(q).join(",")}) and cp.profile_id=${q(ids.mentee)} and not exists (select 1 from public.mentor_assignments x where x.mentor_id=mp.id and x.candidate_id=cp.id);
-  insert into public.mentor_assignments(mentor_id,candidate_id,status) select mp.id, cp.id,'active' from public.mentor_profiles mp join public.profiles p on p.id=mp.profile_id and p.email='testmentor@t3a.test', public.candidate_profiles cp where cp.profile_id=${q(ids.stranger_mentee)} and not exists (select 1 from public.mentor_assignments x where x.mentor_id=mp.id and x.candidate_id=cp.id);`);
+  insert into public.mentor_assignments(mentor_id,candidate_id,status) select mp.id, cp.id,'active' from public.mentor_profiles mp join public.profiles p on p.id=mp.profile_id and p.email='dual-stranger-mentor@t3a.test', public.candidate_profiles cp where cp.profile_id=${q(ids.stranger_mentee)} and not exists (select 1 from public.mentor_assignments x where x.mentor_id=mp.id and x.candidate_id=cp.id);`);
 // ids the screen test needs, kept beside the passwords (not printed)
 const one = async (query) => (await sql(query))[0];
 creds._ids = {
