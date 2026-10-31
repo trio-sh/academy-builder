@@ -92,6 +92,10 @@ const ALLOWLIST = new Set([
   // table) to re-target their policies; it adds no new use of the term.
   "supabase/migrations/20261100000000_close_open_access_policies.sql",
 
+  // CR-343: closes the open write policies on the legacy tables. Like the CR-004 file above it must name those tables
+  // (the retired skill passport and endorsement tables) to replace their policies; it adds no new use of the terms.
+  "supabase/migrations/20270255000000_close_open_write_policies.sql",
+
   // Day 1 field registry: generated from the dictionary, it stores package
   // Table 5.1 (the list of retired terms the CI check enforces) as data.
   // Naming a retired term in a row that prohibits it is not a use of it.
