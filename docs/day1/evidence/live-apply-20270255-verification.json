@@ -1,0 +1,16 @@
+[
+ {
+  "file": "20270255000000_close_open_write_policies.sql",
+  "sha256": "a908ae80c26f9bd3249a1e77ebb7361eadc8fa72d921d483ebedb23d1ff75651",
+  "ok": true,
+  "error": null,
+  "seconds": 0.54
+ },
+ {
+  "file": "20270256000000_mentor_assignment_pending_and_declined.sql",
+  "sha256": "6a107bf5d52fbeb3f3bd4ba6b359bbcdf1de82ce0776bf4a0e981835fd78dc00",
+  "ok": true,
+  "error": null,
+  "seconds": 0.29
+ }
+]
