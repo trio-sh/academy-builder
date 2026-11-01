@@ -5,6 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
 import { startLoop, completeLoop, mentorOverride } from "@/lib/observationLoops";
 import { saveAssignedDimensions } from "@/lib/assignedDimensions";
+import { saveS2Feedback } from "@/lib/observationFeedback";
 import { useToast } from "@/hooks/use-toast";
 import { useUnreadMessageCount, usePresence, isUserOnline, sendMessageNotification } from "@/hooks/useMessaging";
 import { uploadMessageAttachment, isImageFile, formatFileSize } from "@/lib/fileUpload";
@@ -346,21 +347,29 @@ const ObservationFormModal = () => {
       }
 
       if (!asDraft) {
-        // Write S2 observation feedback for each scored dimension
-        for (const dimId of Object.keys(formData.scores)) {
-          await supabase.from("observation_feedback").insert({
-            assignment_id: formData.assignmentId,
-            candidate_id: formData.candidateId,
-            mentor_id: mentorProfile.id,
-            dimension_id: dimId,
-            feedback_level: 2,
-            bars_score: formData.scores[dimId],
-            mentor_feedback: formData.notes || null,
-            status: "approved",
-            mentor_approved: true,
-            mentor_approved_at: new Date().toISOString(),
-          });
+        // The candidate's profile id (formData.candidateId is the desk row id; observation_feedback points at profiles)
+        const { data: cpForFeedback } = await supabase
+          .from("candidate_profiles")
+          .select("profile_id")
+          .eq("id", formData.candidateId)
+          .single();
 
+        // Write S2 observation feedback for each scored dimension
+        const feedback = cpForFeedback?.profile_id
+          ? await saveS2Feedback(supabase, {
+              assignmentId: formData.assignmentId,
+              mentorUserId: user.id,
+              candidateUserId: cpForFeedback.profile_id,
+              marks: formData.scores,
+              notes: formData.notes,
+            })
+          : { ok: false, message: "The candidate's profile was not found." };
+        if (!feedback.ok) {
+          console.error("Observation feedback not saved:", feedback.message);
+          alert(`The observation was saved, but its feedback could not be recorded: ${feedback.message}`);
+        }
+
+        for (const dimId of Object.keys(formData.scores)) {
           // Record loop tracking for S2 observation
           const loop = await startLoop(formData.candidateId, formData.assignmentId, dimId, 2, mentorProfile.id);
           if (loop) await completeLoop(loop.id, formData.scores[dimId], 'proceed');

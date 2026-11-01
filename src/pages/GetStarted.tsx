@@ -21,6 +21,7 @@ import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
+import { requestMentor } from "@/lib/mentorRequest";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
 import { parseResume } from "@/lib/resumeParser";
@@ -333,27 +334,28 @@ const GetStarted = () => {
               .eq("profile_id", user.id)
               .single();
 
+            let requested: { ok: boolean; message?: string } = { ok: false, message: "Your candidate profile was not found." };
             if (cpRow) {
-              await supabase.from("mentor_assignments").insert({
-                mentor_id: topMentor.mentor.id,
-                candidate_id: cpRow.id,
-                status: "pending",
-              });
-
-              // Notify the mentor about the mentee request
-              await supabase.from("notifications").insert({
-                user_id: topMentor.mentor.profile?.id || topMentor.mentor.profile_id,
-                type: "mentee_request",
-                title: "New Mentee Request",
-                message: `A new candidate has been matched with you (${topMentor.compatibilityLevel} compatibility). Review and accept in your dashboard.`,
+              requested = await requestMentor(supabase, {
+                mentorId: topMentor.mentor.id,
+                candidateProfileId: cpRow.id,
+                mentorUserId: topMentor.mentor.profile?.id || topMentor.mentor.profile_id,
+                compatibilityLevel: topMentor.compatibilityLevel,
               });
             }
 
-
-            toast({
-              title: "Setup complete!",
-              description: `Welcome! You've been matched with a mentor (${topMentor.compatibilityLevel} match). They'll confirm shortly.`,
-            });
+            if (requested.ok) {
+              toast({
+                title: "Setup complete!",
+                description: `Welcome! You've been matched with a mentor (${topMentor.compatibilityLevel} match). They'll confirm shortly.`,
+              });
+            } else {
+              console.error("Mentor request not saved:", requested.message);
+              toast({
+                title: "Setup complete",
+                description: "Your account is ready, but the mentor request could not be saved. You can ask for a mentor from your dashboard.",
+              });
+            }
           } else {
 
             toast({

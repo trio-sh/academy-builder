@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Link, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { companyProfileFields } from "@/lib/employerProfile";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
@@ -2160,31 +2161,17 @@ const Company = () => {
     setIsSaving(true);
 
     try {
-      const allFieldsFilled = !!(formData.company_name && formData.industry && formData.company_size);
+      const fields = companyProfileFields(formData);
 
       if (employerProfile) {
         await supabase
           .from("employer_profiles")
-          .update({
-            company_name: formData.company_name,
-            industry: formData.industry,
-            company_size: formData.company_size,
-            company_website: formData.company_website,
-            is_verified: allFieldsFilled ? true : employerProfile.is_verified,
-            updated_at: new Date().toISOString(),
-          })
+          .update({ ...fields, updated_at: new Date().toISOString() })
           .eq("profile_id", user.id);
       } else {
         await supabase
           .from("employer_profiles")
-          .insert({
-            profile_id: user.id,
-            company_name: formData.company_name,
-            industry: formData.industry,
-            company_size: formData.company_size,
-            company_website: formData.company_website,
-            is_verified: allFieldsFilled,
-          });
+          .insert({ profile_id: user.id, ...fields });
       }
 
       await refreshProfile();
