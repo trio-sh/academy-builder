@@ -72,12 +72,12 @@ const OPENROUTER_MODELS = new Set([
 
 const DEFAULT_MODEL = "kilo-auto/free";
 const FALLBACK_MODELS = [
-  // Top 5 Kilo free models (ranked by context_length desc, then max_completion_tokens desc) — refreshed 2026-10-26
+  // Top 5 Kilo free models (ranked by context_length desc, then max_completion_tokens desc) — refreshed 2026-11-02
+  "reflection/beam-free",                            // ctx=1048576, max_tok=131072 — NEW
+  "inclusionai/ling-3.1-flash-1019-free",            // ctx=1000000, max_tok=262144 — NEW
   "nvidia/nemotron-3.5-super-vl:free",               // ctx=1000000, max_tok=131072
   "nvidia/nemotron-3.5-lightning:free",              // ctx=1000000, max_tok=65536
   "nvidia/nemotron-3-ultra-550b-a55b:free",          // ctx=1000000, max_tok=65536
-  "dots-studio/dots-3-note-preview:free",            // ctx=512000,  max_tok=460800
-  "recursive/flint-v1.0:free",                       // ctx=262144,  max_tok=235929 — NEW
   "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free", // ctx=256000, max_tok=65536, multimodal
   // OpenRouter free models
   "tencent/hy3:free",
@@ -99,11 +99,14 @@ const FALLBACK_MODELS = [
   "inclusionai/ling-3.0-tiny:free",
   "nvidia/nemotron-nano-12b-v2-vl:free",            // ctx=128000, max_tok=128000, multimodal
   // OpenRouter free models added 2026-08-17
+  "nvidia/nemotron-3.5-lightning:free",             // ctx=1000000, max_tok=65536 (OpenRouter)
+  "dots-studio/dots-3-note-preview:free",           // ctx=512000,  max_tok=460800 (OpenRouter)
   "z-ai/glm-5.2:free",                              // ctx=128000, coding/agentic (Zhipu AI)
   // OpenRouter free models added 2026-08-31
   "minimax/minimax-m3:free",                        // ctx=1048576, max_tok=943718, coding/agentic (MiniMax)
   "thinkingmachines/inkling:free",                  // ctx=1048576, max_tok=262144, coding/agentic
   "thinkingmachines/inkling-small:free",            // ctx=1048576, max_tok=262144, coding/agentic
+  "nvidia/nemotron-3-ultra-550b-a55b:free",         // ctx=1000000, max_tok=65536 (OpenRouter)
   "minimax/minimax-m2.7:free",                      // ctx=196608, coding (MiniMax)
   // OpenRouter free models added 2026-09-21
   "nex-agi/nex-n2.5-pro:free",                     // ctx=262144, max_tok=235929, coding/agentic (Nex AGI)
