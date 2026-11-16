@@ -182,16 +182,21 @@ const OPENROUTER_MODELS = new Set([
   "xingchen-agi/xing4.0-29b-a4b:free",
   // Refreshed 2026-10-26
   "recursive/flint-v1.0:free",
+  // Refreshed 2026-11-16
+  "inclusionai/ling-3.2-flash:free",
+  "particle-ai/particle-1:free",
+  "baidu/ernie-5.5-flash-preview:free",
+  "thinkingmachines/inkling-2-small:free",
 ]);
 
 const KILO_DEFAULT_MODEL = "kilo-auto/free";
 const KILO_FALLBACK_MODELS = [
-  // Top 5 Kilo free models (ranked by context_length desc, then max_completion_tokens desc) — refreshed 2026-10-26
+  // Top 5 Kilo free models (ranked by context_length desc, then max_completion_tokens desc) — refreshed 2026-11-16
+  "inclusionai/ling-3.2-flash:free",           // ctx=1048576, max_tok=262144
+  "particle-ai/particle-1:free",               // ctx=1048576, max_tok=131072
+  "reflection/beam-free",                      // ctx=1048576, max_tok=131072
+  "baidu/ernie-5.5-flash-preview:free",        // ctx=1024000, max_tok=921600
   "nvidia/nemotron-3.5-super-vl:free",         // ctx=1000000, max_tok=131072
-  "nvidia/nemotron-3.5-lightning:free",        // ctx=1000000, max_tok=65536
-  "nvidia/nemotron-3-ultra-550b-a55b:free",    // ctx=1000000, max_tok=65536
-  "dots-studio/dots-3-note-preview:free",      // ctx=512000,  max_tok=460800
-  "recursive/flint-v1.0:free",                 // ctx=262144,  max_tok=235929 — NEW
   // OpenRouter free models (tool-capable)
   "tencent/hy3:free",
   "moonshotai/kimi-k2.6:free",
@@ -228,6 +233,11 @@ const KILO_FALLBACK_MODELS = [
   "xingchen-agi/xing4.0-29b-a4b:free",        // ctx=262144, max_tok=235929, coding/agentic (Xingchen AGI)
   // OpenRouter free models added 2026-10-26
   "recursive/flint-v1.0:free",                 // ctx=262144, max_tok=235929, coding/agentic (Recursive)
+  // OpenRouter free models added 2026-11-16
+  "inclusionai/ling-3.2-flash:free",           // ctx=1048576, max_tok=262144, coding/agentic (InclusionAI)
+  "particle-ai/particle-1:free",               // ctx=1048576, max_tok=131072, coding/agentic (Particle AI)
+  "baidu/ernie-5.5-flash-preview:free",        // ctx=1024000, max_tok=921600, coding (Baidu)
+  "thinkingmachines/inkling-2-small:free",     // ctx=1048576, max_tok=131072, coding/agentic (Thinking Machines)
 ];
 const PRAXIS_API_KEY = process.env.PRAXIS_API_KEY || "";
 
