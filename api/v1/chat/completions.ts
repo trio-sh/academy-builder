@@ -73,11 +73,13 @@ const OPENROUTER_MODELS = new Set([
   "particle-ai/particle-1:free",
   "baidu/ernie-5.5-flash-preview:free",
   "thinkingmachines/inkling-2-small:free",
+  // Refreshed 2026-11-23
+  "nvidia/nemotron-3.5-lightning:free",
 ]);
 
 const DEFAULT_MODEL = "kilo-auto/free";
 const FALLBACK_MODELS = [
-  // Top 5 Kilo free models (ranked by context_length desc, then max_completion_tokens desc) — refreshed 2026-11-16
+  // Top 5 Kilo free models (ranked by context_length desc, then max_completion_tokens desc) — refreshed 2026-11-23
   "inclusionai/ling-3.2-flash:free",                 // ctx=1048576, max_tok=262144
   "particle-ai/particle-1:free",                     // ctx=1048576, max_tok=131072
   "reflection/beam-free",                            // ctx=1048576, max_tok=131072
@@ -124,6 +126,8 @@ const FALLBACK_MODELS = [
   "particle-ai/particle-1:free",                    // ctx=1048576, max_tok=131072, coding/agentic (Particle AI)
   "baidu/ernie-5.5-flash-preview:free",             // ctx=1024000, max_tok=921600, coding (Baidu)
   "thinkingmachines/inkling-2-small:free",          // ctx=1048576, max_tok=131072, coding/agentic (Thinking Machines)
+  // OpenRouter free models added 2026-11-23
+  "nvidia/nemotron-3.5-lightning:free",             // ctx=1000000, max_tok=65536, coding/agentic (NVIDIA)
 ];
 
 const VISION_MODEL = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free";
