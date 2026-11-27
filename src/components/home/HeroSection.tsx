@@ -1,7 +1,12 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { todayStamp } from "@/lib/dateStamp";
+import { LiveDateline } from "@/components/home/LiveDateline";
+import { AmbientVideo } from "@/components/home/AmbientVideo";
+import { Globe } from "@/components/home/Globe";
+import { TiltCard } from "@/components/home/TiltCard";
+import { usePointerDepth } from "@/lib/pointerDepth";
+import { useRef } from "react";
 
 // Fade-in-up on load, staggered
 const rise = {
@@ -14,8 +19,18 @@ const rise = {
 };
 
 export function HeroSection() {
+  const section = useRef<HTMLElement>(null);
+  usePointerDepth(section);
   return (
-    <section className="relative paper-grain pt-32 pb-24 md:pt-40 md:pb-32 overflow-hidden">
+    <section ref={section} className="relative isolate paper-grain pt-32 pb-24 md:pt-40 md:pb-32 overflow-hidden">
+      {/* Three layers at three depths: the video far back, the globe in the middle, the type in front. They shift by different amounts with the pointer. */}
+      <div className="depth-layer absolute -inset-8 -z-30 pointer-events-none" style={{ "--dx": "-12px", "--dy": "-8px" } as React.CSSProperties}>
+        <AmbientVideo src="/video/hero.mp4" poster="/video/hero.jpg" priority className="h-full w-full object-cover opacity-50" />
+      </div>
+      <div className="absolute inset-0 -z-20 bg-gradient-to-b from-background/55 via-background/45 to-background pointer-events-none" aria-hidden="true" />
+      <div className="depth-layer absolute -z-10 pointer-events-none right-[-50%] top-[40%] w-[160vw] aspect-square opacity-55 md:right-[-22%] md:top-[10%] md:w-[77vw] md:max-w-[1250px] md:opacity-85" style={{ "--dx": "-26px", "--dy": "-16px" } as React.CSSProperties}>
+        <Globe className="h-full w-full" />
+      </div>
       {/* Corner registration marks — like a printed press sheet */}
       <RegistrationMarks />
 
@@ -40,12 +55,7 @@ export function HeroSection() {
             </div>
           </div>
           <div className="text-right md:text-right">
-            <span className="mono-label text-foreground/60 block">
-              {todayStamp()}
-            </span>
-            <span className="mono-label text-foreground/40 mt-1 block">
-              Iss. 04 · pp. 001–024
-            </span>
+            <LiveDateline />
           </div>
         </motion.div>
 
@@ -78,7 +88,7 @@ export function HeroSection() {
             custom={2}
             className="md:col-span-4 md:pb-4"
           >
-            <div className="border-l-2 border-foreground pl-5 md:pl-6">
+            <div className="border-l-2 border-foreground pl-5 md:pl-6 md:bg-background/35 md:backdrop-blur-[2px] md:py-3 md:pr-3">
               <p className="text-foreground text-base md:text-[1.0625rem] leading-[1.7] tracking-tight">
                 <span className="display-serif text-5xl md:text-6xl float-left leading-[0.85] pr-2 pt-1 -mt-1">
                   T
@@ -161,10 +171,10 @@ export function HeroSection() {
               cap: "The receipt",
             },
           ].map((item, i) => (
+            <TiltCard key={item.n} className="h-full" max={5}>
             <div
-              key={item.n}
               className={
-                "px-1 py-8 md:py-10 md:px-8 " +
+                "px-1 py-8 md:py-10 md:px-8 h-full " +
                 (i > 0 ? "md:border-l md:border-foreground/20" : "")
               }
             >
@@ -179,6 +189,7 @@ export function HeroSection() {
                 {item.b}
               </p>
             </div>
+            </TiltCard>
           ))}
         </motion.div>
       </div>

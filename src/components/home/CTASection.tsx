@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { todayStamp } from "@/lib/dateStamp";
+import { AmbientVideo } from "@/components/home/AmbientVideo";
 
 const rise = {
   hidden: { opacity: 0, y: 30 },
@@ -14,7 +15,9 @@ const rise = {
 
 export function CTASection() {
   return (
-    <section className="paper-grain relative py-28 md:py-40 border-t border-foreground overflow-hidden">
+    <section className="paper-grain relative isolate py-28 md:py-40 border-t border-foreground overflow-hidden">
+      <AmbientVideo src="/video/globe-wide.mp4" poster="/video/globe-wide.jpg" className="absolute inset-0 -z-10 h-full w-full object-cover opacity-75 pointer-events-none" />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-background/60 via-background/25 to-background/10 pointer-events-none" aria-hidden="true" />
       {/* Faint background numeral — a large "01" watermark bleeding off */}
       <div
         aria-hidden

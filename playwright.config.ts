@@ -44,6 +44,8 @@ const sharedUse = {
   ...(proxyConfig ? { proxy: proxyConfig } : {}),
   launchOptions: {
     args: [`--ignore-certificate-errors-spki-list=${PROXY_CA_SPKI}`],
+    // a machine whose browser build does not match this Playwright version can point at the one it has
+    ...(process.env.PW_CHROMIUM ? { executablePath: process.env.PW_CHROMIUM } : {}),
   },
 };
 
@@ -142,6 +144,8 @@ export default defineConfig({
       },
       dependencies: ["setup"],
     },
+    // the public home page: no sign-in, no fixtures
+    { name: "public-tests", testMatch: /home-.*\.spec\.ts/, use: { ...sharedUse } },
     // the live dual-role accounts (CR-340); present only when the account script's credentials file is named
     ...(process.env.DUAL_CREDS ? [{ name: "dual-role-tests", testMatch: /dual-role-desks\.spec\.ts/, use: { ...sharedUse } }] : []),
   ],

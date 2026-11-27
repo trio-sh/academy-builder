@@ -1,0 +1,17 @@
+<!doctype html><meta charset="utf-8"><style>html,body{margin:0;background:#0a0a14}canvas{display:block}</style>
+<canvas id="c" width="1280" height="720"></canvas>
+<script src="globe.bundle.js"></script>
+<script>
+const W=1280,H=720,T=40,TAU=Math.PI*2;
+const cv=document.getElementById('c'),g=cv.getContext('2d');
+function rnd(seed){let s=seed>>>0;return()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296}}
+const R=rnd(5),specks=Array.from({length:150},()=>({x:R()*W,y:R()*H,r:.4+Math.pow(R(),3)*1.6,n:1+Math.floor(R()*2),a:.15+R()*.5,tw:R()*TAU}));
+window.renderFrame=(t,variant)=>{
+  const gr=g.createLinearGradient(0,0,0,H);gr.addColorStop(0,'#0a0a16');gr.addColorStop(1,'#0d0b20');g.fillStyle=gr;g.fillRect(0,0,W,H);
+  for(const s of specks){const y=((s.y-H*s.n*(t/T))%H+H)%H; const a=s.a*(0.6+0.4*Math.sin(TAU*(t/T)*s.n*2+s.tw));g.beginPath();g.arc(s.x,y,s.r,0,TAU);g.fillStyle=`rgba(200,205,255,${a})`;g.fill()}
+  const off=document.createElement('canvas');off.width=W;off.height=H;const og=off.getContext('2d');
+  GlobeLib.drawGlobe(og,W,H,t,{turnSecs:T,arcSecs:8,radius:variant==='wide'?0.46:0.42,cx:variant==='wide'?0.62:0.5,cy:0.52,tilt:0.42,yaw0:0.9});
+  g.drawImage(off,0,0);
+  return cv.toDataURL('image/png');
+};
+</script>

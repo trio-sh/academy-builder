@@ -1,6 +1,7 @@
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { HeroSection } from "@/components/home/HeroSection";
-import { LaunchCountdown } from "@/components/home/LaunchCountdown";
+import { RecordTicker } from "@/components/home/RecordTicker";
+import { YearEndStrip } from "@/components/home/YearEndStrip";
 import { JourneySection } from "@/components/home/JourneySection";
 import { DifferentiatorSection } from "@/components/home/DifferentiatorSection";
 import { StakeholdersSection } from "@/components/home/StakeholdersSection";
@@ -10,7 +11,8 @@ const Index = () => {
   return (
     <PublicLayout>
       <HeroSection />
-      <LaunchCountdown />
+      <RecordTicker />
+      <YearEndStrip />
       <JourneySection />
       <DifferentiatorSection />
       <StakeholdersSection />
