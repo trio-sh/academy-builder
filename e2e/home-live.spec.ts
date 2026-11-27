@@ -34,6 +34,16 @@ test.describe("home page, live", () => {
     await expect(page.getByTestId("year-end")).toContainText(/Year-end · 20\d\d/);
   });
 
+  test("the year in the record shows days open, live, and no counts of people", async ({ page }) => {
+    await page.goto("/");
+    const band = page.getByTestId("year-in-record");
+    await band.scrollIntoViewIfNeeded();
+    await expect(band).toContainText("registration since 20 September 2026");
+    const days = Number(await page.getByTestId("ledger-0").textContent());
+    expect(days).toBeGreaterThanOrEqual(68);
+    expect(await band.textContent()).not.toMatch(/people|participants/i);
+  });
+
   test("a card tips toward the mouse in 3D", async ({ page }) => {
     await page.goto("/");
     const card = page.getByTestId("tilt-card").first();
