@@ -1,13 +1,7 @@
 import { motion } from "framer-motion";
+import { rise3d as rise, SceneBackdrop } from "@/components/home/depth";
+import { LayerStack } from "@/components/home/LayerStack";
 
-const rise = {
-  hidden: { opacity: 0, y: 40 },
-  visible: (i: number = 0) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.8, delay: 0.05 + i * 0.06, ease: [0.19, 1, 0.22, 1] },
-  }),
-};
 
 type Entry = {
   n: string;
@@ -76,7 +70,8 @@ const entries: Entry[] = [
 
 export function JourneySection() {
   return (
-    <section className="paper-grain relative py-24 md:py-32 border-t border-foreground/50">
+    <section data-rail="The journey" className="paper-grain relative isolate overflow-hidden py-24 md:py-32 border-t border-foreground/50">
+      <SceneBackdrop tone="indigo" />
       <div className="max-w-[1400px] mx-auto px-6">
         {/* Section header */}
         <motion.div
@@ -101,6 +96,7 @@ export function JourneySection() {
               Behavioral evidence is built through mentor-led observation over time —
               no shortcuts, no self-assessments. Six steps. One record.
             </p>
+            <div className="hidden lg:block mt-10"><LayerStack /></div>
           </div>
         </motion.div>
 

@@ -23,7 +23,7 @@ export function YearEndStrip() {
     { label: "Seconds", value: two(p.seconds) },
   ];
   return (
-    <section aria-labelledby="year-end-title" className="relative isolate overflow-hidden border-y-2 border-vermilion bg-vermilion/[0.06] paper-grain py-12 md:py-16" data-testid="year-end">
+    <section data-rail="Year end" aria-labelledby="year-end-title" className="relative isolate overflow-hidden border-y-2 border-vermilion bg-vermilion/[0.06] paper-grain py-12 md:py-16" data-testid="year-end">
       <AmbientVideo src="/video/winter.mp4" poster="/video/winter.jpg" className="absolute inset-0 -z-10 h-full w-full object-cover opacity-45 pointer-events-none" />
       <div className="absolute inset-0 -z-10 bg-gradient-to-r from-background/80 via-background/40 to-background/70 pointer-events-none" aria-hidden="true" />
       <div className="max-w-[1400px] mx-auto px-5 md:px-6">

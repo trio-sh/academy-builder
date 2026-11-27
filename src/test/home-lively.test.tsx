@@ -106,11 +106,12 @@ describe("the year in the record", () => {
     expect(daysOpen(at("2027-01-01T18:00:00Z"))).toBe(103);
   });
   it("shows only facts that can be checked, and no counts of people", () => {
+    vi.stubGlobal("IntersectionObserver", FakeObserver);
     vi.useFakeTimers(); vi.setSystemTime(at("2026-11-27T17:00:00Z"));
     render(<YearInRecord />);
-    expect(screen.getByTestId("ledger-0").textContent).toBe("68");
+    expect(screen.getByTestId("ledger-count-0").getAttribute("data-final")).toBe("68");
     expect(screen.getByTestId("year-in-record").textContent).toContain("registration since 20 September 2026");
     expect(screen.getByTestId("year-in-record").textContent).not.toMatch(/people|participants|mentors? \(|schools? \(/i);
-    vi.useRealTimers();
+    vi.useRealTimers(); vi.unstubAllGlobals();
   });
 });

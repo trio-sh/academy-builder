@@ -1,13 +1,6 @@
 import { motion } from "framer-motion";
+import { rise3d as rise, SceneBackdrop } from "@/components/home/depth";
 
-const rise = {
-  hidden: { opacity: 0, y: 24 },
-  visible: (i: number = 0) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.7, delay: 0.05 + i * 0.05, ease: [0.19, 1, 0.22, 1] },
-  }),
-};
 
 type Row = {
   criteria: string;
@@ -63,7 +56,8 @@ const rows: Row[] = [
 
 export function DifferentiatorSection() {
   return (
-    <section className="paper-grain relative py-24 md:py-32 border-t border-foreground/50">
+    <section data-rail="The difference" className="paper-grain relative isolate overflow-hidden py-24 md:py-32 border-t border-foreground/50">
+      <SceneBackdrop floor tone="violet" />
       <div className="max-w-[1400px] mx-auto px-6">
         {/* Header */}
         <motion.div
