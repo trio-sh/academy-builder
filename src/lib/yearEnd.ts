@@ -50,3 +50,14 @@ export function clockText(now: Date, timeZone?: string): { time: string; zone: s
 }
 
 export const CALGARY = ALBERTA;
+
+/** Registration opened on this date (the first sign-up on the live project, 20 September 2026). */
+export const REGISTRATION_OPENED = "2026-09-20";
+
+/** whole days registration has been open, counted by Alberta's calendar dates so it turns over at Calgary's midnight */
+export function daysOpen(now: Date, since: string = REGISTRATION_OPENED): number {
+  // read the date as numbers, not text: browsers and Node spell a date differently for the same locale
+  const p = Object.fromEntries(new Intl.DateTimeFormat("en-US", { timeZone: ALBERTA, year: "numeric", month: "numeric", day: "numeric" }).formatToParts(now).filter((x) => x.type !== "literal").map((x) => [x.type, Number(x.value)]));
+  const [sy, sm, sd] = since.split("-").map(Number);
+  return Math.max(0, Math.round((Date.UTC(p.year, p.month - 1, p.day) - Date.UTC(sy, sm - 1, sd)) / 86_400_000));
+}

@@ -1,7 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { albertaYear, CALGARY, clockText, closingParts, yearEndInstant } from "@/lib/yearEnd";
+import { albertaYear, CALGARY, clockText, closingParts, daysOpen, yearEndInstant } from "@/lib/yearEnd";
+import { YearInRecord } from "@/components/home/YearInRecord";
 import { AmbientVideo, allowsMotion } from "@/components/home/AmbientVideo";
 import { LiveDateline } from "@/components/home/LiveDateline";
 import { YearEndStrip } from "@/components/home/YearEndStrip";
@@ -93,5 +94,23 @@ describe("the live parts of the page", () => {
     expect(secs()).toBe((first + 59) % 60);
     expect(screen.getByTestId("year-end-days").textContent).toBe(String(closingParts(new Date("2026-11-27T17:17:04Z")).days).padStart(2, "0"));
     expect(screen.getByText(/Year-end · 2026/)).toBeTruthy();
+  });
+});
+
+describe("the year in the record", () => {
+  it("counts the days registration has been open, by Calgary's calendar", () => {
+    expect(daysOpen(at("2026-09-20T18:00:00Z"))).toBe(0);
+    expect(daysOpen(at("2026-11-27T17:00:00Z"))).toBe(68);
+    expect(daysOpen(at("2026-11-28T05:00:00Z"))).toBe(68);    // still 27 November evening in Calgary or already 28th, depending on the zone rules: never a jump of two
+    expect(daysOpen(at("2026-09-01T00:00:00Z"))).toBe(0);     // never negative
+    expect(daysOpen(at("2027-01-01T18:00:00Z"))).toBe(103);
+  });
+  it("shows only facts that can be checked, and no counts of people", () => {
+    vi.useFakeTimers(); vi.setSystemTime(at("2026-11-27T17:00:00Z"));
+    render(<YearInRecord />);
+    expect(screen.getByTestId("ledger-0").textContent).toBe("68");
+    expect(screen.getByTestId("year-in-record").textContent).toContain("registration since 20 September 2026");
+    expect(screen.getByTestId("year-in-record").textContent).not.toMatch(/people|participants|mentors? \(|schools? \(/i);
+    vi.useRealTimers();
   });
 });
