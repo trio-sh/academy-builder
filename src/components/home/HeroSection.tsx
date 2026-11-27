@@ -22,7 +22,7 @@ export function HeroSection() {
   const section = useRef<HTMLElement>(null);
   usePointerDepth(section);
   return (
-    <section ref={section} className="relative isolate paper-grain pt-32 pb-24 md:pt-40 md:pb-32 overflow-hidden">
+    <section ref={section} data-rail="Home" className="relative isolate paper-grain pt-32 pb-24 md:pt-40 md:pb-32 overflow-hidden">
       {/* Three layers at three depths: the video far back, the globe in the middle, the type in front. They shift by different amounts with the pointer. */}
       <div className="depth-layer absolute -inset-8 -z-30 pointer-events-none" style={{ "--dx": "-12px", "--dy": "-8px" } as React.CSSProperties}>
         <AmbientVideo src="/video/hero.mp4" poster="/video/hero.jpg" priority className="h-full w-full object-cover opacity-50" />

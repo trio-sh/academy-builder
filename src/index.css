@@ -568,3 +568,32 @@ input[type="password"]::-ms-clear {
   .tilt-card { transform: none !important; transition: none; }
   .depth-layer { transform: none; }
 }
+
+/* Depth below the hero: a floor grid that recedes to the horizon and flows toward the reader, and radial gradients for the drifting orbs. */
+.bg-gradient-radial { background-image: radial-gradient(closest-side, var(--tw-gradient-from), var(--tw-gradient-to)); }
+.floor-grid {
+  position: absolute; left: -30%; right: -30%; bottom: -6%; height: 58%;
+  background-image:
+    linear-gradient(hsl(var(--vermilion) / 0.30) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(var(--vermilion) / 0.30) 1px, transparent 1px);
+  background-size: 72px 72px;
+  transform: perspective(520px) rotateX(64deg); transform-origin: 50% 100%;
+  -webkit-mask-image: linear-gradient(to top, #000 10%, transparent 88%); mask-image: linear-gradient(to top, #000 10%, transparent 88%);
+  animation: floor-flow 16s linear infinite;
+}
+@keyframes floor-flow { from { background-position: 0 0, 0 0; } to { background-position: 0 72px, 0 0; } }
+@media (prefers-reduced-motion: reduce) { .floor-grid { animation: none; } .depth-orb { transform: none !important; } }
+
+/* The stack of sheets, and the light that follows the pointer */
+.layer-stack { perspective: 1300px; }
+.layer-sheet {
+  position: absolute; width: 15rem; height: 9.5rem; padding: 0.9rem 1rem;
+  display: flex; flex-direction: column; justify-content: space-between;
+  border: 1px solid hsl(var(--vermilion) / 0.55);
+  background: linear-gradient(135deg, hsl(var(--vermilion) / 0.20), hsl(var(--vermilion-warm) / 0.10) 70%, hsl(var(--background) / 0.35));
+  box-shadow: 0 0 24px hsl(var(--vermilion) / 0.18), inset 0 0 18px hsl(var(--vermilion) / 0.10);
+  backdrop-filter: blur(1px);
+  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.pointer-spotlight { background: radial-gradient(520px circle at var(--sx, 50%) var(--sy, 30%), hsl(var(--vermilion) / 0.12), transparent 65%); mix-blend-mode: screen; }
+@media (prefers-reduced-motion: reduce) { .layer-sheet { transition: none; } .pointer-spotlight { display: none; } }

@@ -2,15 +2,8 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { TiltCard } from "@/components/home/TiltCard";
+import { rise3d as rise, SceneBackdrop } from "@/components/home/depth";
 
-const rise = {
-  hidden: { opacity: 0, y: 30 },
-  visible: (i: number = 0) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.8, delay: 0.1 + i * 0.08, ease: [0.19, 1, 0.22, 1] },
-  }),
-};
 
 type Reader = {
   n: string;
@@ -77,7 +70,8 @@ const readers: ReaderWithFigure[] = [
 
 export function StakeholdersSection() {
   return (
-    <section className="paper-grain relative py-24 md:py-32 border-t border-foreground/50">
+    <section data-rail="Who it is for" className="paper-grain relative isolate overflow-hidden py-24 md:py-32 border-t border-foreground/50">
+      <SceneBackdrop tone="indigo" />
       <div className="max-w-[1400px] mx-auto px-6">
         {/* Header */}
         <motion.div
