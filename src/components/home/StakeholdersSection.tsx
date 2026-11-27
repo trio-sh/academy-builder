@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { TiltCard } from "@/components/home/TiltCard";
 
 const rise = {
   hidden: { opacity: 0, y: 30 },
@@ -108,15 +109,15 @@ export function StakeholdersSection() {
         {/* Three columns */}
         <div className="grid md:grid-cols-3 border-t-2 border-foreground border-b border-foreground/40">
           {readers.map((r, i) => (
+            <TiltCard key={r.title} className="h-full" max={3.5}>
             <motion.div
-              key={r.title}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.2 }}
               variants={rise}
               custom={i}
               className={
-                "flex flex-col p-8 md:p-10 group hover:bg-foreground/[0.025] transition-colors " +
+                "flex flex-col h-full p-8 md:p-10 group hover:bg-foreground/[0.025] transition-colors " +
                 (i > 0 ? "border-t md:border-t-0 md:border-l border-foreground/25" : "")
               }
             >
@@ -184,6 +185,7 @@ export function StakeholdersSection() {
                 </Link>
               </Button>
             </motion.div>
+            </TiltCard>
           ))}
         </div>
       </div>
