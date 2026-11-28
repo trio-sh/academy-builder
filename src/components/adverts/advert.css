@@ -1,0 +1,34 @@
+/* The advertisement posters: fixed-size artboards, so what is staged is what is exported. Brand colours: deep navy, indigo, violet. */
+.advert-poster {
+  --ad-indigo: #6366f1; --ad-violet: #a855f7; --ad-navy: #0a0a14;
+  position: relative; overflow: hidden; isolation: isolate; box-sizing: border-box;
+  background: var(--ad-navy); color: #fff; font-family: "Instrument Sans", system-ui, sans-serif;
+}
+.advert-poster[data-format="portrait"]  { width: 1080px; height: 1350px; padding: 88px 92px 76px; --lead: 112px; --sub: 56px; --body: 37px; --ask: 46px; --eyebrow: 23px; --cta: 31px; --cta-sub: 24px; --fine: 23px; --gap: 40px; }
+.advert-poster[data-format="landscape"] { width: 1200px; height: 630px;  padding: 46px 62px 40px; --lead: 60px;  --sub: 33px; --body: 22px; --ask: 28px; --eyebrow: 16px; --cta: 22px; --cta-sub: 17px; --fine: 15px; --gap: 18px; }
+.advert-bg { position: absolute; inset: 0; z-index: -3; background-size: cover; background-repeat: no-repeat; opacity: 0.95; }
+.advert-poster[data-audience="job-seekers"] .advert-bg { background-image: url("/video/globe-wide.jpg"); background-position: 78% 50%; }
+.advert-poster[data-audience="employers"]   .advert-bg { background-image: url("/video/hero.jpg"); background-position: 30% 50%; }
+.advert-veil { position: absolute; inset: 0; z-index: -2; background:
+  linear-gradient(100deg, rgba(10,10,20,0.90) 0%, rgba(10,10,20,0.62) 55%, rgba(10,10,20,0.18) 100%),
+  linear-gradient(0deg, rgba(10,10,20,0.92) 0%, rgba(10,10,20,0) 38%); }
+.advert-poster[data-format="portrait"] .advert-veil { background:
+  linear-gradient(180deg, rgba(10,10,20,0.30) 0%, rgba(10,10,20,0.62) 40%, rgba(10,10,20,0.90) 100%); }
+.advert-poster[data-format="portrait"][data-audience="job-seekers"] .advert-bg { background-size: auto 78%; background-position: 82% 4%; }
+.advert-grid { position: absolute; inset: 0; z-index: -1; opacity: 0.5;
+  background-image: linear-gradient(rgba(140,150,255,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(140,150,255,0.07) 1px, transparent 1px); background-size: 72px 72px; }
+.advert-inner { height: 100%; display: flex; flex-direction: column; }
+.advert-eyebrow { display: flex; align-items: center; gap: 16px; font: 500 var(--eyebrow)/1.2 "JetBrains Mono", ui-monospace, monospace; letter-spacing: 0.22em; color: rgba(255,255,255,0.78); }
+.advert-eyebrow::before { content: ""; width: 54px; height: 3px; background: linear-gradient(90deg, var(--ad-indigo), var(--ad-violet)); }
+.advert-main { flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: center; gap: var(--gap); }
+.advert-line { margin: 0; }
+.advert-line[data-role="lead"] { font: 400 var(--lead)/1.02 "Fraunces", Georgia, serif; letter-spacing: -0.02em; }
+.advert-line[data-role="sub"]  { font: 400 var(--sub)/1.12 "Fraunces", Georgia, serif; letter-spacing: -0.01em; color: rgba(255,255,255,0.92); }
+.advert-line[data-role="body"] { font: 400 var(--body)/1.5 "Instrument Sans", system-ui, sans-serif; color: rgba(255,255,255,0.86); max-width: 34em; }
+.advert-line[data-role="ask"]  { font: 400 var(--ask)/1.22 "Fraunces", Georgia, serif; color: #fff; padding-left: 0.9em; border-left: 3px solid var(--ad-indigo); }
+.advert-em { font-style: italic; color: #8b8dfa; }
+.advert-line[data-role="lead"] .advert-em { background: linear-gradient(90deg, #8b8dfa, #c084fc); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.advert-cta { align-self: flex-start; padding: 0.7em 1.05em; border: 2px solid var(--ad-indigo); background: rgba(99,102,241,0.16); box-shadow: 0 0 0 1px rgba(168,85,247,0.25), 0 14px 40px -18px rgba(99,102,241,0.7); display: flex; flex-direction: column; gap: 0.25em; margin-top: calc(var(--gap) * 0.4); font-size: var(--cta); color: #fff; text-decoration: none; }
+.advert-cta-main { font: 600 1em/1.2 "Instrument Sans", system-ui, sans-serif; letter-spacing: 0.005em; }
+.advert-cta-sub { font: 500 calc(var(--cta-sub) / var(--cta) * 1em)/1.2 "JetBrains Mono", ui-monospace, monospace; letter-spacing: 0.08em; color: rgba(255,255,255,0.72); }
+.advert-fine { margin: calc(var(--gap) * 0.9) 0 0; padding-top: calc(var(--gap) * 0.55); border-top: 1px solid rgba(255,255,255,0.22); font: 400 var(--fine)/1.45 "Instrument Sans", system-ui, sans-serif; color: rgba(255,255,255,0.72); }
