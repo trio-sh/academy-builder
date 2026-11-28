@@ -67,6 +67,7 @@ export default defineConfig({
     {
       name: "setup",
       testMatch: /auth\.setup\.ts/,
+      use: { launchOptions: sharedUse.launchOptions },
     },
     // The Stage 2 cockpit suite has its own sign-in because its subject is
     // what a mentor sees, and the sign-in path is part of that. It also

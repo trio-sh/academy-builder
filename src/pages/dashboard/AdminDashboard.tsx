@@ -21,6 +21,7 @@ import {
 } from "@/components/dashboard/primitives";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import AdvertsStaging from "@/pages/dashboard/AdvertsStaging";
 import type { Database } from "@/types/database.types";
 import {
   LineChart,
@@ -89,7 +90,7 @@ import {
   Palette,
   Bot,
   PanelLeftClose,
-  PanelLeft,
+  PanelLeft, Megaphone
 } from "lucide-react";
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
@@ -153,6 +154,7 @@ const navItems = [
   { name: "Employers", href: "/dashboard/admin/employers", icon: Building2 },
   { name: "Schools", href: "/dashboard/admin/schools", icon: GraduationCap },
   { name: "Communications", href: "/dashboard/admin/communications", icon: Mail },
+  { name: "Advertisements", href: "/dashboard/admin/adverts", icon: Megaphone },
   { name: "Reports", href: "/dashboard/admin/reports", icon: FileText },
   { name: "Evidence Review", href: "/dashboard/admin/evidence-review", icon: ShieldCheck },
   { name: "D1 Issuance", href: "/dashboard/admin/d1-issuance", icon: ShieldCheck },
@@ -2613,6 +2615,7 @@ const AdminDashboard = () => {
         <Route path="employers" element={<EmployersManagement />} />
         <Route path="schools" element={<SchoolsManagement />} />
         <Route path="communications" element={<CommunicationsPage />} />
+        <Route path="adverts" element={<AdvertsStaging />} />
         <Route path="reports" element={<Reports />} />
         <Route path="evidence-review" element={<EvidenceReview />} />
         <Route path="d1-issuance" element={<D1IssuanceCoordinator />} />

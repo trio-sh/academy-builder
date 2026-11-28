@@ -1,0 +1,50 @@
+[
+  {
+    "id": "ad1",
+    "audience": "job-seekers",
+    "status": "staged, not published",
+    "files": {
+      "portrait": "ad1-portrait.png",
+      "landscape": "ad1-landscape.png"
+    },
+    "link": "mailto:hello@the3rdacademy.com?subject=Pilot",
+    "caption": "THE 3RD ACADEMY · JOB SEEKERS\n\nAI can polish your résumé.\n\nIt doesn't show how you respond under workplace pressure.\n\nStand out with a free Behavioral Evidence Report from The 3rd Academy.\n\nJoin the interest list: hello@the3rdacademy.com\nSubject: Pilot\n\nComing soon. Free for pilot participants who complete the process. Limited places. Join the list to hear first.",
+    "altText": "THE 3RD ACADEMY · JOB SEEKERS AI can polish your résumé. It doesn't show how you respond under workplace pressure. Stand out with a free Behavioral Evidence Report from The 3rd Academy. Join the interest list: hello@the3rdacademy.com Subject: Pilot Coming soon. Free for pilot participants who complete the process. Limited places. Join the list to hear first."
+  },
+  {
+    "id": "ad2",
+    "audience": "job-seekers",
+    "status": "staged, not published",
+    "files": {
+      "portrait": "ad2-portrait.png",
+      "landscape": "ad2-landscape.png"
+    },
+    "link": "mailto:hello@the3rdacademy.com?subject=Pilot",
+    "caption": "THE 3RD ACADEMY · JOB SEEKERS\n\nYour evidence. Your choice.\n\nA record of how you respond under workplace pressure.\n\nYou decide whether to share it.\n\nDiscover the free Behavioral Evidence Report from The 3rd Academy.\n\nJoin the interest list: hello@the3rdacademy.com\nSubject: Pilot\n\nComing soon. Free for pilot participants who complete the process. Limited places. Join the list to hear first.",
+    "altText": "THE 3RD ACADEMY · JOB SEEKERS Your evidence. Your choice. A record of how you respond under workplace pressure. You decide whether to share it. Discover the free Behavioral Evidence Report from The 3rd Academy. Join the interest list: hello@the3rdacademy.com Subject: Pilot Coming soon. Free for pilot participants who complete the process. Limited places. Join the list to hear first."
+  },
+  {
+    "id": "ad3",
+    "audience": "employers",
+    "status": "staged, not published",
+    "files": {
+      "portrait": "ad3-portrait.png",
+      "landscape": "ad3-landscape.png"
+    },
+    "link": "mailto:hello@the3rdacademy.com?subject=Employer%20Sample",
+    "caption": "THE 3RD ACADEMY · EMPLOYERS\n\nStrong résumé. Great interview. Then came the first difficult week.\n\nInterviews show how candidates talk about work. The Behavioral Evidence Report from The 3rd Academy records how a person responded in realistic workplace-pressure moments, observed by an experienced professional.\n\nRequest a sample report and decide what it could add to your hiring process.\n\nhello@the3rdacademy.com\nSubject: Employer Sample\n\nComing soon. Free preview with a sample report. Participants control their reports; hiring decisions stay with you.",
+    "altText": "THE 3RD ACADEMY · EMPLOYERS Strong résumé. Great interview. Then came the first difficult week. Interviews show how candidates talk about work. The Behavioral Evidence Report from The 3rd Academy records how a person responded in realistic workplace-pressure moments, observed by an experienced professional. Request a sample report and decide what it could add to your hiring process. hello@the3rdacademy.com Subject: Employer Sample Coming soon. Free preview with a sample report. Participants control their reports; hiring decisions stay with you."
+  },
+  {
+    "id": "ad4",
+    "audience": "employers",
+    "status": "staged, not published",
+    "files": {
+      "portrait": "ad4-portrait.png",
+      "landscape": "ad4-landscape.png"
+    },
+    "link": "mailto:hello@the3rdacademy.com?subject=Employer%20Sample",
+    "caption": "THE 3RD ACADEMY · EMPLOYERS\n\nThey interviewed well.\n\nThen workplace pressure revealed what the interview hadn't.\n\nRequest a sample Behavioral Evidence Report from The 3rd Academy and decide what it could add to your hiring process.\n\nhello@the3rdacademy.com\nSubject: Employer Sample\n\nComing soon. Free preview with a sample report. Participants control their reports; hiring decisions stay with you.",
+    "altText": "THE 3RD ACADEMY · EMPLOYERS They interviewed well. Then workplace pressure revealed what the interview hadn't. Request a sample Behavioral Evidence Report from The 3rd Academy and decide what it could add to your hiring process. hello@the3rdacademy.com Subject: Employer Sample Coming soon. Free preview with a sample report. Participants control their reports; hiring decisions stay with you."
+  }
+]
